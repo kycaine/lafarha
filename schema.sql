@@ -1,0 +1,36 @@
+CREATE TABLE IF NOT EXISTS orders (
+  id TEXT PRIMARY KEY,
+  client_name TEXT NOT NULL,
+  client_whatsapp TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'AWAITING_VERIFICATION',
+  token TEXT,
+  token_expiry INTEGER,
+  created_at INTEGER
+);
+
+CREATE TABLE IF NOT EXISTS order_items (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  order_id TEXT NOT NULL,
+  category TEXT NOT NULL,
+  title TEXT NOT NULL,
+  specs TEXT,
+  cost_currency TEXT DEFAULT 'SAR',
+  reseller_cost REAL,
+  markup REAL,
+  subtotal REAL,
+  FOREIGN KEY(order_id) REFERENCES orders(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS blacklist (
+  identifier TEXT PRIMARY KEY,
+  reason TEXT,
+  created_at INTEGER
+);
+
+CREATE TABLE IF NOT EXISTS products (
+  id TEXT PRIMARY KEY,
+  title TEXT NOT NULL,
+  icon TEXT,
+  requires_pax INTEGER DEFAULT 0,
+  form_schema TEXT NOT NULL
+);
