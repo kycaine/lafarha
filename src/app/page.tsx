@@ -16,6 +16,11 @@ export default function Home() {
               🛒 Ke Halaman Produk
             </Button>
           </Link>
+          <Link href="/counter">
+            <Button size="lg" className="w-full sm:w-auto h-14 px-8 text-lg bg-blue-600 hover:bg-blue-700 text-white">
+              📊 Ke Halaman Counter (Sales)
+            </Button>
+          </Link>
           <Link href="/admin/products">
             <Button size="lg" variant="outline" className="w-full sm:w-auto h-14 px-8 text-lg border-emerald-600 text-emerald-700 hover:bg-emerald-50">
               ⚙️ Ke CMS Admin

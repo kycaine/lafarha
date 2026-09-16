@@ -88,13 +88,41 @@ app.post('/products/reset', async (c) => {
 app.post('/orders', async (c) => {
   try {
     const formData = await c.req.json();
+    let specsJson: any = {};
+    try {
+      specsJson = JSON.parse(formData.notes);
+    } catch (e) {
+      specsJson = { services: ['HOTEL'] };
+    }
+
+    const services = specsJson.services || [];
     
+    // Prefix Mapping
+    const prefixMap: Record<string, string> = {
+      'HOTEL': 'HOT',
+      'FLIGHT': 'PES',
+      'BAGGAGE': 'BAG',
+      'VISA': 'VIS',
+      'TRANS_AIRPORT': 'TRA',
+      'TRANS_TOUR': 'TRT'
+    };
+    
+    const titleMap: Record<string, string> = {
+      'HOTEL': 'Hotel',
+      'FLIGHT': 'Tiket Pesawat',
+      'BAGGAGE': 'Bagasi',
+      'VISA': 'Visa',
+      'TRANS_AIRPORT': 'Transportasi Bandara',
+      'TRANS_TOUR': 'Transportasi Tour'
+    };
+
+    const prefixes = services.map((s: string) => prefixMap[s] || s.substring(0, 3)).join('-');
     const token = Math.random().toString(36).substring(2, 8).toUpperCase();
-    const orderId = `ORD-${Math.floor(Math.random() * 10000)}`;
+    const orderId = `${prefixes}-${Math.floor(Math.random() * 10000)}`;
     const tokenExpiry = new Date(Date.now() + 20 * 60000).toISOString();
-    
+
     await c.env.DB.prepare(
-      `INSERT INTO orders (id, client_name, client_whatsapp, status, verification_token, token_expiry) 
+      `INSERT INTO orders (id, client_name, client_whatsapp, status, token, token_expiry) 
        VALUES (?, ?, ?, 'AWAITING_VERIFICATION', ?, ?)`
     ).bind(
       orderId, 
@@ -104,17 +132,29 @@ app.post('/orders', async (c) => {
       tokenExpiry
     ).run();
 
-    await c.env.DB.prepare(
-      `INSERT INTO order_items (order_id, category, specs_json)
-       VALUES (?, 'HOTEL', ?)`
-    ).bind(
-      orderId,
-      JSON.stringify({
-        pax: formData.pax,
-        hotelRating: formData.hotelRating,
-        notes: formData.notes
-      })
-    ).run();
+    // Insert each service as a distinct order item
+    for (const srv of services) {
+      let itemSpecs = {};
+      if (srv === 'HOTEL') itemSpecs = specsJson.hotel || {};
+      else if (srv === 'FLIGHT') itemSpecs = specsJson.flight || {};
+      else if (srv === 'BAGGAGE') itemSpecs = specsJson.baggage || {};
+      else if (srv === 'VISA') itemSpecs = specsJson.visa || {};
+      else if (srv === 'TRANS_AIRPORT') itemSpecs = specsJson.transAirport || {};
+      else if (srv === 'TRANS_TOUR') itemSpecs = specsJson.transTour || {};
+      
+      // Inject generic pax info into each spec if needed
+      itemSpecs = { ...itemSpecs, pax: specsJson.pax, customFields: specsJson.customFields?.[srv] };
+
+      await c.env.DB.prepare(
+        `INSERT INTO order_items (order_id, category, title, specs)
+         VALUES (?, ?, ?, ?)`
+      ).bind(
+        orderId,
+        srv,
+        titleMap[srv] || srv,
+        JSON.stringify(itemSpecs)
+      ).run();
+    }
 
     return c.json({ success: true, orderId, token });
   } catch (error: any) {
@@ -130,14 +170,25 @@ app.put('/orders/:id/quote', async (c) => {
     await c.env.DB.prepare(
       `UPDATE orders 
        SET status = 'QUOTATION_READY', 
-           total_amount_idr = ?, 
+           total_amount_idr = ?,
+           dp_amount_idr = ?,
+           pelunasan_amount_idr = ?,
            quote_expiry = ? 
        WHERE id = ?`
     ).bind(
-      quoteData.totalAmount, 
-      new Date(Date.now() + 24 * 60 * 60000).toISOString(), // 24 hours expiry
+      quoteData.totalAmount,
+      quoteData.dpAmount,
+      quoteData.pelunasanAmount,
+      new Date(Date.now() + (quoteData.validityHours || 24) * 60 * 60000).toISOString(),
       orderId
     ).run();
+
+    if (quoteData.items) {
+      for (const [itemId, price] of Object.entries(quoteData.items)) {
+        await c.env.DB.prepare(`UPDATE order_items SET subtotal = ? WHERE id = ?`)
+          .bind(Number(price), itemId).run();
+      }
+    }
 
     return c.json({ success: true });
   } catch (error: any) {
@@ -146,6 +197,17 @@ app.put('/orders/:id/quote', async (c) => {
 });
 
 // Admin fetching all orders
+app.put('/orders/:id/issue', async (c) => {
+  try {
+    const orderId = c.req.param('id');
+    await c.env.DB.prepare(
+      `UPDATE orders SET status = 'ISSUED' WHERE id = ?`
+    ).bind(orderId).run();
+    return c.json({ success: true });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
 app.get('/orders', async (c) => {
   try {
     const { results } = await c.env.DB.prepare("SELECT * FROM orders ORDER BY created_at DESC").all();

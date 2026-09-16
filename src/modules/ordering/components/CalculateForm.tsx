@@ -2,119 +2,369 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { updateOrderQuote } from "@/modules/ordering/actions";
+import { updateOrderQuote, issueOrder } from "@/modules/ordering/actions";
+import { Clock, CheckCircle2, Copy, Ban, Percent, CreditCard, Package, Calculator, MessageCircle, Edit } from "lucide-react";
 
 export function CalculateForm({ order, items }: { order: any, items: any[] }) {
-  const [sarRate, setSarRate] = useState(4300);
-  const [markup, setMarkup] = useState(1000000); // Flat markup for demo
-  const [loading, setLoading] = useState(false);
+  
+  const [itemPrices, setItemPrices] = useState<Record<number, string>>(() => {
+    const initial: Record<number, string> = {};
+    items.forEach(item => {
+      initial[item.id] = item.subtotal ? item.subtotal.toString() : "";
+    });
+    return initial;
+  });
 
-  const parsedSpecs = items.length > 0 ? JSON.parse(items[0].specs_json) : {};
-  const pax = parsedSpecs.pax || 0;
+  const updateItemPrice = (id: number, value: string) => {
+    const numericStr = value.replace(/\D/g, "");
+    setItemPrices(prev => ({
+      ...prev,
+      [id]: numericStr
+    }));
+  };
+
+  const [dpPercentage, setDpPercentage] = useState(30);
+  const [validityHours, setValidityHours] = useState(24);
+  const [loading, setLoading] = useState(false);
   
-  // Base cost per pax in SAR (just for demo purposes)
-  const baseCostSAR = 1500; 
+  const isOriginallyPublished = order.status === 'QUOTATION_READY' || order.status === 'ISSUED';
+  const isIssued = order.status === 'ISSUED';
   
-  const totalBaseCostIDR = pax * baseCostSAR * sarRate;
-  const totalAmountIDR = totalBaseCostIDR + (pax * markup);
+  const [isEditing, setIsEditing] = useState(false);
+  const isReadOnly = isOriginallyPublished && !isEditing;
+
+  let totalClientPrice = 0;
+
+  items.forEach(item => {
+    const specs = item.specs ? JSON.parse(item.specs) : {};
+    const pax = Number(specs.pax) || 1;
+    const priceStr = itemPrices[item.id] || "";
+    const pricePerPax = Number(priceStr.replace(/\D/g, "")) || 0;
+    
+    totalClientPrice += (pricePerPax * pax);
+  });
+
+  const dpAmount = (totalClientPrice * dpPercentage) / 100;
+  const pelunasanAmount = totalClientPrice - dpAmount;
 
   const handlePublish = async () => {
     setLoading(true);
-    const res = await updateOrderQuote(order.id, { totalAmount: totalAmountIDR });
+    const payload = { 
+      totalAmount: totalClientPrice, 
+      dpAmount, 
+      pelunasanAmount, 
+      validityHours,
+      items: itemPrices
+    };
+    const res = await updateOrderQuote(order.id, payload);
     setLoading(false);
     if (res.success) {
-      alert("Quote published successfully!");
+      alert("Penawaran berhasil disimpan!");
       window.location.reload();
     } else {
-      alert("Failed to publish quote: " + res.error);
+      alert("Gagal menyimpan penawaran: " + res.error);
     }
   };
 
+  const handleIssue = async () => {
+    if (!confirm("Tandai pesanan ini sebagai Selesai / Issued? Pastikan pembayaran sudah lunas.")) return;
+    setLoading(true);
+    const res = await issueOrder(order.id);
+    setLoading(false);
+    if (res.success) {
+      alert("Pesanan berhasil ditandai selesai!");
+      window.location.reload();
+    } else {
+      alert("Gagal mengupdate pesanan: " + res.error);
+    }
+  };
+
+  const generateWhatsAppMessage = () => {
+    return `Halo ${order.client_name}, ini penawaran pesanan Anda.\n\n` +
+      `📦 *Rincian Pesanan:*\n` +
+      items.map(item => {
+        const specs = item.specs ? JSON.parse(item.specs) : {};
+        const pax = Number(specs.pax) || 1;
+        return `- ${item.title} (${pax} Pax)\n`;
+      }).join('') + `\n` +
+      `💰 *Total Harga:* Rp ${totalClientPrice.toLocaleString("id-ID")}\n\n` +
+      `💳 *Termin Pembayaran:*\n` +
+      `- DP (${dpPercentage}%): Rp ${dpAmount.toLocaleString("id-ID")}\n` +
+      `- Pelunasan: Rp ${pelunasanAmount.toLocaleString("id-ID")}\n\n` +
+      `⏳ *Masa Berlaku Penawaran:* ${validityHours} Jam\n\n` +
+      `Silakan klik link berikut untuk konfirmasi: https://la-dev.pages.dev/quote?id=${order.id}`;
+  };
+
   const handleCopy = () => {
-    const text = `Halo ${order.client_name}, ini penawaran LA Umrah Anda.\n\nTotal Pax: ${pax}\nTotal Harga: Rp ${totalAmountIDR.toLocaleString("id-ID")}\n\nSilakan klik link berikut untuk konfirmasi: https://la-dev.pages.dev/quote?id=${order.id}`;
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(generateWhatsAppMessage());
     alert("Teks berhasil disalin ke clipboard!");
   };
 
-  return (
-    <div className="grid md:grid-cols-3 gap-6">
-      <div className="md:col-span-2 space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Calculation Desk</CardTitle>
-            <CardDescription>Rapidly calculate and publish quote for {order.id}</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Live SAR to IDR Rate</Label>
-                <Input 
-                  type="number" 
-                  value={sarRate} 
-                  onChange={(e) => setSarRate(Number(e.target.value))} 
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Markup per PAX (IDR)</Label>
-                <Input 
-                  type="number" 
-                  value={markup} 
-                  onChange={(e) => setMarkup(Number(e.target.value))} 
-                />
-              </div>
-            </div>
+  const handleChatWA = () => {
+    const text = generateWhatsAppMessage();
+    let phone = (order.client_whatsapp || "").replace(/\D/g, '');
+    if (phone.startsWith('0')) {
+      phone = '62' + phone.substring(1);
+    }
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank');
+  };
 
-            <div className="border-t pt-4 mt-4">
-              <h4 className="font-semibold mb-2">Requested Specifications:</h4>
-              <ul className="text-sm space-y-1 text-slate-600 dark:text-slate-400">
-                <li>Total Jamaah (PAX): <strong>{pax}</strong></li>
-                <li>Hotel Rating: <strong>{parsedSpecs.hotelRating} Stars</strong></li>
-                <li>Notes: {parsedSpecs.notes}</li>
-              </ul>
-            </div>
-          </CardContent>
-        </Card>
+  return (
+    <div className="grid lg:grid-cols-3 gap-8">
+      <div className="lg:col-span-2 space-y-8">
+        
+        {/* Per-Item Cards */}
+        {items.map((item, index) => {
+          const specs = item.specs ? JSON.parse(item.specs) : {};
+          const pax = Number(specs.pax) || 1;
+          const rawPriceStr = itemPrices[item.id] || "";
+          const pricePerPax = Number(rawPriceStr.replace(/\D/g, "")) || 0;
+          
+          return (
+            <Card key={item.id} className="border-0 shadow-lg bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl ring-1 ring-slate-200 dark:ring-slate-800 overflow-hidden">
+              <div className="bg-indigo-50 dark:bg-indigo-900/30 px-6 py-3 border-b border-indigo-100 dark:border-indigo-800/50 flex items-center gap-3">
+                <div className="h-8 w-8 rounded-full bg-indigo-100 dark:bg-indigo-800 text-indigo-600 dark:text-indigo-300 flex items-center justify-center font-bold">
+                  {index + 1}
+                </div>
+                <CardTitle className="text-lg text-indigo-900 dark:text-indigo-100">{item.title}</CardTitle>
+              </div>
+              <CardContent className="pt-6 space-y-6">
+                
+                {/* Specs Summary */}
+                <div className="bg-slate-50 dark:bg-slate-950 rounded-xl p-4 border border-slate-100 dark:border-slate-800 text-sm">
+                  <h4 className="font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
+                    <Package className="w-4 h-4" /> Spesifikasi {item.title}
+                  </h4>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div>
+                      <div className="text-slate-500 mb-1">Kuantitas (Pax)</div>
+                      <div className="font-bold text-slate-800 dark:text-slate-200">{pax}</div>
+                    </div>
+                    {Object.entries(specs).filter(([k]) => k !== 'pax' && k !== 'customFields').map(([k, v]) => (
+                       <div key={k}>
+                         <div className="text-slate-500 mb-1 capitalize">{k.replace(/([A-Z])/g, ' $1').trim()}</div>
+                         <div className="font-medium text-slate-800 dark:text-slate-200 truncate">{String(v) || '-'}</div>
+                       </div>
+                    ))}
+                  </div>
+                  {specs.customFields && Object.keys(specs.customFields).length > 0 && (
+                    <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800 grid grid-cols-2 gap-4">
+                      {Object.entries(specs.customFields).map(([k, v]) => (
+                        <div key={k}>
+                          <div className="text-slate-500 mb-1 capitalize">{k}</div>
+                          <div className="font-medium text-slate-800 dark:text-slate-200">{String(v)}</div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Pricing Inputs */}
+                <div className="grid sm:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label className="text-slate-500 font-semibold">Harga Jual / Pax (IDR)</Label>
+                    <div className="relative flex items-center">
+                      <span className="absolute left-3 text-slate-400 font-medium z-10 pointer-events-none">Rp</span>
+                      <Input 
+                        type="text" 
+                        placeholder="0"
+                        className="pl-10 font-bold bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 transition-all focus:ring-emerald-500 disabled:opacity-75 disabled:bg-slate-100 disabled:dark:bg-slate-900"
+                        value={rawPriceStr ? parseInt(rawPriceStr, 10).toLocaleString("id-ID") : ""} 
+                        onChange={(e) => updateItemPrice(item.id, e.target.value)} 
+                        disabled={isReadOnly}
+                      />
+                    </div>
+                  </div>
+                  
+                  {/* Total for this item */}
+                  <div className="space-y-2 flex flex-col justify-end pb-2">
+                     <div className="text-sm text-slate-500">Subtotal {item.title}:</div>
+                     <div className="text-xl font-bold text-slate-800 dark:text-slate-200">
+                        Rp {(pricePerPax * pax).toLocaleString('id-ID')}
+                     </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
+
+        {/* Terms & Conditions */}
+        <div className="grid sm:grid-cols-2 gap-6">
+          <Card className="border-0 shadow-lg bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl ring-1 ring-slate-200 dark:ring-slate-800">
+            <CardHeader className="pb-4">
+              <div className="flex items-center gap-2">
+                <CreditCard className="w-5 h-5 text-orange-500" />
+                <CardTitle className="text-base">Termin Pembayaran</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label className="text-slate-500 font-semibold">Uang Muka / DP</Label>
+                  <div className="flex items-center gap-4">
+                    <div className="relative flex-1">
+                      <Input 
+                        type="number" 
+                        max={100}
+                        className="pr-8 font-bold bg-white dark:bg-slate-950 focus:ring-orange-500 disabled:opacity-75 disabled:bg-slate-100 disabled:dark:bg-slate-900"
+                        value={dpPercentage} 
+                        onChange={(e) => setDpPercentage(Number(e.target.value))} 
+                        disabled={isReadOnly}
+                      />
+                      <Percent className="absolute right-3 top-3 w-4 h-4 text-slate-400" />
+                    </div>
+                    <div className="flex-1 text-right">
+                      <div className="text-xs text-slate-500 mb-1">Nominal DP</div>
+                      <div className="font-bold text-slate-800 dark:text-slate-200">
+                        Rp {dpAmount.toLocaleString("id-ID")}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center">
+                  <span className="text-sm font-semibold text-slate-600 dark:text-slate-400">Pelunasan ({100 - dpPercentage}%)</span>
+                  <span className="font-bold text-slate-800 dark:text-slate-200">Rp {pelunasanAmount.toLocaleString("id-ID")}</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-0 shadow-lg bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl ring-1 ring-slate-200 dark:ring-slate-800">
+            <CardHeader className="pb-4">
+              <div className="flex items-center gap-2">
+                <Clock className="w-5 h-5 text-sky-500" />
+                <CardTitle className="text-base">Batas Waktu</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="space-y-3">
+                  <Label className="text-slate-500 font-semibold">Penawaran Berlaku Untuk</Label>
+                  <div className="flex gap-2">
+                    {[3, 12, 24, 48].map(h => (
+                      <Button 
+                        key={h}
+                        type="button"
+                        variant={validityHours === h ? "default" : "outline"}
+                        className={validityHours === h ? "bg-sky-500 hover:bg-sky-600" : ""}
+                        onClick={() => setValidityHours(h)}
+                        disabled={isReadOnly}
+                      >
+                        {h} Jam
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+                <p className="text-xs text-slate-500 leading-relaxed pt-2">
+                  Jika sudah lebih dari {validityHours} jam, penawaran ini hangus dan perlu dihitung ulang.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
 
-      <div>
-        <Card className="bg-slate-50 dark:bg-slate-900 border-emerald-500/50">
+      {/* Summary Sidebar */}
+      <div className="space-y-6">
+        <Card className="border-0 shadow-xl bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/40 dark:to-teal-950/40 ring-1 ring-emerald-200/50 dark:ring-emerald-900/50 sticky top-6">
           <CardHeader>
-            <CardTitle>Summary</CardTitle>
+            <CardTitle className="text-emerald-900 dark:text-emerald-400">Total Penawaran</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex justify-between text-sm">
-              <span>Base Cost (SAR)</span>
-              <span>{baseCostSAR * pax} SAR</span>
+          <CardContent className="space-y-5">
+            <div className="space-y-3 text-sm">
+              {items.map(item => {
+                const specs = item.specs ? JSON.parse(item.specs) : {};
+                const pax = Number(specs.pax) || 1;
+                const rawPriceStr = itemPrices[item.id] || "";
+                const price = Number(rawPriceStr.replace(/\D/g, "")) || 0;
+                return (
+                  <div key={item.id} className="flex justify-between items-center text-slate-600 dark:text-slate-400">
+                    <span className="truncate pr-4">{item.title} (x{pax})</span>
+                    <span className="font-semibold text-slate-800 dark:text-slate-300 whitespace-nowrap">
+                      Rp {(price * pax).toLocaleString("id-ID")}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
-            <div className="flex justify-between text-sm">
-              <span>Base Cost (IDR)</span>
-              <span>Rp {totalBaseCostIDR.toLocaleString("id-ID")}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span>Total Markup</span>
-              <span>Rp {(markup * pax).toLocaleString("id-ID")}</span>
-            </div>
-            <div className="border-t pt-4">
-              <div className="flex justify-between font-bold text-lg text-emerald-600">
-                <span>Total Client Price</span>
-                <span>Rp {totalAmountIDR.toLocaleString("id-ID")}</span>
+            
+            <div className="pt-4 border-t border-emerald-200/50 dark:border-emerald-800/50">
+              <div className="flex justify-between items-end">
+                <span className="text-sm font-bold text-emerald-800 dark:text-emerald-500">Grand Total</span>
+                <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400 tracking-tight">
+                  Rp {totalClientPrice.toLocaleString("id-ID")}
+                </span>
               </div>
             </div>
-            <div className="space-y-2 pt-4">
+          </CardContent>
+          <CardFooter className="flex-col gap-3 pt-2">
+            {!isEditing && isOriginallyPublished ? (
               <Button 
-                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white" 
-                onClick={handlePublish}
-                disabled={loading || order.status === 'QUOTATION_READY'}
+                size="lg"
+                className="w-full h-14 text-lg font-bold bg-amber-500 hover:bg-amber-600 text-white shadow-lg shadow-amber-500/20 transition-all"
+                onClick={() => setIsEditing(true)}
+                disabled={isIssued}
               >
-                {loading ? "Publishing..." : order.status === 'QUOTATION_READY' ? "Already Published" : "Publish Quote"}
+                <Edit className="w-5 h-5 mr-2" /> Atur Ulang Penawaran
               </Button>
-              <Button variant="outline" className="w-full" onClick={handleCopy}>
-                Copy WhatsApp Text
+            ) : (
+              <Button 
+                size="lg"
+                className="w-full h-14 text-lg font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20 transition-all" 
+                onClick={handlePublish}
+                disabled={loading || totalClientPrice === 0}
+              >
+                {loading ? "Menyimpan..." : isOriginallyPublished ? "🔄 Perbarui Penawaran" : "🚀 Terbitkan Penawaran"}
               </Button>
-            </div>
+            )}
+
+            {isOriginallyPublished && !isEditing && (
+              <Button 
+                size="lg"
+                className="w-full h-14 text-lg font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/20 transition-all"
+                onClick={handleIssue}
+                disabled={loading || isIssued}
+              >
+                {loading ? "Menyimpan..." : isIssued ? "Pesanan Sudah Selesai (Issued)" : "✅ Tandai Selesai & Lunas"}
+              </Button>
+            )}
+
+            <Button 
+              variant="ghost" 
+              className="w-full text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/30" 
+            >
+              <Ban className="w-4 h-4 mr-2" /> Batalkan Pesanan
+            </Button>
+          </CardFooter>
+        </Card>
+
+        {/* Communication Card */}
+        <Card className="border-0 shadow-lg bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl ring-1 ring-slate-200 dark:ring-slate-800">
+          <CardHeader className="pb-4">
+             <CardTitle className="text-base text-slate-800 dark:text-slate-200">Komunikasi Pelanggan</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <Button 
+              size="lg"
+              variant="outline" 
+              className="w-full h-12 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-900/30 dark:hover:bg-emerald-900/50 border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400" 
+              onClick={handleChatWA}
+            >
+              <MessageCircle className="w-4 h-4 mr-2" /> Chat WhatsApp
+            </Button>
+            
+            <Button 
+              size="lg"
+              variant="outline" 
+              className="w-full h-12 bg-white/50 hover:bg-white dark:bg-transparent dark:hover:bg-slate-800 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-400" 
+              onClick={handleCopy}
+            >
+              <Copy className="w-4 h-4 mr-2" /> Salin Penawaran
+            </Button>
           </CardContent>
         </Card>
       </div>

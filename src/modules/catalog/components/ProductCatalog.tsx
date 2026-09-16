@@ -269,10 +269,11 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
       });
 
       if (res.success) {
-        const adminPhone = "6285176861181"; 
-        const selectedNames = selectedServices.map(id => products.find(p => p.id === id)?.title).join(", ");
-        const text = encodeURIComponent(`Halo Admin, saya order LA Umrah [REF: ${res.orderId}-${res.token}] atas nama ${formData.name}.\nLayanan: ${selectedNames}${needsPax ? `\nPAX: ${formData.pax}` : ""}`);
-        window.location.href = `https://wa.me/${adminPhone}?text=${text}`;
+        alert("Penawaran terkirim! Silakan periksa halaman Counter.");
+        // Reset form
+        setFormData({ name: "", whatsapp: "", pax: "", manifestFileName: "", notes: "" });
+        setSelectedServices([]);
+        setLoading(false);
       } else {
         alert("Gagal mengirim pesanan: " + res.error);
         setLoading(false);
@@ -661,7 +662,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
                 disabled={loading}
                 className="w-full h-14 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-lg shadow-lg mt-4"
               >
-                {loading ? "Memproses..." : "Kirim & Lanjut ke WA Admin"}
+                {loading ? "Memproses..." : "Kirim & Langsung Hitung (Testing)"}
               </Button>
             </div>
           </section>

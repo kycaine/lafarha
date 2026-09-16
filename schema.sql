@@ -5,6 +5,10 @@ CREATE TABLE IF NOT EXISTS orders (
   status TEXT NOT NULL DEFAULT 'AWAITING_VERIFICATION',
   token TEXT,
   token_expiry INTEGER,
+  total_amount_idr INTEGER,
+  dp_amount_idr INTEGER,
+  pelunasan_amount_idr INTEGER,
+  quote_expiry TEXT,
   created_at INTEGER
 );
 

@@ -16,6 +16,7 @@ CREATE TABLE orders (
     sar_to_idr_rate REAL,
     total_amount_idr REAL,
     dp_amount_idr REAL,
+    pelunasan_amount_idr REAL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 

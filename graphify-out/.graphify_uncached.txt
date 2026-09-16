@@ -1,0 +1,10 @@
+/home/kyxdx/projects/LA/AGENTS.md
+/home/kyxdx/projects/LA/CLAUDE.md
+/home/kyxdx/projects/LA/MASTER_PROMPT.md
+/home/kyxdx/projects/LA/README.md
+/home/kyxdx/projects/LA/deployments.md
+/home/kyxdx/projects/LA/public/file.svg
+/home/kyxdx/projects/LA/public/globe.svg
+/home/kyxdx/projects/LA/public/next.svg
+/home/kyxdx/projects/LA/public/vercel.svg
+/home/kyxdx/projects/LA/public/window.svg

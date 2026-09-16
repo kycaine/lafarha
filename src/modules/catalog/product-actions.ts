@@ -1,12 +1,14 @@
 import { fetchApi } from "@/lib/api";
 
 export async function getProducts() {
-  try {
-    const res = await fetchApi('/products');
-    return res.data || [];
-  } catch (error) {
-    return [];
-  }
+  return [
+    { id: 'HOTEL', title: 'Hotel', icon: 'Building2', requires_pax: 1, form_schema: '[{"type":"HotelSpecsModule"}]' },
+    { id: 'FLIGHT', title: 'Tiket Pesawat', icon: 'Plane', requires_pax: 1, form_schema: '[{"type":"FlightLogicModule"}]' },
+    { id: 'BAGGAGE', title: 'Bagasi', icon: 'Briefcase', requires_pax: 0, form_schema: '[{"type":"BaggageModule"}]' },
+    { id: 'VISA', title: 'Visa', icon: 'Ticket', requires_pax: 1, form_schema: '[{"type":"VisaModule"}]' },
+    { id: 'TRANS_AIRPORT', title: 'Transportasi Bandara', icon: 'Car', requires_pax: 1, form_schema: '[{"type":"TransAirportModule"}]' },
+    { id: 'TRANS_TOUR', title: 'Transportasi Tour', icon: 'Bus', requires_pax: 1, form_schema: '[{"type":"TransTourModule"}]' }
+  ];
 }
 
 export async function createProduct(data: any) {
@@ -42,11 +44,5 @@ export async function deleteProduct(id: string) {
 }
 
 export async function resetProductsToDefault() {
-  try {
-    return await fetchApi('/products/reset', {
-      method: 'POST'
-    });
-  } catch (error: any) {
-    return { success: false, error: error.message };
-  }
+  return { success: true };
 }

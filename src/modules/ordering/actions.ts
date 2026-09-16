@@ -22,6 +22,16 @@ export async function updateOrderQuote(orderId: string, quoteData: any) {
   }
 }
 
+export async function issueOrder(orderId: string) {
+  try {
+    return await fetchApi(`/orders/${orderId}/issue`, {
+      method: 'PUT'
+    });
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
 export async function getOrders() {
   try {
     const res = await fetchApi('/orders');

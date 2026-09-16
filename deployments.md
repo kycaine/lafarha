@@ -1,45 +1,48 @@
 # Cloudflare Deployment Guide
 
-Dokumen ini berisi panduan dan arahan untuk melakukan *deployment* aplikasi LA Umrah ke ekosistem Cloudflare.
+Dokumen ini berisi panduan dan arahan untuk melakukan *deployment* aplikasi LA ke ekosistem Cloudflare.
+
+---
+
+## Arsitektur
+
+Aplikasi terbagi menjadi dua bagian terpisah:
+
+| Bagian | Teknologi | Proyek Cloudflare | URL |
+|---|---|---|---|
+| **Frontend** | Next.js Static Export | Cloudflare Pages `la-dev` | https://la-dev.pages.dev |
+| **Backend** | Hono API Worker | Cloudflare Worker `la-dev-api` | https://la-dev-api.rizkyap90s.workers.dev |
+
+> **Catatan:** Database D1 (`DB`) hanya di-binding ke Worker (`api-worker/wrangler.toml`). Pages tidak perlu binding database.
+
+---
 
 ## Lingkungan Development (DEV)
 
-Untuk tahap *development* atau *staging*, kita menggunakan proyek terpisah agar tidak mengganggu *production*.
+### Deploy Backend (API Worker)
 
-### Konfigurasi Proyek Cloudflare
-Karena arsitektur sudah dipisahkan (Frontend dan Backend terpisah) untuk menghindari kendala runtime:
-- **Cloudflare Pages:** `la-dev` (Frontend Next.js Static Export, URL: https://la-dev.pages.dev)
-- **Cloudflare Worker:** `la-dev-api` (Backend Hono API, URL: https://la-dev-api.rizkyap90s.workers.dev)
-- **Database D1:** Binding (`DB`) kini berada **hanya di Worker** (`api-worker/wrangler.toml`), Pages tidak lagi membutuhkan binding database.
+Jalankan dari **root proyek**:
 
-### Langkah-langkah Deploy ke DEV:
-> **Catatan Penting:** Backend Worker harus selalu berjalan/di-deploy agar Frontend bisa memanggil API.
-
-#### 1. Deploy API Worker (Backend)
-Buka terminal dan masuk ke folder `api-worker`, lalu deploy:
 ```bash
-cd api-worker
-npx wrangler deploy
+cd api-worker && npx wrangler deploy
 ```
-*(Catatan: Ini akan otomatis membaca `api-worker/wrangler.toml` yang sudah memiliki binding ke D1 database Anda).*
 
-#### 2. Deploy Frontend (Next.js Pages)
-Pastikan Anda berada di direktori utama proyek (luar folder `api-worker`). 
+### Deploy Frontend (Next.js Pages)
 
-a. **Build Aplikasi Next.js:**
-Aplikasi sekarang menggunakan *Static Export* murni.
+Jalankan dari **root proyek** (bukan dari dalam `api-worker`):
+
 ```bash
-npm run build
+npm run build && npx wrangler pages deploy out --project-name la-dev --branch main
 ```
-*(Ini akan membuat folder `out/` yang berisi file HTML/CSS/JS statis).*
 
-b. **Deploy ke Cloudflare Pages (la-dev):**
-Gunakan perintah Wrangler untuk men-deploy folder `out/`:
+### Deploy Keduanya Sekaligus
+
 ```bash
-npx wrangler pages deploy out --project-name la-dev --branch main
+cd api-worker && npx wrangler deploy && cd .. && npm run build && npx wrangler pages deploy out --project-name la-dev --branch main
 ```
 
 ---
 
 ## Lingkungan Production (PROD)
-*(Tahapan Production akan ditambahkan nanti setelah environment DEV stabil dan selesai dikonfigurasi).*
+
+*(Akan ditambahkan setelah environment DEV stabil.)*
