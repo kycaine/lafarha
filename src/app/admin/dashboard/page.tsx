@@ -197,8 +197,8 @@ export default function AdminDashboard() {
 
             <DialogFooter className="mt-4">
               <div className="flex justify-between w-full">
-                <DialogClose asChild>
-                  <Button variant="outline">Tutup</Button>
+                <DialogClose render={<Button variant="outline" />}>
+                  Tutup
                 </DialogClose>
                 
                 {/* Action button: Jika masih baru, bisa diberi penawaran harga */}
