@@ -6,7 +6,6 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { formatRupiah } from "@/lib/utils";
 
 const STATUS_LABELS: Record<string, string> = {
   AWAITING_VERIFICATION: "New (Awaiting WA)",
