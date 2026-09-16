@@ -6,7 +6,7 @@ import { getProducts } from "@/modules/catalog/product-actions";
 import { useEffect, useState } from "react";
 
 export default function PenawaranPage() {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

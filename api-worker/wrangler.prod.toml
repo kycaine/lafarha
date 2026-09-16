@@ -1,0 +1,9 @@
+name = "la-prod-api"
+main = "src/index.ts"
+compatibility_date = "2024-02-28"
+compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "la-prod-db"
+database_id = "REPLACE_WITH_PROD_D1_ID"

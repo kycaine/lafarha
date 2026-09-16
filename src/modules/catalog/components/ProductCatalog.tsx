@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -158,29 +158,30 @@ function DatePickerNative({ value, onChange }: { value: string, onChange: (val: 
   );
 }
 
+/** Unified specs keyed by service ID — replaces 6 separate useState hooks */
+type ModuleSpecs = Record<string, any>;
+
 export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any[] }) {
-  const products = initialProducts.map(p => {
-    let parsedSchema = [];
-    if (typeof p.form_schema === "string") {
-      try {
-        parsedSchema = JSON.parse(p.form_schema);
-      } catch (e) {
-        parsedSchema = [];
+
+  // Memoize parsed products + O(1) lookup map together
+  const { products, productMap } = useMemo(() => {
+    const prods = initialProducts.map(p => {
+      let parsedSchema = [];
+      if (typeof p.form_schema === "string") {
+        try { parsedSchema = JSON.parse(p.form_schema); } catch { parsedSchema = []; }
+      } else {
+        parsedSchema = p.form_schema || [];
       }
-    } else {
-      parsedSchema = p.form_schema || [];
-    }
-    return {
-      ...p,
-      requires_pax: p.requires_pax === 1,
-      form_schema: parsedSchema
-    };
-  });
+      return { ...p, requires_pax: p.requires_pax === 1, form_schema: parsedSchema };
+    });
+    const map: Record<string, typeof prods[0]> = Object.fromEntries(prods.map(p => [p.id, p]));
+    return { products: prods, productMap: map };
+  }, [initialProducts]);
 
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   
-  // Data State
+  // Contact & group data
   const [formData, setFormData] = useState({
     name: "",
     whatsapp: "",
@@ -189,15 +190,25 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
     notes: "",
   });
 
-  // Dynamic Forms State for specific complex modules
-  const [flightData, setFlightData] = useState({ origin: "CGK", destination: "JED", airline: "", departureDate: "", returnDate: "", isRoundTrip: true, isCheapest: false });
-  const [hotelData, setHotelData] = useState({ checkInDate: "", checkOutDate: "", rating: "4", roomDetails: "" });
-  const [baggageData, setBaggageData] = useState({ weight: "", description: "", flightDate: "" });
-  const [visaData, setVisaData] = useState({ type: "Umrah", entryDate: "" });
-  const [transAirportData, setTransAirportData] = useState({ vehicle: "", flightDetails: "", pickupDate: "" });
-  const [transTourData, setTransTourData] = useState({ vehicle: "", route: "", tourDate: "" });
+  // Unified module specs state — keyed by service ID
+  // Replaces the 6 separate useState hooks (flightData, hotelData, etc.)
+  const [moduleSpecs, setModuleSpecs] = useState<Record<string, ModuleSpecs>>({
+    FLIGHT: { origin: "CGK", destination: "JED", airline: "", departureDate: "", returnDate: "", isRoundTrip: true, isCheapest: false },
+    HOTEL: { checkInDate: "", checkOutDate: "", rating: "4", roomDetails: "" },
+    BAGGAGE: { weight: "", description: "", flightDate: "" },
+    VISA: { type: "Umrah", entryDate: "" },
+    TRANS_AIRPORT: { vehicle: "", flightDetails: "", pickupDate: "" },
+    TRANS_TOUR: { vehicle: "", route: "", tourDate: "" },
+  });
 
-  // State for generic custom fields
+  const updateModuleSpec = (serviceId: string, field: string, value: any) => {
+    setModuleSpecs(prev => ({
+      ...prev,
+      [serviceId]: { ...prev[serviceId], [field]: value }
+    }));
+  };
+
+  // State for generic custom fields (from dynamic schema TextInput / DatePickerNative)
   const [genericData, setGenericData] = useState<Record<string, Record<string, string>>>({});
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -211,10 +222,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
   const handleGenericChange = (serviceId: string, fieldName: string, value: string) => {
     setGenericData(prev => ({
       ...prev,
-      [serviceId]: {
-        ...(prev[serviceId] || {}),
-        [fieldName]: value
-      }
+      [serviceId]: { ...(prev[serviceId] || {}), [fieldName]: value }
     }));
   };
 
@@ -224,7 +232,246 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
     }
   };
 
-  const needsPax = selectedServices.some(id => products.find(p => p.id === id)?.requires_pax);
+  // O(1) lookup via productMap — avoids find() inside render
+  const needsPax = selectedServices.some(id => productMap[id]?.requires_pax);
+
+  // ─── Module Render Registry ───────────────────────────────────────────────
+  // O(1) lookup by type string instead of linear if-chain.
+  // Signature: (serviceId, mod, index) => ReactNode
+  // ─────────────────────────────────────────────────────────────────────────
+  const moduleRenderers: Record<string, (srvId: string, mod: any, i: number) => React.ReactNode> = {
+
+    HotelSpecsModule: (srvId, _mod, i) => {
+      const specs = moduleSpecs[srvId];
+      return (
+        <div key={i} className="grid md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label>Tanggal Check-In</Label>
+            <DatePickerNative value={specs.checkInDate} onChange={val => updateModuleSpec(srvId, 'checkInDate', val)} />
+          </div>
+          <div className="space-y-2">
+            <Label>Tanggal Check-Out</Label>
+            <DatePickerNative value={specs.checkOutDate} onChange={val => updateModuleSpec(srvId, 'checkOutDate', val)} />
+          </div>
+          <div className="space-y-2">
+            <Label>Preferensi Bintang</Label>
+            <select 
+              className="flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:focus:ring-emerald-500"
+              value={specs.rating}
+              onChange={e => updateModuleSpec(srvId, 'rating', e.target.value)}
+            >
+              <option value="3">Bintang 3 (Ekonomis)</option>
+              <option value="4">Bintang 4 (Premium)</option>
+              <option value="5">Bintang 5 (VIP)</option>
+            </select>
+          </div>
+          <div className="space-y-2">
+            <Label>Kebutuhan Kamar</Label>
+            <Input placeholder="Contoh: 10 Quad, 2 Double" value={specs.roomDetails} onChange={e => updateModuleSpec(srvId, 'roomDetails', e.target.value)} required />
+          </div>
+        </div>
+      );
+    },
+
+    FlightLogicModule: (srvId, _mod, i) => {
+      const specs = moduleSpecs[srvId];
+      return (
+        <div key={i} className="space-y-4">
+          <div className="flex flex-col gap-3 mb-2">
+            <div className="flex items-center gap-2">
+              <input 
+                type="checkbox" 
+                id="roundTrip" 
+                className="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer accent-emerald-600" 
+                checked={specs.isRoundTrip} 
+                onChange={e => updateModuleSpec(srvId, 'isRoundTrip', e.target.checked)}
+              />
+              <Label htmlFor="roundTrip" className="cursor-pointer font-semibold text-sm">Penerbangan Pulang Pergi (Round Trip)</Label>
+            </div>
+            <div className="flex items-center gap-2">
+              <input 
+                type="checkbox" 
+                id="cheapestFlight" 
+                className="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer accent-emerald-600" 
+                checked={specs.isCheapest} 
+                onChange={e => {
+                  const isChecked = e.target.checked;
+                  setModuleSpecs(prev => ({
+                    ...prev,
+                    [srvId]: { ...prev[srvId], isCheapest: isChecked, airline: isChecked ? "Termurah / Fleksibel" : "" }
+                  }));
+                }}
+              />
+              <Label htmlFor="cheapestFlight" className="cursor-pointer font-semibold text-sm">Carikan tiket termurah (Fleksibel Maskapai)</Label>
+            </div>
+          </div>
+          
+          <div className="space-y-2 mb-6">
+            <Label className="text-base text-slate-800 dark:text-slate-200">Maskapai Harapan</Label>
+            <Input 
+              placeholder="Contoh: Saudia / Garuda" 
+              value={specs.airline} 
+              onChange={e => updateModuleSpec(srvId, 'airline', e.target.value)} 
+              required 
+              disabled={specs.isCheapest}
+              className={`h-12 text-lg ${specs.isCheapest ? "opacity-60 cursor-not-allowed bg-slate-100 dark:bg-slate-900" : "bg-white dark:bg-slate-950"}`}
+            />
+          </div>
+
+          <div className="p-5 border-2 border-emerald-200 dark:border-emerald-800/50 bg-emerald-50/50 dark:bg-emerald-900/10 rounded-2xl mb-6">
+            <div className="flex items-center gap-2 mb-4 text-emerald-700 dark:text-emerald-400 font-bold">
+              <MapPin className="w-5 h-5" /> Rute Perjalanan
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Bandara Asal (Origin)</Label>
+                <SearchableSelect 
+                  placeholder="Pilih Bandara Asal..."
+                  options={AIRPORT_OPTIONS} 
+                  value={specs.origin} 
+                  onChange={(val: string) => updateModuleSpec(srvId, 'origin', val)} 
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Bandara Tujuan (Destination)</Label>
+                <SearchableSelect 
+                  placeholder="Pilih Bandara Tujuan..."
+                  options={AIRPORT_OPTIONS} 
+                  value={specs.destination} 
+                  onChange={(val: string) => updateModuleSpec(srvId, 'destination', val)} 
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="p-5 border-2 border-blue-200 dark:border-blue-800/50 bg-blue-50/50 dark:bg-blue-900/10 rounded-2xl">
+            <div className="flex items-center gap-2 mb-4 text-blue-700 dark:text-blue-400 font-bold">
+              <CalendarDays className="w-5 h-5" /> Jadwal Penerbangan
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Tanggal Keberangkatan</Label>
+                <DatePickerNative value={specs.departureDate} onChange={val => updateModuleSpec(srvId, 'departureDate', val)} />
+              </div>
+              {specs.isRoundTrip && (
+                <div className="space-y-2">
+                  <Label>Tanggal Kepulangan</Label>
+                  <DatePickerNative value={specs.returnDate} onChange={val => updateModuleSpec(srvId, 'returnDate', val)} />
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    },
+
+    BaggageModule: (srvId, _mod, i) => {
+      const specs = moduleSpecs[srvId];
+      return (
+        <div key={i} className="grid md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label>Total Berat Tambahan (Kg)</Label>
+            <Input type="number" placeholder="Contoh: 100" value={specs.weight} onChange={e => updateModuleSpec(srvId, 'weight', e.target.value)} required />
+          </div>
+          <div className="space-y-2">
+            <Label>Tanggal Penerbangan</Label>
+            <DatePickerNative value={specs.flightDate} onChange={val => updateModuleSpec(srvId, 'flightDate', val)} />
+          </div>
+          <div className="md:col-span-2 space-y-2">
+            <Label>Catatan Bagasi</Label>
+            <Input placeholder="Contoh: 10 koper air zamzam" value={specs.description} onChange={e => updateModuleSpec(srvId, 'description', e.target.value)} />
+          </div>
+        </div>
+      );
+    },
+
+    VisaModule: (srvId, _mod, i) => {
+      const specs = moduleSpecs[srvId];
+      return (
+        <div key={i} className="grid md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label>Jenis Visa</Label>
+            <select 
+              className="flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:focus:ring-emerald-500"
+              value={specs.type}
+              onChange={e => updateModuleSpec(srvId, 'type', e.target.value)}
+            >
+              <option value="Umrah">Visa Umrah</option>
+              <option value="Turis">Visa Turis</option>
+              <option value="Ziarah">Visa Ziarah</option>
+            </select>
+          </div>
+          <div className="space-y-2">
+            <Label>Rencana Tanggal Masuk (Entry)</Label>
+            <DatePickerNative value={specs.entryDate} onChange={val => updateModuleSpec(srvId, 'entryDate', val)} />
+          </div>
+        </div>
+      );
+    },
+
+    TransAirportModule: (srvId, _mod, i) => {
+      const specs = moduleSpecs[srvId];
+      return (
+        <div key={i} className="grid md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label>Armada (Hiace / Bus / Sedan)</Label>
+            <Input placeholder="Contoh: Toyota Hiace" value={specs.vehicle} onChange={e => updateModuleSpec(srvId, 'vehicle', e.target.value)} required />
+          </div>
+          <div className="space-y-2">
+            <Label>Tanggal Penjemputan</Label>
+            <DatePickerNative value={specs.pickupDate} onChange={val => updateModuleSpec(srvId, 'pickupDate', val)} />
+          </div>
+          <div className="md:col-span-2 space-y-2">
+            <Label>Detail Penerbangan</Label>
+            <Input placeholder="Contoh: SV 818 ETA 14:00 JED" value={specs.flightDetails} onChange={e => updateModuleSpec(srvId, 'flightDetails', e.target.value)} required />
+          </div>
+        </div>
+      );
+    },
+
+    TransTourModule: (srvId, _mod, i) => {
+      const specs = moduleSpecs[srvId];
+      return (
+        <div key={i} className="grid md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label>Kebutuhan Armada</Label>
+            <Input placeholder="Contoh: 1 Bus VIP 45 Seat" value={specs.vehicle} onChange={e => updateModuleSpec(srvId, 'vehicle', e.target.value)} required />
+          </div>
+          <div className="space-y-2">
+            <Label>Tanggal Tour</Label>
+            <DatePickerNative value={specs.tourDate} onChange={val => updateModuleSpec(srvId, 'tourDate', val)} />
+          </div>
+          <div className="md:col-span-2 space-y-2">
+            <Label>Rute Ziarah</Label>
+            <Input placeholder="Contoh: Makkah - Madinah - Thaif" value={specs.route} onChange={e => updateModuleSpec(srvId, 'route', e.target.value)} required />
+          </div>
+        </div>
+      );
+    },
+
+    // Generic modules — also in registry for uniformity
+    TextInput: (srvId, mod, i) => (
+      <div key={i} className="space-y-2">
+        <Label>{mod.label}</Label>
+        <Input 
+          placeholder="Ketik jawaban..."
+          value={genericData[srvId]?.[mod.name] || ""} 
+          onChange={e => handleGenericChange(srvId, mod.name, e.target.value)} 
+          required 
+        />
+      </div>
+    ),
+
+    DatePickerNative: (srvId, mod, i) => (
+      <div key={i} className="space-y-2">
+        <Label>{mod.label}</Label>
+        <DatePickerNative 
+          value={genericData[srvId]?.[mod.name] || ""} 
+          onChange={val => handleGenericChange(srvId, mod.name, val)} 
+        />
+      </div>
+    ),
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -242,29 +489,30 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
       if (genericData[id]) customFields[id] = genericData[id];
     });
 
+    const flightSpecs = moduleSpecs['FLIGHT'];
     const specsJson = JSON.stringify({
       services: selectedServices,
       pax: needsPax ? formData.pax : "N/A",
       notes: formData.notes,
       manifest: formData.manifestFileName,
       flight: selectedServices.includes("FLIGHT") ? {
-        ...flightData,
-        route: `${flightData.origin} - ${flightData.destination} ${flightData.isRoundTrip ? `- ${flightData.origin}` : ''}`
+        ...flightSpecs,
+        route: `${flightSpecs.origin} - ${flightSpecs.destination} ${flightSpecs.isRoundTrip ? `- ${flightSpecs.origin}` : ''}`
       } : null,
-      hotel: selectedServices.includes("HOTEL") ? hotelData : null,
-      baggage: selectedServices.includes("BAGGAGE") ? baggageData : null,
-      visa: selectedServices.includes("VISA") ? visaData : null,
-      transAirport: selectedServices.includes("TRANS_AIRPORT") ? transAirportData : null,
-      transTour: selectedServices.includes("TRANS_TOUR") ? transTourData : null,
+      hotel: selectedServices.includes("HOTEL") ? moduleSpecs['HOTEL'] : null,
+      baggage: selectedServices.includes("BAGGAGE") ? moduleSpecs['BAGGAGE'] : null,
+      visa: selectedServices.includes("VISA") ? moduleSpecs['VISA'] : null,
+      transAirport: selectedServices.includes("TRANS_AIRPORT") ? moduleSpecs['TRANS_AIRPORT'] : null,
+      transTour: selectedServices.includes("TRANS_TOUR") ? moduleSpecs['TRANS_TOUR'] : null,
       customFields
     });
 
     try {
       const res = await createOrder({
         name: formData.name,
-        whatsapp: "Direct WA", 
+        whatsapp: formData.whatsapp,
         pax: needsPax ? formData.pax : "0",
-        hotelRating: hotelData.rating || "4",
+        hotelRating: moduleSpecs['HOTEL']?.rating || "4",
         notes: specsJson,
       });
 
@@ -338,7 +586,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
             <div className="grid gap-6">
               
               {selectedServices.map(srvId => {
-                const service = products.find(p => p.id === srvId);
+                const service = productMap[srvId]; // O(1) lookup
                 if (!service) return null;
                 
                 const IconComp = ICON_MAP[service.icon] || HelpCircle;
@@ -349,243 +597,11 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
                       <IconComp className="text-emerald-500 h-5 w-5" /> Spesifikasi {service.title}
                     </div>
                     
-                    {/* Render Modules Dynamically */}
+                    {/* Registry lookup — O(1) instead of linear if-chain */}
                     <div className="space-y-4">
                       {service.form_schema.map((mod: any, i: number) => {
-                        
-                        // --- MODULE: HOTEL SPECS ---
-                        if (mod.type === "HotelSpecsModule") {
-                          return (
-                            <div key={i} className="grid md:grid-cols-2 gap-4">
-                              <div className="space-y-2">
-                                <Label>Tanggal Check-In</Label>
-                                <DatePickerNative value={hotelData.checkInDate} onChange={val => setHotelData({...hotelData, checkInDate: val})} />
-                              </div>
-                              <div className="space-y-2">
-                                <Label>Tanggal Check-Out</Label>
-                                <DatePickerNative value={hotelData.checkOutDate} onChange={val => setHotelData({...hotelData, checkOutDate: val})} />
-                              </div>
-                              <div className="space-y-2">
-                                <Label>Preferensi Bintang</Label>
-                                <select 
-                                  className="flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:focus:ring-emerald-500"
-                                  value={hotelData.rating}
-                                  onChange={e => setHotelData({...hotelData, rating: e.target.value})}
-                                >
-                                  <option value="3">Bintang 3 (Ekonomis)</option>
-                                  <option value="4">Bintang 4 (Premium)</option>
-                                  <option value="5">Bintang 5 (VIP)</option>
-                                </select>
-                              </div>
-                              <div className="space-y-2">
-                                <Label>Kebutuhan Kamar</Label>
-                                <Input placeholder="Contoh: 10 Quad, 2 Double" value={hotelData.roomDetails} onChange={e => setHotelData({...hotelData, roomDetails: e.target.value})} required />
-                              </div>
-                            </div>
-                          );
-                        }
-
-                        // --- MODULE: FLIGHT LOGIC ---
-                        if (mod.type === "FlightLogicModule") {
-                          return (
-                            <div key={i} className="space-y-4">
-                              <div className="flex flex-col gap-3 mb-2">
-                                <div className="flex items-center gap-2">
-                                  <input 
-                                    type="checkbox" 
-                                    id="roundTrip" 
-                                    className="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer accent-emerald-600" 
-                                    checked={flightData.isRoundTrip} 
-                                    onChange={e => setFlightData({...flightData, isRoundTrip: e.target.checked})}
-                                  />
-                                  <Label htmlFor="roundTrip" className="cursor-pointer font-semibold text-sm">Penerbangan Pulang Pergi (Round Trip)</Label>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  <input 
-                                    type="checkbox" 
-                                    id="cheapestFlight" 
-                                    className="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer accent-emerald-600" 
-                                    checked={flightData.isCheapest} 
-                                    onChange={e => {
-                                      const isChecked = e.target.checked;
-                                      setFlightData({...flightData, isCheapest: isChecked, airline: isChecked ? "Termurah / Fleksibel" : ""});
-                                    }}
-                                  />
-                                  <Label htmlFor="cheapestFlight" className="cursor-pointer font-semibold text-sm">Carikan tiket termurah (Fleksibel Maskapai)</Label>
-                                </div>
-                              </div>
-                              
-                              <div className="space-y-2 mb-6">
-                                <Label className="text-base text-slate-800 dark:text-slate-200">Maskapai Harapan</Label>
-                                <Input 
-                                  placeholder="Contoh: Saudia / Garuda" 
-                                  value={flightData.airline} 
-                                  onChange={e => setFlightData({...flightData, airline: e.target.value})} 
-                                  required 
-                                  disabled={flightData.isCheapest}
-                                  className={`h-12 text-lg ${flightData.isCheapest ? "opacity-60 cursor-not-allowed bg-slate-100 dark:bg-slate-900" : "bg-white dark:bg-slate-950"}`}
-                                />
-                              </div>
-
-                              <div className="p-5 border-2 border-emerald-200 dark:border-emerald-800/50 bg-emerald-50/50 dark:bg-emerald-900/10 rounded-2xl mb-6">
-                                <div className="flex items-center gap-2 mb-4 text-emerald-700 dark:text-emerald-400 font-bold">
-                                  <MapPin className="w-5 h-5" /> Rute Perjalanan
-                                </div>
-                                <div className="grid md:grid-cols-2 gap-4">
-                                  <div className="space-y-2">
-                                    <Label>Bandara Asal (Origin)</Label>
-                                    <SearchableSelect 
-                                      placeholder="Pilih Bandara Asal..."
-                                      options={AIRPORT_OPTIONS} 
-                                      value={flightData.origin} 
-                                      onChange={(val: string) => setFlightData({...flightData, origin: val})} 
-                                    />
-                                  </div>
-                                  <div className="space-y-2">
-                                    <Label>Bandara Tujuan (Destination)</Label>
-                                    <SearchableSelect 
-                                      placeholder="Pilih Bandara Tujuan..."
-                                      options={AIRPORT_OPTIONS} 
-                                      value={flightData.destination} 
-                                      onChange={(val: string) => setFlightData({...flightData, destination: val})} 
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div className="p-5 border-2 border-blue-200 dark:border-blue-800/50 bg-blue-50/50 dark:bg-blue-900/10 rounded-2xl">
-                                <div className="flex items-center gap-2 mb-4 text-blue-700 dark:text-blue-400 font-bold">
-                                  <CalendarDays className="w-5 h-5" /> Jadwal Penerbangan
-                                </div>
-                                <div className="grid md:grid-cols-2 gap-4">
-                                  <div className="space-y-2">
-                                    <Label>Tanggal Keberangkatan</Label>
-                                    <DatePickerNative value={flightData.departureDate} onChange={val => setFlightData({...flightData, departureDate: val})} />
-                                  </div>
-                                  {flightData.isRoundTrip && (
-                                    <div className="space-y-2">
-                                      <Label>Tanggal Kepulangan</Label>
-                                      <DatePickerNative value={flightData.returnDate} onChange={val => setFlightData({...flightData, returnDate: val})} />
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          );
-                        }
-
-                        // --- MODULE: BAGGAGE ---
-                        if (mod.type === "BaggageModule") {
-                          return (
-                            <div key={i} className="grid md:grid-cols-2 gap-4">
-                              <div className="space-y-2">
-                                <Label>Total Berat Tambahan (Kg)</Label>
-                                <Input type="number" placeholder="Contoh: 100" value={baggageData.weight} onChange={e => setBaggageData({...baggageData, weight: e.target.value})} required />
-                              </div>
-                              <div className="space-y-2">
-                                <Label>Tanggal Penerbangan</Label>
-                                <DatePickerNative value={baggageData.flightDate} onChange={val => setBaggageData({...baggageData, flightDate: val})} />
-                              </div>
-                              <div className="md:col-span-2 space-y-2">
-                                <Label>Catatan Bagasi</Label>
-                                <Input placeholder="Contoh: 10 koper air zamzam" value={baggageData.description} onChange={e => setBaggageData({...baggageData, description: e.target.value})} />
-                              </div>
-                            </div>
-                          );
-                        }
-
-                        // --- MODULE: VISA ---
-                        if (mod.type === "VisaModule") {
-                          return (
-                            <div key={i} className="grid md:grid-cols-2 gap-4">
-                              <div className="space-y-2">
-                                <Label>Jenis Visa</Label>
-                                <select 
-                                  className="flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:focus:ring-emerald-500"
-                                  value={visaData.type}
-                                  onChange={e => setVisaData({...visaData, type: e.target.value})}
-                                >
-                                  <option value="Umrah">Visa Umrah</option>
-                                  <option value="Turis">Visa Turis</option>
-                                  <option value="Ziarah">Visa Ziarah</option>
-                                </select>
-                              </div>
-                              <div className="space-y-2">
-                                <Label>Rencana Tanggal Masuk (Entry)</Label>
-                                <DatePickerNative value={visaData.entryDate} onChange={val => setVisaData({...visaData, entryDate: val})} />
-                              </div>
-                            </div>
-                          );
-                        }
-
-                        // --- MODULE: TRANS AIRPORT ---
-                        if (mod.type === "TransAirportModule") {
-                          return (
-                            <div key={i} className="grid md:grid-cols-2 gap-4">
-                              <div className="space-y-2">
-                                <Label>Armada (Hiace / Bus / Sedan)</Label>
-                                <Input placeholder="Contoh: Toyota Hiace" value={transAirportData.vehicle} onChange={e => setTransAirportData({...transAirportData, vehicle: e.target.value})} required />
-                              </div>
-                              <div className="space-y-2">
-                                <Label>Tanggal Penjemputan</Label>
-                                <DatePickerNative value={transAirportData.pickupDate} onChange={val => setTransAirportData({...transAirportData, pickupDate: val})} />
-                              </div>
-                              <div className="md:col-span-2 space-y-2">
-                                <Label>Detail Penerbangan</Label>
-                                <Input placeholder="Contoh: SV 818 ETA 14:00 JED" value={transAirportData.flightDetails} onChange={e => setTransAirportData({...transAirportData, flightDetails: e.target.value})} required />
-                              </div>
-                            </div>
-                          );
-                        }
-
-                        // --- MODULE: TRANS TOUR ---
-                        if (mod.type === "TransTourModule") {
-                          return (
-                            <div key={i} className="grid md:grid-cols-2 gap-4">
-                              <div className="space-y-2">
-                                <Label>Kebutuhan Armada</Label>
-                                <Input placeholder="Contoh: 1 Bus VIP 45 Seat" value={transTourData.vehicle} onChange={e => setTransTourData({...transTourData, vehicle: e.target.value})} required />
-                              </div>
-                              <div className="space-y-2">
-                                <Label>Tanggal Tour</Label>
-                                <DatePickerNative value={transTourData.tourDate} onChange={val => setTransTourData({...transTourData, tourDate: val})} />
-                              </div>
-                              <div className="md:col-span-2 space-y-2">
-                                <Label>Rute Ziarah</Label>
-                                <Input placeholder="Contoh: Makkah - Madinah - Thaif" value={transTourData.route} onChange={e => setTransTourData({...transTourData, route: e.target.value})} required />
-                              </div>
-                            </div>
-                          );
-                        }
-
-                        // --- GENERIC MODULES ---
-                        if (mod.type === "TextInput") {
-                          return (
-                            <div key={i} className="space-y-2">
-                              <Label>{mod.label}</Label>
-                              <Input 
-                                placeholder="Ketik jawaban..."
-                                value={genericData[srvId]?.[mod.name] || ""} 
-                                onChange={e => handleGenericChange(srvId, mod.name, e.target.value)} 
-                                required 
-                              />
-                            </div>
-                          );
-                        }
-
-                        if (mod.type === "DatePickerNative") {
-                          return (
-                            <div key={i} className="space-y-2">
-                              <Label>{mod.label}</Label>
-                              <DatePickerNative 
-                                value={genericData[srvId]?.[mod.name] || ""} 
-                                onChange={val => handleGenericChange(srvId, mod.name, val)} 
-                              />
-                            </div>
-                          );
-                        }
-
-                        return null;
+                        const renderer = moduleRenderers[mod.type];
+                        return renderer ? renderer(srvId, mod, i) : null;
                       })}
                     </div>
                   </div>
@@ -649,11 +665,21 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
               Kirim Permintaan
             </h2>
             <div className="bg-white dark:bg-[#111] border border-slate-200 dark:border-slate-800 p-6 rounded-2xl space-y-6">
-              <div className="space-y-2">
-                <Label>Nama Pemesan</Label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
-                  <Input required placeholder="Masukkan nama Anda" className="pl-10 h-10 w-full" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label>Nama Pemesan</Label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+                    <Input required placeholder="Masukkan nama Anda" className="pl-10 h-10 w-full" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Nomor WhatsApp</Label>
+                  <div className="relative">
+                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+                    <Input required placeholder="Contoh: 08123456789" className="pl-10 h-10 w-full" value={formData.whatsapp} onChange={e => setFormData({...formData, whatsapp: e.target.value})} />
+                  </div>
                 </div>
               </div>
 

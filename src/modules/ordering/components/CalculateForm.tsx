@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -36,16 +36,24 @@ export function CalculateForm({ order, items }: { order: any, items: any[] }) {
   const [isEditing, setIsEditing] = useState(false);
   const isReadOnly = isOriginallyPublished && !isEditing;
 
-  let totalClientPrice = 0;
+  // Pre-parse specs once per items reference — avoids 3x JSON.parse per render
+  const parsedItems = useMemo(() =>
+    items.map(item => ({
+      ...item,
+      specs: item.specs ? JSON.parse(item.specs) : {}
+    })), [items]
+  );
 
-  items.forEach(item => {
-    const specs = item.specs ? JSON.parse(item.specs) : {};
-    const pax = Number(specs.pax) || 1;
-    const priceStr = itemPrices[item.id] || "";
-    const pricePerPax = Number(priceStr.replace(/\D/g, "")) || 0;
-    
-    totalClientPrice += (pricePerPax * pax);
-  });
+  // Memoize total — only recomputes when prices or items actually change
+  const totalClientPrice = useMemo(() =>
+    parsedItems.reduce((sum, item) => {
+      const pax = Number(item.specs.pax) || 1;
+      // itemPrices stores digit-only strings (enforced by updateItemPrice)
+      const pricePerPax = Number(itemPrices[item.id] || 0);
+      return sum + (pricePerPax * pax);
+    }, 0),
+    [parsedItems, itemPrices]
+  );
 
   const dpAmount = (totalClientPrice * dpPercentage) / 100;
   const pelunasanAmount = totalClientPrice - dpAmount;
@@ -85,9 +93,8 @@ export function CalculateForm({ order, items }: { order: any, items: any[] }) {
   const generateWhatsAppMessage = () => {
     return `Halo ${order.client_name}, ini penawaran pesanan Anda.\n\n` +
       `📦 *Rincian Pesanan:*\n` +
-      items.map(item => {
-        const specs = item.specs ? JSON.parse(item.specs) : {};
-        const pax = Number(specs.pax) || 1;
+      parsedItems.map(item => {
+        const pax = Number(item.specs.pax) || 1;
         return `- ${item.title} (${pax} Pax)\n`;
       }).join('') + `\n` +
       `💰 *Total Harga:* Rp ${totalClientPrice.toLocaleString("id-ID")}\n\n` +
@@ -116,12 +123,12 @@ export function CalculateForm({ order, items }: { order: any, items: any[] }) {
     <div className="grid lg:grid-cols-3 gap-8">
       <div className="lg:col-span-2 space-y-8">
         
-        {/* Per-Item Cards */}
-        {items.map((item, index) => {
-          const specs = item.specs ? JSON.parse(item.specs) : {};
-          const pax = Number(specs.pax) || 1;
+        {/* Per-Item Cards — uses parsedItems so specs already an object */}
+        {parsedItems.map((item, index) => {
+          const pax = Number(item.specs.pax) || 1;
           const rawPriceStr = itemPrices[item.id] || "";
-          const pricePerPax = Number(rawPriceStr.replace(/\D/g, "")) || 0;
+          // rawPriceStr is always digit-only (enforced by updateItemPrice)
+          const pricePerPax = Number(rawPriceStr) || 0;
           
           return (
             <Card key={item.id} className="border-0 shadow-lg bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl ring-1 ring-slate-200 dark:ring-slate-800 overflow-hidden">
@@ -143,16 +150,16 @@ export function CalculateForm({ order, items }: { order: any, items: any[] }) {
                       <div className="text-slate-500 mb-1">Kuantitas (Pax)</div>
                       <div className="font-bold text-slate-800 dark:text-slate-200">{pax}</div>
                     </div>
-                    {Object.entries(specs).filter(([k]) => k !== 'pax' && k !== 'customFields').map(([k, v]) => (
+                    {Object.entries(item.specs).filter(([k]) => k !== 'pax' && k !== 'customFields').map(([k, v]) => (
                        <div key={k}>
                          <div className="text-slate-500 mb-1 capitalize">{k.replace(/([A-Z])/g, ' $1').trim()}</div>
                          <div className="font-medium text-slate-800 dark:text-slate-200 truncate">{String(v) || '-'}</div>
                        </div>
                     ))}
                   </div>
-                  {specs.customFields && Object.keys(specs.customFields).length > 0 && (
+                  {item.specs.customFields && Object.keys(item.specs.customFields).length > 0 && (
                     <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800 grid grid-cols-2 gap-4">
-                      {Object.entries(specs.customFields).map(([k, v]) => (
+                      {Object.entries(item.specs.customFields).map(([k, v]) => (
                         <div key={k}>
                           <div className="text-slate-500 mb-1 capitalize">{k}</div>
                           <div className="font-medium text-slate-800 dark:text-slate-200">{String(v)}</div>
@@ -276,11 +283,10 @@ export function CalculateForm({ order, items }: { order: any, items: any[] }) {
           </CardHeader>
           <CardContent className="space-y-5">
             <div className="space-y-3 text-sm">
-              {items.map(item => {
-                const specs = item.specs ? JSON.parse(item.specs) : {};
-                const pax = Number(specs.pax) || 1;
-                const rawPriceStr = itemPrices[item.id] || "";
-                const price = Number(rawPriceStr.replace(/\D/g, "")) || 0;
+              {/* Uses parsedItems — specs already an object, no redundant parse */}
+              {parsedItems.map(item => {
+                const pax = Number(item.specs.pax) || 1;
+                const price = Number(itemPrices[item.id] || 0);
                 return (
                   <div key={item.id} className="flex justify-between items-center text-slate-600 dark:text-slate-400">
                     <span className="truncate pr-4">{item.title} (x{pax})</span>

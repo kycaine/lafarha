@@ -3,8 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "concurrently -n \"FE,BE\" -c \"cyan.bold,green.bold\" --kill-others-on-fail \"npm run dev:fe\" \"npm run dev:be\"",
+    "dev:fe": "next dev",
+    "dev:be": "cd api-worker && npx wrangler dev --remote",
     "build": "next build",
+    "build:dev": "NEXT_PUBLIC_API_URL=https://la-dev-api.rizkyap90s.workers.dev next build",
+    "build:prod": "NEXT_PUBLIC_API_URL=https://la-prod-api.rizkyap90s.workers.dev next build",
+    "deploy:dev": "cd api-worker && npx wrangler deploy --config wrangler.toml && cd .. && npm run build:dev && npx wrangler pages deploy out --project-name la-dev --branch main",
+    "deploy:prod": "cd api-worker && npx wrangler deploy --config wrangler.prod.toml && cd .. && npm run build:prod && npx wrangler pages deploy out --project-name la-prod --branch production",
     "start": "next start",
     "lint": "eslint"
   },
@@ -24,6 +30,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "concurrently": "^10.0.5",
     "eslint": "^9",
     "eslint-config-next": "16.3.5",
     "tailwindcss": "^4",

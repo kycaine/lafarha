@@ -66,16 +66,37 @@ app.delete('/products/:id', async (c) => {
 
 app.post('/products/reset', async (c) => {
   try {
+    const body = await c.req.json().catch(() => ({}));
+    const products: any[] = body.products;
+
     await c.env.DB.prepare("DELETE FROM products").run();
-    await c.env.DB.prepare(
-      `INSERT INTO products (id, title, icon, requires_pax, form_schema) VALUES 
-      ('HOTEL', 'Hotel', 'Building2', 1, '[{"type":"HotelSpecsModule"}]'), 
-      ('FLIGHT', 'Tiket Pesawat', 'Plane', 1, '[{"type":"FlightLogicModule"}]'), 
-      ('BAGGAGE', 'Bagasi', 'Briefcase', 0, '[{"type":"BaggageModule"}]'), 
-      ('VISA', 'Visa', 'Ticket', 1, '[{"type":"VisaModule"}]'), 
-      ('TRANS_AIRPORT', 'Transportasi Bandara', 'Car', 1, '[{"type":"TransAirportModule"}]'), 
-      ('TRANS_TOUR', 'Transportasi Tour', 'Bus', 1, '[{"type":"TransTourModule"}]')`
-    ).run();
+
+    if (products && products.length > 0) {
+      // Insert exactly what the frontend sent — single source of truth
+      for (const p of products) {
+        await c.env.DB.prepare(
+          "INSERT INTO products (id, title, icon, requires_pax, form_schema) VALUES (?, ?, ?, ?, ?)"
+        ).bind(
+          p.id,
+          p.title,
+          p.icon,
+          p.requires_pax ? 1 : 0,
+          typeof p.form_schema === "string" ? p.form_schema : JSON.stringify(p.form_schema)
+        ).run();
+      }
+    } else {
+      // Fallback: hardcoded insert (e.g. called directly without body)
+      await c.env.DB.prepare(
+        `INSERT INTO products (id, title, icon, requires_pax, form_schema) VALUES 
+        ('HOTEL', 'Hotel', 'Building2', 1, '[{"type":"HotelSpecsModule"}]'), 
+        ('FLIGHT', 'Tiket Pesawat', 'Plane', 1, '[{"type":"FlightLogicModule"}]'), 
+        ('BAGGAGE', 'Bagasi', 'Briefcase', 0, '[{"type":"BaggageModule"}]'), 
+        ('VISA', 'Visa', 'Ticket', 1, '[{"type":"VisaModule"}]'), 
+        ('TRANS_AIRPORT', 'Transportasi Bandara', 'Car', 1, '[{"type":"TransAirportModule"}]'), 
+        ('TRANS_TOUR', 'Transportasi Tour', 'Bus', 1, '[{"type":"TransTourModule"}]')`
+      ).run();
+    }
+
     return c.json({ success: true });
   } catch (error: any) {
     return c.json({ success: false, error: error.message }, 500);
@@ -122,14 +143,15 @@ app.post('/orders', async (c) => {
     const tokenExpiry = new Date(Date.now() + 20 * 60000).toISOString();
 
     await c.env.DB.prepare(
-      `INSERT INTO orders (id, client_name, client_whatsapp, status, token, token_expiry) 
-       VALUES (?, ?, ?, 'AWAITING_VERIFICATION', ?, ?)`
+      `INSERT INTO orders (id, client_name, client_whatsapp, status, token, token_expiry, created_at) 
+       VALUES (?, ?, ?, 'AWAITING_VERIFICATION', ?, ?, ?)`
     ).bind(
       orderId, 
       formData.name, 
       formData.whatsapp, 
       token, 
-      tokenExpiry
+      tokenExpiry,
+      new Date().toISOString()
     ).run();
 
     // Insert each service as a distinct order item
