@@ -26,7 +26,6 @@ export function CalculateForm({ order, items }: { order: any, items: any[] }) {
     }));
   };
 
-  const [dpPercentage, setDpPercentage] = useState(30);
   const [validityHours, setValidityHours] = useState(24);
   const [loading, setLoading] = useState(false);
   
@@ -55,8 +54,9 @@ export function CalculateForm({ order, items }: { order: any, items: any[] }) {
     [parsedItems, itemPrices]
   );
 
-  const dpAmount = (totalClientPrice * dpPercentage) / 100;
-  const pelunasanAmount = totalClientPrice - dpAmount;
+  // Termin dihapus sesuai request, DP 0, Pelunasan = Total
+  const dpAmount = 0;
+  const pelunasanAmount = totalClientPrice;
 
   const handlePublish = async () => {
     setLoading(true);
@@ -98,9 +98,6 @@ export function CalculateForm({ order, items }: { order: any, items: any[] }) {
         return `- ${item.title} (${pax} Pax)\n`;
       }).join('') + `\n` +
       `💰 *Total Harga:* Rp ${totalClientPrice.toLocaleString("id-ID")}\n\n` +
-      `💳 *Termin Pembayaran:*\n` +
-      `- DP (${dpPercentage}%): Rp ${dpAmount.toLocaleString("id-ID")}\n` +
-      `- Pelunasan: Rp ${pelunasanAmount.toLocaleString("id-ID")}\n\n` +
       `⏳ *Masa Berlaku Penawaran:* ${validityHours} Jam\n\n` +
       `Silakan klik link berikut untuk konfirmasi: https://la-dev.pages.dev/quote?id=${order.id}`;
   };
@@ -200,45 +197,7 @@ export function CalculateForm({ order, items }: { order: any, items: any[] }) {
         })}
 
         {/* Terms & Conditions */}
-        <div className="grid sm:grid-cols-2 gap-6">
-          <Card className="border-0 shadow-lg bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl ring-1 ring-slate-200 dark:ring-slate-800">
-            <CardHeader className="pb-4">
-              <div className="flex items-center gap-2">
-                <CreditCard className="w-5 h-5 text-orange-500" />
-                <CardTitle className="text-base">Termin Pembayaran</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label className="text-slate-500 font-semibold">Uang Muka / DP</Label>
-                  <div className="flex items-center gap-4">
-                    <div className="relative flex-1">
-                      <Input 
-                        type="number" 
-                        max={100}
-                        className="pr-8 font-bold bg-white dark:bg-slate-950 focus:ring-orange-500 disabled:opacity-75 disabled:bg-slate-100 disabled:dark:bg-slate-900"
-                        value={dpPercentage} 
-                        onChange={(e) => setDpPercentage(Number(e.target.value))} 
-                        disabled={isReadOnly}
-                      />
-                      <Percent className="absolute right-3 top-3 w-4 h-4 text-slate-400" />
-                    </div>
-                    <div className="flex-1 text-right">
-                      <div className="text-xs text-slate-500 mb-1">Nominal DP</div>
-                      <div className="font-bold text-slate-800 dark:text-slate-200">
-                        Rp {dpAmount.toLocaleString("id-ID")}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center">
-                  <span className="text-sm font-semibold text-slate-600 dark:text-slate-400">Pelunasan ({100 - dpPercentage}%)</span>
-                  <span className="font-bold text-slate-800 dark:text-slate-200">Rp {pelunasanAmount.toLocaleString("id-ID")}</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+        <div className="grid gap-6">
 
           <Card className="border-0 shadow-lg bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl ring-1 ring-slate-200 dark:ring-slate-800">
             <CardHeader className="pb-4">

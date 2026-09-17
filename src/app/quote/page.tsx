@@ -1,12 +1,14 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
+import { ArrowLeft } from "lucide-react";
 import { getOrderById } from "@/modules/ordering/actions";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 function QuotePageContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const id = searchParams.get('id');
   
   const [order, setOrder] = useState<any>(null);
@@ -31,8 +33,14 @@ function QuotePageContent() {
 
   return (
     <main className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-[#0a0a0a] to-black text-white flex items-center justify-center p-6">
-      <Card className="w-full max-w-3xl backdrop-blur-xl bg-white/5 dark:bg-black/50 border-white/10 shadow-2xl">
-        <CardHeader className="text-center pb-8 border-b border-white/10">
+      <Card className="w-full max-w-3xl backdrop-blur-xl bg-white/5 dark:bg-black/50 border-white/10 shadow-2xl relative">
+        <button 
+          onClick={() => router.back()} 
+          className="absolute top-4 left-4 flex items-center text-sm font-medium text-slate-400 hover:text-white transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4 mr-1" /> Kembali
+        </button>
+        <CardHeader className="text-center pb-8 border-b border-white/10 mt-6">
           <div className="mx-auto w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mb-6">
             <div className="w-8 h-8 rounded-full bg-emerald-500 animate-pulse"></div>
           </div>

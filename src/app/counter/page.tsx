@@ -71,7 +71,7 @@ export default function CalculatorDashboard() {
                     <div className="text-sm text-slate-500 dark:text-slate-400 space-y-1">
                       <p><strong>Order ID:</strong> {order.id.slice(0, 8)}...</p>
                       <p><strong>WA:</strong> {order.client_whatsapp}</p>
-                      <p><strong>Date:</strong> {new Date(order.created_at).toLocaleDateString()}</p>
+                      <p><strong>Date:</strong> {new Date(order.created_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
                     </div>
                     
                     <div className="flex items-center text-blue-600 dark:text-blue-400 font-semibold text-sm group-hover:text-blue-700 dark:group-hover:text-blue-300">

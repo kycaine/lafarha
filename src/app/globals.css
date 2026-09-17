@@ -126,5 +126,11 @@
   }
   html {
     @apply font-sans;
+    scroll-behavior: smooth;
   }
+}
+
+/* Landing page specific utilities */
+.bg-\[radial-gradient\(ellipse_80\%_60\%_at_50\%_40\%\,rgba\(201\,168\,76\,0\.08\)_0\%\,transparent_70\%\)\] {
+  background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201, 168, 76, 0.08) 0%, transparent 70%);
 }

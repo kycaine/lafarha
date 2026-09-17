@@ -97,7 +97,7 @@ export default function AdminDashboard() {
                         {order.created_at ? (
                           <div className="flex flex-col">
                             <span className="font-semibold text-slate-800">
-                              {new Date(order.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
+                              {new Date(order.created_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })}
                             </span>
                             <span className="text-xs text-slate-400">
                               {new Date(order.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}

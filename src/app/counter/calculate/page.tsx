@@ -1,12 +1,14 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
 import { getOrderById } from "@/modules/ordering/actions";
 import { CalculateForm } from "@/modules/ordering/components/CalculateForm";
+import { ArrowLeft } from "lucide-react";
 
 function CalculatePageContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const id = searchParams.get('id');
   
   const [data, setData] = useState<any>(null);
@@ -31,7 +33,14 @@ function CalculatePageContent() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 p-4 md:p-8">
       <div className="max-w-7xl mx-auto space-y-8">
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white/70 dark:bg-slate-900/70 backdrop-blur-md p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm transition-all hover:shadow-md">
+        <div>
+          <button 
+            onClick={() => router.back()} 
+            className="flex items-center text-sm font-medium text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100 transition-colors mb-4"
+          >
+            <ArrowLeft className="w-4 h-4 mr-1" /> Kembali
+          </button>
+          <header className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white/70 dark:bg-slate-900/70 backdrop-blur-md p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm transition-all hover:shadow-md">
           <div className="space-y-1">
             <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Calculate Order: {order.id}</h1>
             <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
@@ -46,6 +55,7 @@ function CalculatePageContent() {
             </div>
           </div>
         </header>
+        </div>
 
         <CalculateForm order={order} items={items || []} />
       </div>

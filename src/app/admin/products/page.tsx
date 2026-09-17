@@ -111,10 +111,10 @@ export default function ProductsCMS() {
 
   return (
     <div className="p-6 pt-10 max-w-7xl mx-auto">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Manajemen Layanan (CMS)</h1>
+      <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-8">
+        <h1 className="text-2xl md:text-3xl font-bold">Manajemen Layanan (CMS)</h1>
         {!isEditing && (
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <Button variant="outline" className="border-red-200 text-red-600 hover:bg-red-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-900/30" onClick={handleReset}>
               Reset ke Default
             </Button>
@@ -153,22 +153,22 @@ export default function ProductsCMS() {
               {/* Added Modules */}
               <div className="space-y-3 mb-6">
                 {currentProduct.form_schema.map((mod: any, i: number) => (
-                  <div key={i} className="flex items-center justify-between bg-slate-50 dark:bg-[#1a1a1a] p-4 rounded-lg border border-slate-200 dark:border-slate-800">
-                    <div>
-                      <span className="font-bold text-emerald-600">{mod.type}</span>
+                  <div key={i} className="flex flex-col sm:flex-row sm:items-center justify-between bg-slate-50 dark:bg-[#1a1a1a] p-4 rounded-lg border border-slate-200 dark:border-slate-800 gap-4">
+                    <div className="flex-1 w-full overflow-hidden">
+                      <span className="font-bold text-emerald-600 block">{mod.type}</span>
                       {(mod.type === "TextInput" || mod.type === "DatePickerNative") && (
-                        <div className="flex gap-4 mt-2">
-                          <div>
+                        <div className="flex flex-col sm:flex-row gap-4 mt-3">
+                          <div className="w-full sm:w-auto">
                             <span className="text-xs text-slate-500 block mb-1">Field Name (JSON key)</span>
-                            <input className="border rounded px-2 py-1 w-32 bg-white dark:bg-black dark:border-slate-700" value={mod.name} onChange={e => {
+                            <input className="border rounded px-2 py-1 w-full sm:w-32 bg-white dark:bg-black dark:border-slate-700" value={mod.name} onChange={e => {
                               const newSchema = [...currentProduct.form_schema];
                               newSchema[i].name = e.target.value;
                               setCurrentProduct({...currentProduct, form_schema: newSchema});
                             }} /> 
                           </div>
-                          <div>
+                          <div className="w-full sm:w-auto">
                             <span className="text-xs text-slate-500 block mb-1">Label Form</span>
-                            <input className="border rounded px-2 py-1 w-48 bg-white dark:bg-black dark:border-slate-700" value={mod.label} onChange={e => {
+                            <input className="border rounded px-2 py-1 w-full sm:w-48 bg-white dark:bg-black dark:border-slate-700" value={mod.label} onChange={e => {
                               const newSchema = [...currentProduct.form_schema];
                               newSchema[i].label = e.target.value;
                               setCurrentProduct({...currentProduct, form_schema: newSchema});
@@ -177,7 +177,7 @@ export default function ProductsCMS() {
                         </div>
                       )}
                     </div>
-                    <Button variant="destructive" size="sm" type="button" onClick={() => removeModule(i)}><Trash2 className="w-4 h-4" /></Button>
+                    <Button variant="destructive" size="sm" type="button" className="w-full sm:w-auto" onClick={() => removeModule(i)}><Trash2 className="w-4 h-4 sm:mr-0 mr-2" /> <span className="sm:hidden">Hapus Modul</span></Button>
                   </div>
                 ))}
                 {currentProduct.form_schema.length === 0 && (
@@ -209,26 +209,28 @@ export default function ProductsCMS() {
       ) : (
         <div className="grid grid-cols-1 gap-4">
           {products.map(p => (
-            <div key={p.id} className="bg-white dark:bg-[#111] border border-slate-200 dark:border-slate-800 p-5 rounded-xl shadow-sm flex flex-wrap gap-4 items-center justify-between transition-all hover:border-emerald-200">
-              <div className="flex items-center gap-4">
-                <div className="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 p-3 rounded-lg">
+            <div key={p.id} className="bg-white dark:bg-[#111] border border-slate-200 dark:border-slate-800 p-5 rounded-xl shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all hover:border-emerald-200">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4 w-full">
+                <div className="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 p-3 rounded-lg w-max">
                   <LayoutTemplate className="w-6 h-6" /> 
                 </div>
-                <div>
-                  <h3 className="font-bold text-lg">{p.title} <span className="text-sm font-normal text-slate-500 ml-2">[{p.id}]</span></h3>
-                  <div className="text-sm text-slate-500 flex gap-4 mt-1">
+                <div className="overflow-hidden">
+                  <h3 className="font-bold text-lg truncate">{p.title} <span className="text-sm font-normal text-slate-500 ml-2">[{p.id}]</span></h3>
+                  <div className="text-sm text-slate-500 flex flex-col sm:flex-row sm:flex-wrap gap-1 sm:gap-4 mt-1">
                     <span><strong>Icon:</strong> {p.icon}</span>
+                    <span className="hidden sm:inline">•</span>
                     <span><strong>Modul Form:</strong> {p.form_schema.length}</span>
+                    <span className="hidden sm:inline">•</span>
                     <span><strong>Wajib PAX:</strong> {p.requires_pax ? "Ya" : "Tidak"}</span>
                   </div>
                 </div>
               </div>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" className="border-slate-200 dark:border-slate-700" onClick={() => {
+              <div className="flex gap-2 mt-2 md:mt-0">
+                <Button variant="outline" size="sm" className="flex-1 md:flex-none border-slate-200 dark:border-slate-700" onClick={() => {
                   setCurrentProduct(p);
                   setIsEditing(true);
                 }}><Edit2 className="w-4 h-4 mr-2" /> Edit</Button>
-                <Button variant="destructive" size="sm" onClick={() => handleDelete(p.id)}><Trash2 className="w-4 h-4 mr-2" /> Hapus</Button>
+                <Button variant="destructive" size="sm" className="flex-1 md:flex-none" onClick={() => handleDelete(p.id)}><Trash2 className="w-4 h-4 mr-2" /> Hapus</Button>
               </div>
             </div>
           ))}
