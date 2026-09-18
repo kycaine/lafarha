@@ -1,6 +1,7 @@
 import {
   GoogleAuthProvider,
   signInWithPopup,
+  signInWithRedirect,
   signOut as firebaseSignOut,
   onAuthStateChanged,
   User,
@@ -9,9 +10,16 @@ import { auth } from "./firebase";
 
 const googleProvider = new GoogleAuthProvider();
 
-export async function signInWithGoogle(): Promise<User> {
-  const result = await signInWithPopup(auth, googleProvider);
-  return result.user;
+export async function signInWithGoogle(): Promise<User | null> {
+  const isMobile = typeof window !== "undefined" && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  
+  if (isMobile) {
+    await signInWithRedirect(auth, googleProvider);
+    return null;
+  } else {
+    const result = await signInWithPopup(auth, googleProvider);
+    return result.user;
+  }
 }
 
 export async function signOut(): Promise<void> {

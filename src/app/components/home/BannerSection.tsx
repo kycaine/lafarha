@@ -478,21 +478,34 @@ export default function BannerSection() {
 
         {/* Center content */}
         <div className="relative z-10 flex-1 flex flex-col items-center justify-start sm:justify-center text-center px-4 mx-auto w-full overflow-hidden">
-          <div className="w-max mx-auto flex flex-col mt-[20vh] sm:mt-0">
+          <div className="w-[90vw] max-w-[1200px] mx-auto flex flex-col mt-[20vh] sm:mt-0">
             {/* Headline */}
             <h1 
-              className="text-[25vw] sm:text-[22vw] md:text-[20vw] lg:text-[18vw] font-black text-[#1a1a1a] leading-none tracking-tighter whitespace-nowrap"
-              style={{ fontFamily: 'var(--font-cinzel), serif' }}
+              className="w-full flex justify-between items-center font-black text-[#1a1a1a] leading-none tracking-tighter whitespace-nowrap"
+              style={{ 
+                fontFamily: 'var(--font-cinzel), serif',
+                fontSize: 'clamp(3rem, 19vw, 15rem)' 
+              }}
             >
-              KANZA
+              <span>K</span>
+              <span>A</span>
+              <span>N</span>
+              <span>Z</span>
+              <span>A</span>
             </h1>
             {/* Subtitle */}
-            <p 
-              className="w-full text-right text-2xl sm:text-3xl md:text-4xl font-normal text-[#1a1a1a] tracking-wide -mt-4 sm:-mt-6 md:-mt-8 lg:-mt-10"
-              style={{ fontFamily: '"Times New Roman", Times, serif' }}
-            >
-              Land Arrangement Umrah Service
-            </p>
+            <div className="w-full flex justify-end">
+              <p 
+                className="font-normal text-[#1a1a1a] tracking-wide whitespace-nowrap"
+                style={{ 
+                  fontFamily: '"Times New Roman", Times, serif',
+                  fontSize: 'clamp(0.9rem, 4.3vw, 3rem)',
+                  marginTop: 'clamp(-8px, -2vw, -24px)'
+                }}
+              >
+                Land Arrangement Umrah Service
+              </p>
+            </div>
           </div>
         </div>
 
