@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/session";
 
+export const runtime = 'edge';
+
 const API_WORKER_URL = process.env.NEXT_PUBLIC_API_URL;
 const API_SECRET_KEY = process.env.API_SECRET_KEY;
 

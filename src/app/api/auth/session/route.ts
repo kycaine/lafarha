@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/session";
 
+export const runtime = 'edge';
+
 // POST /api/auth/session — store token + role in an encrypted cookie
 export async function POST(req: NextRequest) {
   const { token, role, uid } = await req.json();
