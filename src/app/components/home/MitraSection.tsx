@@ -1,17 +1,21 @@
 "use client";
 
-const MITRA = [
-  { name: "Garuda Indonesia", abbr: "GA", cat: "Maskapai Nasional" },
-  { name: "Saudi Airlines", abbr: "SV", cat: "Maskapai Internasional" },
-  { name: "Hotel Pullman Zamzam", abbr: "PZ", cat: "Akomodasi Makkah" },
-  { name: "Hotel Movenpick", abbr: "MP", cat: "Akomodasi Madinah" },
-  { name: "Bin Dawood Group", abbr: "BD", cat: "Partner Logistik" },
-  { name: "Naqaba Transport", abbr: "NT", cat: "Transportasi Darat" },
-  { name: "Al Rajhi Bank", abbr: "AR", cat: "Layanan Keuangan" },
-  { name: "KEMENAG RI", abbr: "KM", cat: "Institusi Resmi" },
-];
+import { useEffect, useState } from "react";
+import { getMitra } from "@/modules/catalog/mitra-actions";
 
 export default function MitraSection() {
+  const [mitras, setMitras] = useState<any[]>([]);
+
+  useEffect(() => {
+    async function load() {
+      const data = await getMitra();
+      if (data && data.length > 0) {
+        setMitras(data);
+      }
+    }
+    load();
+  }, []);
+
   return (
     <section id="mitra" className="relative bg-slate-50 py-32 overflow-hidden">
       {/* BG glow */}
@@ -38,24 +42,33 @@ export default function MitraSection() {
 
         {/* Mitra logo grid */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {MITRA.map((m) => (
-            <div
-              key={m.name}
-              className="group relative rounded-xl border border-slate-200 bg-white hover:bg-slate-50 hover:border-[#C9A84C]/30 transition-all duration-300 p-6 flex flex-col items-center gap-3 hover:-translate-y-1 shadow-sm hover:shadow-md"
-            >
-              {/* Monogram avatar — gold tone, monochrome */}
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center font-black text-lg bg-amber-50 border border-amber-200/60 text-[#8B6914] shadow-sm">
-                {m.abbr}
-              </div>
-              <div className="text-center">
-                <p className="text-slate-800 font-semibold text-sm leading-tight">{m.name}</p>
-                <p className="text-slate-400 text-[11px] mt-0.5">{m.cat}</p>
-              </div>
+          {mitras.map((m) => {
+            const abbr = m.nama.split(' ').map((n: string) => n[0]).join('').substring(0, 2).toUpperCase();
+            return (
+              <div
+                key={m.id}
+                className="group relative rounded-xl border border-slate-200 bg-white hover:bg-slate-50 hover:border-[#C9A84C]/30 transition-all duration-300 p-6 flex flex-col items-center gap-3 hover:-translate-y-1 shadow-sm hover:shadow-md"
+              >
+                {/* Monogram avatar / Photo */}
+                {m.foto ? (
+                  <div className="w-14 h-14 rounded-2xl overflow-hidden border border-slate-100 shadow-sm">
+                    <img src={m.foto} alt={m.nama} className="w-full h-full object-cover" />
+                  </div>
+                ) : (
+                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center font-black text-lg bg-amber-50 border border-amber-200/60 text-[#8B6914] shadow-sm">
+                    {abbr}
+                  </div>
+                )}
+                <div className="text-center">
+                  <p className="text-slate-800 font-semibold text-sm leading-tight">{m.nama}</p>
+                  <p className="text-slate-400 text-[11px] mt-0.5">{m.kategori}</p>
+                </div>
 
-              {/* Hover gold underline */}
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 rounded-full bg-[#C9A84C] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            </div>
-          ))}
+                {/* Hover gold underline */}
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 rounded-full bg-[#C9A84C] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

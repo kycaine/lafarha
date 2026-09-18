@@ -17,55 +17,81 @@ export default function ThreeBackground() {
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(W, H);
-    renderer.setClearColor(0x000000, 0); // transparent
+    renderer.setClearColor(0xffffff, 0); 
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     mount.appendChild(renderer.domElement);
 
     // ── Scene & Camera ────────────────────────────────────────────────────────
-    const scene  = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, W / H, 0.1, 100);
-    camera.position.set(0, 4.5, 10);
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0xf4ebd8, 0.04); // Sand storm fog
+
+    const camera = new THREE.PerspectiveCamera(50, W / H, 0.1, 100);
+    camera.position.set(0, 3, 14);
     camera.lookAt(0, 0, 0);
 
-    // ── Wave plane ────────────────────────────────────────────────────────────
-    const SEGS = 120; // resolution
-    const SIZE = 22;
-    const geo  = new THREE.PlaneGeometry(SIZE, SIZE, SEGS, SEGS);
-    geo.rotateX(-Math.PI / 2); // lay flat
+    // ── Lighting ──────────────────────────────────────────────────────────────
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.5);
+    hemiLight.color.setHSL(0.1, 0.2, 0.9);
+    hemiLight.groundColor.setHSL(0.095, 0.5, 0.5);
+    scene.add(hemiLight);
 
-    // Store original y positions (all 0 before displacement)
+    const dirLight = new THREE.DirectionalLight(0xffeeba, 1.2);
+    dirLight.position.set(-15, 8, 10);
+    dirLight.castShadow = true;
+    dirLight.shadow.mapSize.width = 1024;
+    dirLight.shadow.mapSize.height = 1024;
+    dirLight.shadow.camera.near = 0.5;
+    dirLight.shadow.camera.far = 50;
+    dirLight.shadow.camera.left = -20;
+    dirLight.shadow.camera.right = 20;
+    dirLight.shadow.camera.top = 20;
+    dirLight.shadow.camera.bottom = -20;
+    scene.add(dirLight);
+
+    // ── Desert Terrain (Plane) ────────────────────────────────────────────────
+    const SEGS = 80; // Resolution
+    const SIZE = 40;
+    const geo = new THREE.PlaneGeometry(SIZE, SIZE, SEGS, SEGS);
+    geo.rotateX(-Math.PI / 2);
+
     const posAttr = geo.attributes.position as THREE.BufferAttribute;
-    const count   = posAttr.count;
+    const count = posAttr.count;
     const origPos = new Float32Array(posAttr.array);
 
-    // ── Material — subtle gold wireframe ──────────────────────────────────────
-    const mat = new THREE.MeshBasicMaterial({
-      color: 0xc9a84c,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.10,
+    const mat = new THREE.MeshStandardMaterial({
+      color: 0xd2b48c, // Sand color
+      roughness: 1.0,
+      metalness: 0.05,
+      flatShading: false,
     });
 
     const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.y = -2;
+    mesh.receiveShadow = true;
+    mesh.castShadow = true;
     scene.add(mesh);
 
-    // Second layer — slightly thicker lines, lower opacity, slightly smaller
-    const geo2  = new THREE.PlaneGeometry(SIZE * 0.7, SIZE * 0.7, SEGS >> 1, SEGS >> 1);
-    geo2.rotateX(-Math.PI / 2);
-    const posAttr2 = geo2.attributes.position as THREE.BufferAttribute;
-    const count2   = posAttr2.count;
-    const origPos2 = new Float32Array(posAttr2.array);
-    const mat2  = new THREE.MeshBasicMaterial({
-      color: 0x8b6914,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.06,
+    // ── Dust Particles ────────────────────────────────────────────────────────
+    const dustCount = 800;
+    const dustGeo = new THREE.BufferGeometry();
+    const dustPos = new Float32Array(dustCount * 3);
+    for (let i = 0; i < dustCount * 3; i++) {
+        dustPos[i] = (Math.random() - 0.5) * SIZE;
+    }
+    dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
+    const dustMat = new THREE.PointsMaterial({
+        color: 0xffeedd,
+        size: 0.06,
+        transparent: true,
+        opacity: 0.5,
+        blending: THREE.NormalBlending
     });
-    const mesh2 = new THREE.Mesh(geo2, mat2);
-    mesh2.position.y = -0.1;
-    scene.add(mesh2);
+    const dustSystem = new THREE.Points(dustGeo, dustMat);
+    scene.add(dustSystem);
 
     // ── Mouse influence ───────────────────────────────────────────────────────
-    let targetMX = 0; // -1 to 1
+    let targetMX = 0;
     let targetMY = 0;
     let currentMX = 0;
     let currentMY = 0;
@@ -94,44 +120,44 @@ export default function ThreeBackground() {
       animId = requestAnimationFrame(animate);
       const t = clock.getElapsedTime();
 
-      // Smooth mouse follow
       currentMX += (targetMX - currentMX) * 0.03;
       currentMY += (targetMY - currentMY) * 0.03;
 
-      // Displace vertices of layer 1
+      // Animate dunes (shifting sands)
       for (let i = 0; i < count; i++) {
         const ox = origPos[i * 3];
         const oz = origPos[i * 3 + 2];
 
-        // Multi-wave displacement: main wave + ripple + mouse push
-        const wave1 = Math.sin(ox * 0.45 + t * 0.55) * 0.55;
-        const wave2 = Math.cos(oz * 0.40 + t * 0.42) * 0.40;
-        const wave3 = Math.sin((ox + oz) * 0.30 + t * 0.32) * 0.30;
+        // Combine waves for organic dunes moving very slowly
+        const wave1 = Math.sin(ox * 0.15 + oz * 0.1 + t * 0.1) * 1.8;
+        const wave2 = Math.sin(ox * 0.08 - oz * 0.15 + t * 0.08) * 1.5;
+        const wave3 = Math.cos(ox * 0.3 + oz * 0.2 + t * 0.15) * 0.4;
 
-        // Mouse proximity bulge — vertices near mouse cursor rise slightly
-        const dx = ox / (SIZE / 2) - currentMX * 0.8;
-        const dz = oz / (SIZE / 2) + currentMY * 0.5;
-        const dist  = Math.sqrt(dx * dx + dz * dz);
-        const mouse = Math.exp(-dist * dist * 1.4) * 1.2;
-
-        posAttr.setY(i, wave1 + wave2 + wave3 + mouse);
+        posAttr.setY(i, wave1 + wave2 + wave3);
       }
       posAttr.needsUpdate = true;
+      // Recompute normals so lighting reacts to the shifting sand
+      geo.computeVertexNormals();
 
-      // Displace vertices of layer 2 — slower, offset phase
-      for (let i = 0; i < count2; i++) {
-        const ox = origPos2[i * 3];
-        const oz = origPos2[i * 3 + 2];
-        const wave1 = Math.sin(ox * 0.35 + t * 0.38 + 1.2) * 0.60;
-        const wave2 = Math.cos(oz * 0.30 + t * 0.30 + 0.7) * 0.45;
-        posAttr2.setY(i, wave1 + wave2);
+      // Animate dust particles to simulate desert wind
+      const positions = dustGeo.attributes.position.array as Float32Array;
+      for (let i = 0; i < dustCount; i++) {
+          positions[i * 3] -= 0.06; // Wind blowing left
+          positions[i * 3 + 2] += 0.02; // Drifting slightly forward
+          
+          // Reset particles that blow out of bounds
+          if (positions[i * 3] < -SIZE/2) {
+              positions[i * 3] = SIZE/2;
+              positions[i * 3 + 1] = (Math.random() - 0.5) * 6; // Height variation
+              positions[i * 3 + 2] = (Math.random() - 0.5) * SIZE;
+          }
       }
-      posAttr2.needsUpdate = true;
+      dustGeo.attributes.position.needsUpdate = true;
 
-      // Subtle camera drift with mouse
-      camera.position.x += (currentMX * 0.8 - camera.position.x) * 0.02;
-      camera.position.z += (10 - currentMY * 0.5 - camera.position.z) * 0.02;
-      camera.lookAt(0, 0.5, 0);
+      // Subtle camera drift
+      camera.position.x += (currentMX * 1.5 - camera.position.x) * 0.02;
+      camera.position.y += (3 + currentMY * 0.8 - camera.position.y) * 0.02;
+      camera.lookAt(0, -1, 0);
 
       renderer.render(scene, camera);
     };
@@ -144,8 +170,8 @@ export default function ThreeBackground() {
       window.removeEventListener("resize", onResize);
       geo.dispose();
       mat.dispose();
-      geo2.dispose();
-      mat2.dispose();
+      dustGeo.dispose();
+      dustMat.dispose();
       renderer.dispose();
       if (mount.contains(renderer.domElement)) {
         mount.removeChild(renderer.domElement);
@@ -158,6 +184,9 @@ export default function ThreeBackground() {
       ref={mountRef}
       className="absolute inset-0 w-full h-full"
       style={{ pointerEvents: "none" }}
-    />
+    >
+      {/* Optional: Add a smooth fade at the bottom so it blends with white background seamlessly */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent opacity-100 z-10 pointer-events-none" />
+    </div>
   );
 }

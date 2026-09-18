@@ -1,10 +1,7 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-
-const ThreeBackground = dynamic(() => import("./ThreeBackground"), { ssr: false });
 
 // ── Monochrome SVG icons ──────────────────────────────────────────────────────
 const IcoHotel = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>;
@@ -17,6 +14,8 @@ const IcoBuilding = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="
 const IcoPhone = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z" /></svg>;
 const IcoMail = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="M2 7l10 7 10-7" /></svg>;
 const IcoPin = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" /></svg>;
+const IcoMenu = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>;
+const IcoClose = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>;
 
 type IconComp = () => React.JSX.Element;
 
@@ -183,6 +182,7 @@ function NavItem({
 // ── Main component ────────────────────────────────────────────────────────────
 export default function BannerSection() {
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -193,8 +193,8 @@ export default function BannerSection() {
 
   const navStyle: React.CSSProperties = {
     transition:
-      "width 600ms cubic-bezier(0.4,0,0.2,1), border-radius 600ms cubic-bezier(0.4,0,0.2,1), background-color 600ms cubic-bezier(0.4,0,0.2,1), box-shadow 600ms cubic-bezier(0.4,0,0.2,1), margin-top 600ms cubic-bezier(0.4,0,0.2,1), height 600ms cubic-bezier(0.4,0,0.2,1), padding-left 600ms cubic-bezier(0.4,0,0.2,1), padding-right 600ms cubic-bezier(0.4,0,0.2,1)",
-    willChange: "width, border-radius, background-color, margin-top, height",
+      "opacity 600ms cubic-bezier(0.4,0,0.2,1), width 600ms cubic-bezier(0.4,0,0.2,1), border-radius 600ms cubic-bezier(0.4,0,0.2,1), background-color 600ms cubic-bezier(0.4,0,0.2,1), box-shadow 600ms cubic-bezier(0.4,0,0.2,1), margin-top 600ms cubic-bezier(0.4,0,0.2,1), height 600ms cubic-bezier(0.4,0,0.2,1), padding-left 600ms cubic-bezier(0.4,0,0.2,1), padding-right 600ms cubic-bezier(0.4,0,0.2,1)",
+    willChange: "opacity, width, border-radius, background-color, margin-top, height",
     width: scrolled ? "min(760px, calc(100vw - 2rem))" : "100%",
     borderRadius: scrolled ? "1rem" : "0px",
     marginTop: scrolled ? "12px" : "0px",
@@ -207,6 +207,8 @@ export default function BannerSection() {
       : "none",
     backdropFilter: scrolled ? "blur(24px) saturate(1.5)" : "none",
     WebkitBackdropFilter: scrolled ? "blur(24px) saturate(1.5)" : "none",
+    opacity: scrolled ? 1 : 0,
+    pointerEvents: scrolled ? "auto" : "none",
   };
 
   return (
@@ -267,90 +269,124 @@ export default function BannerSection() {
               ))}
             </div>
 
-            {/* Profile icon */}
-            <div className="flex justify-end flex-1">
+            {/* Profile icon (Desktop) */}
+            <div className="hidden md:flex justify-end flex-1">
               <Link href="/penawaran">
-              <button
-                className="group flex items-center justify-center rounded-full transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
-                style={{
-                  width: scrolled ? "34px" : "38px",
-                  height: scrolled ? "34px" : "38px",
-                  background: "linear-gradient(135deg,#C9A84C,#8B6914)",
-                  boxShadow: "0 2px 12px rgba(201,168,76,0.3)",
-                  color: "#fff",
-                  transition:
-                    "width 600ms cubic-bezier(0.4,0,0.2,1), height 600ms cubic-bezier(0.4,0,0.2,1)",
-                }}
-                title="Login / Akun"
-              >
-                <IconUser />
-              </button>
+                <button
+                  className="group flex items-center justify-center rounded-full transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
+                  style={{
+                    width: scrolled ? "34px" : "38px",
+                    height: scrolled ? "34px" : "38px",
+                    background: "linear-gradient(135deg,#C9A84C,#8B6914)",
+                    boxShadow: "0 2px 12px rgba(201,168,76,0.3)",
+                    color: "#fff",
+                    transition:
+                      "width 600ms cubic-bezier(0.4,0,0.2,1), height 600ms cubic-bezier(0.4,0,0.2,1)",
+                  }}
+                  title="Login / Akun"
+                >
+                  <IconUser />
+                </button>
               </Link>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <div className="flex md:hidden justify-end flex-1">
+              <button 
+                onClick={() => setMobileMenuOpen(true)}
+                className="p-2 transition-colors duration-300"
+                style={{ color: scrolled ? "#fff" : "#1e293b" }}
+              >
+                <IcoMenu />
+              </button>
             </div>
           </div>
         </nav>
+      </div>
+
+      {/* ── Mobile Menu Backdrop (Click Outside to Close) ── */}
+      {mobileMenuOpen && (
+        <div 
+          className="fixed inset-0 z-[55] bg-black/20 backdrop-blur-sm transition-opacity" 
+          onClick={() => setMobileMenuOpen(false)} 
+        />
+      )}
+
+      {/* ── Mobile Menu Dropdown ── */}
+      <div 
+        className={`fixed top-16 right-4 md:hidden z-[60] bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden min-w-[220px] flex flex-col transition-all duration-300 origin-top-right ${mobileMenuOpen ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}`}
+      >
+        <div className="flex flex-col py-2">
+          {NAV_LINKS.map(l => (
+            <a 
+              key={l.label} 
+              href={l.href} 
+              onClick={() => setMobileMenuOpen(false)} 
+              className="px-5 py-3.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 hover:text-[#C9A84C] transition-colors flex items-center"
+            >
+              {l.label}
+            </a>
+          ))}
+          <div className="border-t border-slate-100 my-1"></div>
+          <Link href="/penawaran" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3">
+             <button className="w-full py-3 bg-gradient-to-r from-[#C9A84C] to-[#8B6914] text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow-md shadow-[#C9A84C]/20 hover:-translate-y-0.5 transition-all">
+               <IconUser /> Profil / Layanan
+             </button>
+          </Link>
+        </div>
       </div>
 
       {/* ── Hero ── */}
       <section
         ref={heroRef}
         id="banner"
-        className="relative min-h-screen flex items-center justify-center overflow-hidden bg-white"
+        className="relative min-h-screen flex flex-col overflow-hidden bg-white"
       >
-        <ThreeBackground />
+        {/* Background Video */}
+        <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
+          {/* Desktop Video */}
+          <video autoPlay loop muted playsInline className="w-full h-full object-cover hidden sm:block" src="/banner.mp4" />
+          {/* Mobile Video */}
+          <video autoPlay loop muted playsInline className="w-full h-full object-cover block sm:hidden" src="/banner-hp.mp4" />
+        </div>
 
-        <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
-          {/* Headline */}
-          <h1 className="text-5xl md:text-7xl font-extrabold text-slate-900 leading-[1.08] tracking-tight mb-6">
-            Solusi{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C9A84C] via-[#F5E6B8] to-[#C9A84C]">
-              B2B
-            </span>
-            <br />
-            Umrah Terpercaya
-          </h1>
-
-          {/* Subheadline */}
-          <p className="text-slate-500 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-12">
-            Kami menyederhanakan proses pemesanan paket hotel, transportasi, dan layanan Umrah
-            untuk travel agent & agen perjalanan di seluruh Indonesia.
-          </p>
-
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link href="/penawaran">
-              <button className="px-8 py-4 rounded-xl font-bold text-[#0D1117] bg-gradient-to-r from-[#C9A84C] to-[#E8C96C] hover:from-[#E8C96C] hover:to-[#C9A84C] transition-all duration-300 shadow-xl shadow-[#C9A84C]/30 hover:shadow-[#C9A84C]/50 hover:-translate-y-1 text-base tracking-wide">
-                Minta Penawaran Sekarang
-              </button>
-            </Link>
-            <a href="#product">
-              <button className="px-8 py-4 rounded-xl font-semibold text-slate-600 border border-slate-200 hover:border-[#C9A84C]/60 hover:text-[#8B6914] hover:bg-amber-50 transition-all duration-300 text-base">
-                Lihat Layanan →
-              </button>
-            </a>
-          </div>
-
-          {/* Stats */}
-          <div className="mt-20 flex flex-col sm:flex-row gap-8 justify-center items-center">
-            {[
-              { value: "500+", label: "Travel Partner" },
-              { value: "50K+", label: "Jamaah Terlayani" },
-              { value: "10+", label: "Tahun Pengalaman" },
-            ].map((s) => (
-              <div key={s.label} className="text-center">
-                <p className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#C9A84C] to-[#E8C96C]">
-                  {s.value}
-                </p>
-                <p className="text-slate-500 text-sm font-medium mt-1">{s.label}</p>
-              </div>
-            ))}
+        {/* Center content */}
+        <div className="relative z-10 flex-1 flex flex-col items-center justify-start sm:justify-center text-center px-4 mx-auto w-full overflow-hidden">
+          <div className="w-max mx-auto flex flex-col mt-[20vh] sm:mt-0">
+            {/* Headline */}
+            <h1 
+              className="text-[25vw] sm:text-[22vw] md:text-[20vw] lg:text-[18vw] font-black text-[#1a1a1a] leading-none tracking-tighter whitespace-nowrap"
+              style={{ fontFamily: 'var(--font-cinzel), serif' }}
+            >
+              KANZA
+            </h1>
+            {/* Subtitle */}
+            <p 
+              className="w-full text-right text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a] tracking-wider -mt-4 sm:-mt-6 md:-mt-8 lg:-mt-10"
+              style={{ fontFamily: 'var(--font-handwriting), cursive' }}
+            >
+              Land Arrangement Umrah Service
+            </p>
           </div>
         </div>
 
-        {/* Scroll cue */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
-          <span className="text-black text-xs font-semibold tracking-widest uppercase">Scroll</span>
-          <div className="w-px h-10 bg-gradient-to-b from-black to-transparent animate-pulse" />
+        {/* CTAs mentok di bawah */}
+        <div className="absolute bottom-[10vh] left-0 right-0 z-10 w-full px-4 flex flex-row flex-nowrap gap-2 sm:gap-4 justify-center items-center">
+          <Link href="/penawaran">
+            <button className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-full font-bold text-black opacity-40 bg-transparent border border-black hover:opacity-100 transition-all duration-300 text-xs sm:text-sm tracking-wide whitespace-nowrap">
+              Penawaran
+            </button>
+          </Link>
+          <a href="#product">
+            <button className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-full font-bold text-black opacity-40 bg-transparent border border-black hover:opacity-100 transition-all duration-300 text-xs sm:text-sm tracking-wide whitespace-nowrap">
+              Layanan
+            </button>
+          </a>
+          <a href="#footer">
+            <button className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-full font-bold text-black opacity-40 bg-transparent border border-black hover:opacity-100 transition-all duration-300 text-xs sm:text-sm tracking-wide whitespace-nowrap">
+              Kontak
+            </button>
+          </a>
         </div>
       </section>
     </>

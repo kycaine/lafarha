@@ -253,4 +253,54 @@ app.get('/orders/:id', async (c) => {
   }
 });
 
+// -- Mitra API --
+app.get('/mitra', async (c) => {
+  try {
+    const { results } = await c.env.DB.prepare("SELECT * FROM mitra ORDER BY created_at DESC").all();
+    return c.json({ success: true, data: results });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
+app.post('/mitra', async (c) => {
+  try {
+    const data = await c.req.json();
+    const id = `MITRA-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+    await c.env.DB.prepare(
+      "INSERT INTO mitra (id, nama, kategori, foto, created_at) VALUES (?, ?, ?, ?, ?)"
+    ).bind(
+      id, data.nama, data.kategori, data.foto || null, Date.now()
+    ).run();
+    return c.json({ success: true, id });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
+app.put('/mitra/:id', async (c) => {
+  try {
+    const id = c.req.param('id');
+    const data = await c.req.json();
+    await c.env.DB.prepare(
+      "UPDATE mitra SET nama = ?, kategori = ?, foto = ? WHERE id = ?"
+    ).bind(
+      data.nama, data.kategori, data.foto || null, id
+    ).run();
+    return c.json({ success: true });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
+app.delete('/mitra/:id', async (c) => {
+  try {
+    const id = c.req.param('id');
+    await c.env.DB.prepare("DELETE FROM mitra WHERE id = ?").bind(id).run();
+    return c.json({ success: true });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
 export default app;

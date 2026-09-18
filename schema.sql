@@ -38,3 +38,11 @@ CREATE TABLE IF NOT EXISTS products (
   requires_pax INTEGER DEFAULT 0,
   form_schema TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS mitra (
+  id TEXT PRIMARY KEY,
+  nama TEXT NOT NULL,
+  kategori TEXT NOT NULL,
+  foto TEXT,
+  created_at INTEGER
+);

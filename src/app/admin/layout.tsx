@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PackageSearch, ListOrdered } from "lucide-react";
+import { PackageSearch, ListOrdered, Users } from "lucide-react";
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-slate-100 dark:bg-slate-950">
@@ -16,6 +16,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </Link>
               <Link href="/admin/products" className="flex items-center gap-2 px-4 py-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-medium transition-colors">
                 <PackageSearch className="w-4 h-4" /> Manajemen Layanan (CMS)
+              </Link>
+              <Link href="/admin/mitra" className="flex items-center gap-2 px-4 py-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-medium transition-colors">
+                <Users className="w-4 h-4" /> Manajemen Mitra
               </Link>
             </div>
           </div>
