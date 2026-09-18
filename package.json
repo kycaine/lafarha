@@ -5,12 +5,12 @@
   "scripts": {
     "dev": "concurrently -n \"FE,BE\" -c \"cyan.bold,green.bold\" --kill-others-on-fail \"npm run dev:fe\" \"npm run dev:be\"",
     "dev:fe": "next dev",
-    "dev:be": "cd api-worker && npx wrangler dev --remote",
+    "dev:be": "cd api-worker && npx wrangler dev",
     "build": "next build",
-    "build:dev": "NEXT_PUBLIC_API_URL=https://la-dev-api.rizkyap90s.workers.dev next build",
-    "build:prod": "NEXT_PUBLIC_API_URL=https://la-prod-api.rizkyap90s.workers.dev next build",
-    "deploy:dev": "cd api-worker && npx wrangler deploy --config wrangler.toml && cd .. && npm run build:dev && npx wrangler pages deploy out --project-name la-dev --branch main",
-    "deploy:prod": "cd api-worker && npx wrangler deploy --config wrangler.prod.toml && cd .. && npm run build:prod && npx wrangler pages deploy out --project-name la-prod --branch production",
+    "build:dev": "NEXT_PUBLIC_API_URL=https://la-dev-api.rizkyap90s.workers.dev npx @cloudflare/next-on-pages",
+    "build:prod": "NEXT_PUBLIC_API_URL=https://la-prod-api.rizkyap90s.workers.dev npx @cloudflare/next-on-pages",
+    "deploy:dev": "cd api-worker && npx wrangler deploy --config wrangler.toml && cd .. && npm run build:dev && npx wrangler pages deploy .vercel/output/static --project-name la-dev --branch main",
+    "deploy:prod": "cd api-worker && npx wrangler deploy --config wrangler.prod.toml && cd .. && npm run build:prod && npx wrangler pages deploy .vercel/output/static --project-name la-prod --branch production",
     "start": "next start",
     "lint": "eslint"
   },
@@ -19,6 +19,8 @@
     "@types/three": "^0.186.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "firebase": "^12.19.0",
+    "iron-session": "^9.0.1",
     "lucide-react": "^1.46.0",
     "next": "16.3.5",
     "react": "19.2.8",
@@ -28,6 +30,7 @@
     "three": "^0.186.0"
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.13.16",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

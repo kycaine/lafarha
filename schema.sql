@@ -1,5 +1,18 @@
+-- Users table — Firebase UID digunakan sebagai primary key
+-- Role: master | admin | counter | user
+CREATE TABLE IF NOT EXISTS users (
+  id TEXT PRIMARY KEY,           -- Firebase UID
+  email TEXT NOT NULL UNIQUE,
+  display_name TEXT,
+  photo_url TEXT,
+  role TEXT NOT NULL DEFAULT 'user',
+  created_at INTEGER,
+  updated_at INTEGER
+);
+
 CREATE TABLE IF NOT EXISTS orders (
   id TEXT PRIMARY KEY,
+  user_id TEXT,                  -- Firebase UID (nullable untuk order tanpa login)
   client_name TEXT NOT NULL,
   client_whatsapp TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'AWAITING_VERIFICATION',
@@ -9,7 +22,8 @@ CREATE TABLE IF NOT EXISTS orders (
   dp_amount_idr INTEGER,
   pelunasan_amount_idr INTEGER,
   quote_expiry TEXT,
-  created_at INTEGER
+  created_at INTEGER,
+  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS order_items (
@@ -46,3 +60,4 @@ CREATE TABLE IF NOT EXISTS mitra (
   foto TEXT,
   created_at INTEGER
 );
+

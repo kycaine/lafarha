@@ -1,6 +1,6 @@
 export default function SeparatorLine() {
   return (
-    <div className="w-full flex justify-center relative z-20 h-0 pointer-events-none">
+    <div className="w-full flex md:hidden justify-center relative z-20 h-0 pointer-events-none">
       <div className="absolute top-0 -translate-y-1/2 w-full flex justify-center">
         <svg
           viewBox="21.1 22.9 494 43.7"

@@ -3,16 +3,116 @@ import { cors } from 'hono/cors';
 
 type Bindings = {
   DB: D1Database;
+  API_SECRET_KEY: string;
 };
 
 const app = new Hono<{ Bindings: Bindings }>();
 
 // Enable CORS for all routes
 app.use('/*', cors({
-  origin: '*', // In production, you might want to restrict this
+  origin: '*',
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowHeaders: ['Content-Type', 'Authorization'],
+  allowHeaders: ['Content-Type', 'Authorization', 'X-API-Key', 'X-User-ID', 'X-User-Role'],
 }));
+
+// Protect all routes with API Key
+app.use('/*', async (c, next) => {
+  // Check API Key
+  const apiKey = c.req.header('X-API-Key');
+  if (!apiKey || apiKey !== c.env.API_SECRET_KEY) {
+    return c.json({ success: false, error: 'Unauthorized: Invalid or missing API Key' }, 401);
+  }
+  
+  await next();
+});
+
+// -- Users API --
+// Primary key = Firebase UID
+
+app.get('/users', async (c) => {
+  try {
+    const { results } = await c.env.DB.prepare(
+      "SELECT * FROM users ORDER BY created_at DESC"
+    ).all();
+    return c.json({ success: true, data: results });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
+app.get('/users/:id', async (c) => {
+  try {
+    const id = c.req.param('id');
+    const user = await c.env.DB.prepare(
+      "SELECT * FROM users WHERE id = ?"
+    ).bind(id).first();
+    if (!user) return c.json({ success: false, error: 'Not found' }, 404);
+    return c.json({ success: true, data: user });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
+// Upsert user on login — Firebase UID is the primary key
+app.post('/users/upsert', async (c) => {
+  try {
+    const data = await c.req.json();
+    const { id, email, display_name, photo_url, is_master } = data;
+    const now = Date.now();
+
+    const existing = await c.env.DB.prepare(
+      "SELECT * FROM users WHERE id = ?"
+    ).bind(id).first() as any;
+
+    const MASTER_EMAIL = 'kyxdx.id@gmail.com';
+
+    if (!existing) {
+      // New user — create with default role
+      const role = is_master || email === MASTER_EMAIL ? 'master' : 'user';
+      await c.env.DB.prepare(
+        `INSERT INTO users (id, email, display_name, photo_url, role, created_at, updated_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`
+      ).bind(id, email, display_name, photo_url, role, now, now).run();
+
+      const newUser = await c.env.DB.prepare("SELECT * FROM users WHERE id = ?").bind(id).first();
+      return c.json({ success: true, data: newUser });
+    }
+
+    // Existing user — always enforce master role for master email, update display info
+    const role = (email === MASTER_EMAIL) ? 'master' : existing.role;
+    await c.env.DB.prepare(
+      `UPDATE users SET display_name = ?, photo_url = ?, role = ?, updated_at = ? WHERE id = ?`
+    ).bind(display_name, photo_url, role, now, id).run();
+
+    const updatedUser = await c.env.DB.prepare("SELECT * FROM users WHERE id = ?").bind(id).first();
+    return c.json({ success: true, data: updatedUser });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
+// Set user role (master only — enforced in UI layer)
+app.patch('/users/:id/role', async (c) => {
+  try {
+    const id = c.req.param('id');
+    const { role } = await c.req.json();
+
+    const validRoles = ['master', 'admin', 'counter', 'user'];
+    if (!validRoles.includes(role)) {
+      return c.json({ success: false, error: 'Invalid role' }, 400);
+    }
+
+    await c.env.DB.prepare(
+      "UPDATE users SET role = ?, updated_at = ? WHERE id = ?"
+    ).bind(role, Date.now(), id).run();
+
+    return c.json({ success: true });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
+
 
 // -- Products API --
 

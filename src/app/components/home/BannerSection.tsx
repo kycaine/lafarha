@@ -2,6 +2,9 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { useAuth } from "@/shared/AuthContext";
+import { signOut } from "@/lib/auth";
+import { useRouter } from "next/navigation";
 
 // ── Monochrome SVG icons ──────────────────────────────────────────────────────
 const IcoHotel = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>;
@@ -48,7 +51,7 @@ const NAV_LINKS: { label: string; href: string; dropdown: { label: string; desc:
     href: "#footer",
     dropdown: [
       { label: "WhatsApp", desc: "+62 812 3456 7890", href: "#footer", Icon: IcoPhone },
-      { label: "Email", desc: "info@macanputih.id", href: "#footer", Icon: IcoMail },
+      { label: "Email", desc: "info@kanza.id", href: "#footer", Icon: IcoMail },
       { label: "Kantor Jakarta", desc: "Jakarta Selatan, Indonesia", href: "#footer", Icon: IcoPin },
     ],
   },
@@ -181,9 +184,32 @@ function NavItem({
 
 // ── Main component ────────────────────────────────────────────────────────────
 export default function BannerSection() {
+  const { user } = useAuth();
+  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [profileDropdown, setProfileDropdown] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function onClickOutside(e: MouseEvent) {
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+        setProfileDropdown(false);
+      }
+    }
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, []);
+
+  const handleLogoutConfirm = async () => {
+    setLoggingOut(true);
+    await signOut();
+    router.push("/login");
+  };
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 30);
@@ -207,8 +233,10 @@ export default function BannerSection() {
       : "none",
     backdropFilter: scrolled ? "blur(24px) saturate(1.5)" : "none",
     WebkitBackdropFilter: scrolled ? "blur(24px) saturate(1.5)" : "none",
-    opacity: scrolled ? 1 : 0,
-    pointerEvents: scrolled ? "auto" : "none",
+    opacity: 1,
+    pointerEvents: "auto",
+    fontFamily: '"Times New Roman", Times, serif',
+    letterSpacing: "0.02em",
   };
 
   return (
@@ -244,10 +272,11 @@ export default function BannerSection() {
                   style={{
                     color: scrolled ? "#fff" : "#1e293b",
                     fontSize: scrolled ? "11px" : "13px",
+                    fontFamily: 'var(--font-cinzel), serif',
                     transition: "color 600ms cubic-bezier(0.4,0,0.2,1), font-size 600ms cubic-bezier(0.4,0,0.2,1)",
                   }}
                 >
-                  Macan Putih
+                  Kanza
                 </span>
                 <span
                   className="font-medium tracking-[0.2em] uppercase block"
@@ -271,23 +300,120 @@ export default function BannerSection() {
 
             {/* Profile icon (Desktop) */}
             <div className="hidden md:flex justify-end flex-1">
-              <Link href="/penawaran">
-                <button
-                  className="group flex items-center justify-center rounded-full transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
-                  style={{
-                    width: scrolled ? "34px" : "38px",
-                    height: scrolled ? "34px" : "38px",
-                    background: "linear-gradient(135deg,#C9A84C,#8B6914)",
-                    boxShadow: "0 2px 12px rgba(201,168,76,0.3)",
-                    color: "#fff",
-                    transition:
-                      "width 600ms cubic-bezier(0.4,0,0.2,1), height 600ms cubic-bezier(0.4,0,0.2,1)",
-                  }}
-                  title="Login / Akun"
-                >
-                  <IconUser />
-                </button>
-              </Link>
+              {user ? (
+                // Sudah login — dropdown
+                <div className="relative" ref={profileRef}>
+                  <button
+                    onClick={() => setProfileDropdown((v) => !v)}
+                    className="flex items-center gap-2.5 focus:outline-none group"
+                    title={user.displayName ?? "Akun"}
+                  >
+                    {/* Foto profil */}
+                    <div
+                      className="flex-shrink-0 flex items-center justify-center rounded-full overflow-hidden border-2 border-white/60 shadow-md"
+                      style={{
+                        width: scrolled ? "30px" : "34px",
+                        height: scrolled ? "30px" : "34px",
+                        transition: "width 600ms cubic-bezier(0.4,0,0.2,1), height 600ms cubic-bezier(0.4,0,0.2,1)",
+                        background: user.photoURL ? "transparent" : "linear-gradient(135deg,#C9A84C,#8B6914)",
+                      }}
+                    >
+                      {user.photoURL ? (
+                        <img
+                          src={user.photoURL}
+                          alt={user.displayName ?? "Profil"}
+                          referrerPolicy="no-referrer"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <IconUser />
+                      )}
+                    </div>
+
+                    {/* Nama + Email */}
+                    <div className="text-left leading-tight hidden lg:block">
+                      <p
+                        className="text-xs font-semibold truncate max-w-[120px]"
+                        style={{ color: scrolled ? "rgba(255,255,255,0.9)" : "#1e293b" }}
+                      >
+                        {user.displayName ?? "Pengguna"}
+                      </p>
+                      <p
+                        className="text-[10px] truncate max-w-[120px]"
+                        style={{ color: scrolled ? "rgba(255,255,255,0.5)" : "#94a3b8" }}
+                      >
+                        {user.email ?? ""}
+                      </p>
+                    </div>
+
+                    {/* Chevron */}
+                    <svg
+                      width="12" height="12" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                      className="flex-shrink-0 hidden lg:block transition-transform duration-200"
+                      style={{
+                        color: scrolled ? "rgba(255,255,255,0.4)" : "#94a3b8",
+                        transform: profileDropdown ? "rotate(180deg)" : "rotate(0deg)",
+                      }}
+                    >
+                      <polyline points="6 9 12 15 18 9" />
+                    </svg>
+                  </button>
+
+                  {/* Dropdown */}
+                  <div
+                    style={{
+                      opacity: profileDropdown ? 1 : 0,
+                      transform: profileDropdown ? "translateY(0) scale(1)" : "translateY(-6px) scale(0.97)",
+                      pointerEvents: profileDropdown ? "auto" : "none",
+                      transition: "opacity 180ms ease, transform 180ms ease",
+                    }}
+                    className="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl border border-slate-100 shadow-xl shadow-slate-200/60 overflow-hidden z-50"
+                  >
+                    {/* User info mini */}
+                    <div className="px-4 py-3 border-b border-slate-50">
+                      <p className="text-xs font-semibold text-slate-700 truncate">{user.displayName}</p>
+                      <p className="text-[10px] text-slate-400 truncate">{user.email}</p>
+                    </div>
+                    <div className="py-1">
+                      <Link
+                        href="/settings"
+                        onClick={() => setProfileDropdown(false)}
+                        className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+                        Pengaturan
+                      </Link>
+                      <div className="border-t border-slate-50 my-1" />
+                      <button
+                        onClick={() => { setProfileDropdown(false); setShowLogoutModal(true); }}
+                        className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                        Keluar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                // Belum login — icon generik, klik ke login
+                <Link href="/login">
+                  <button
+                    className="group flex items-center justify-center rounded-full transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
+                    style={{
+                      width: scrolled ? "34px" : "38px",
+                      height: scrolled ? "34px" : "38px",
+                      background: "linear-gradient(135deg,#C9A84C,#8B6914)",
+                      boxShadow: "0 2px 12px rgba(201,168,76,0.3)",
+                      color: "#fff",
+                      transition: "width 600ms cubic-bezier(0.4,0,0.2,1), height 600ms cubic-bezier(0.4,0,0.2,1)",
+                    }}
+                    title="Login"
+                  >
+                    <IconUser />
+                  </button>
+                </Link>
+              )}
             </div>
 
             {/* Mobile Menu Button */}
@@ -362,8 +488,8 @@ export default function BannerSection() {
             </h1>
             {/* Subtitle */}
             <p 
-              className="w-full text-right text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a] tracking-wider -mt-4 sm:-mt-6 md:-mt-8 lg:-mt-10"
-              style={{ fontFamily: 'var(--font-handwriting), cursive' }}
+              className="w-full text-right text-2xl sm:text-3xl md:text-4xl font-normal text-[#1a1a1a] tracking-wide -mt-4 sm:-mt-6 md:-mt-8 lg:-mt-10"
+              style={{ fontFamily: '"Times New Roman", Times, serif' }}
             >
               Land Arrangement Umrah Service
             </p>
@@ -377,18 +503,29 @@ export default function BannerSection() {
               Penawaran
             </button>
           </Link>
-          <a href="#product">
-            <button className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-full font-bold text-black opacity-40 bg-transparent border border-black hover:opacity-100 transition-all duration-300 text-xs sm:text-sm tracking-wide whitespace-nowrap">
-              Layanan
-            </button>
-          </a>
-          <a href="#footer">
-            <button className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-full font-bold text-black opacity-40 bg-transparent border border-black hover:opacity-100 transition-all duration-300 text-xs sm:text-sm tracking-wide whitespace-nowrap">
-              Kontak
-            </button>
-          </a>
         </div>
       </section>
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={() => setShowLogoutModal(false)} />
+          <div className="relative z-10 bg-white rounded-2xl shadow-2xl border border-slate-100 p-6 w-full max-w-sm">
+            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-red-50 mx-auto mb-4">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            </div>
+            <h2 className="text-center text-base font-bold text-slate-800 mb-1">Keluar dari Akun?</h2>
+            <p className="text-center text-sm text-slate-500 mb-6">Sesi Anda akan berakhir dan diarahkan ke halaman login.</p>
+            <div className="flex gap-3">
+              <button onClick={() => setShowLogoutModal(false)} disabled={loggingOut} className="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-600 text-sm font-semibold hover:bg-slate-50 transition-colors disabled:opacity-50">Batal</button>
+              <button onClick={handleLogoutConfirm} disabled={loggingOut} className="flex-1 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white text-sm font-semibold transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
+                {loggingOut ? <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : null}
+                {loggingOut ? "Keluar..." : "Ya, Keluar"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
