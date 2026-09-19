@@ -1,15 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getIronSession } from "iron-session";
-import { sessionOptions, SessionData } from "@/lib/session";
+import { getSessionOptions, SessionData } from "@/lib/session";
 
 type Role = "master" | "admin" | "counter" | "user";
 
 const ROUTE_RULES: { pattern: RegExp; allowedRoles: Role[] }[] = [
-  {
-    // /settings — semua yang sudah login bisa akses
-    pattern: /^\/settings(\/.*)?$/,
-    allowedRoles: ["user", "counter", "admin", "master"],
-  },
   {
     // /admin/* — admin dan master saja
     pattern: /^\/admin(\/.*)?$/,
@@ -20,11 +15,6 @@ const ROUTE_RULES: { pattern: RegExp; allowedRoles: Role[] }[] = [
     pattern: /^\/counter(\/.*)?$/,
     allowedRoles: ["counter", "master"],
   },
-  {
-    // /penawaran — semua yang sudah login
-    pattern: /^\/penawaran(\/.*)?$/,
-    allowedRoles: ["user", "counter", "admin", "master"],
-  },
 ];
 
 export async function middleware(req: NextRequest) {
@@ -34,7 +24,7 @@ export async function middleware(req: NextRequest) {
   if (!rule) return NextResponse.next(); // route tidak diproteksi
 
   const res = NextResponse.next();
-  const session = await getIronSession<SessionData>(req, res, sessionOptions);
+  const session = await getIronSession<SessionData>(req, res, getSessionOptions());
   
   const role = session.role;
   const token = session.uid; // we just check if it exists
@@ -58,5 +48,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/settings/:path*", "/penawaran/:path*", "/admin/:path*", "/counter/:path*"],
+  matcher: ["/admin/:path*", "/counter/:path*"],
 };

@@ -3,14 +3,6 @@ import { getSession } from "@/lib/session";
 
 export const runtime = 'edge';
 
-const API_WORKER_URL = process.env.NEXT_PUBLIC_API_URL;
-const API_SECRET_KEY = process.env.API_SECRET_KEY;
-
-export async function middleware(req: NextRequest) {
-  // We handle all HTTP methods
-  return handleProxy(req);
-}
-
 export const GET = handleProxy;
 export const POST = handleProxy;
 export const PUT = handleProxy;
@@ -19,6 +11,9 @@ export const DELETE = handleProxy;
 export const OPTIONS = handleProxy;
 
 async function handleProxy(req: NextRequest) {
+  const API_WORKER_URL = process.env.NEXT_PUBLIC_API_URL || "https://la-dev-api.rizkyap90s.workers.dev";
+  const API_SECRET_KEY = process.env.API_SECRET_KEY || "super_secret_api_key_for_backend_worker";
+
   if (!API_WORKER_URL || !API_SECRET_KEY) {
     return NextResponse.json({ error: "API configuration missing" }, { status: 500 });
   }

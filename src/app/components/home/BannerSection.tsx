@@ -454,9 +454,9 @@ export default function BannerSection() {
             </a>
           ))}
           <div className="border-t border-slate-100 my-1"></div>
-          <Link href="/penawaran" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3">
+          <Link href={user ? "/penawaran" : "/login"} onClick={() => setMobileMenuOpen(false)} className="px-4 py-3">
              <button className="w-full py-3 bg-gradient-to-r from-[#C9A84C] to-[#8B6914] text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow-md shadow-[#C9A84C]/20 hover:-translate-y-0.5 transition-all">
-               <IconUser /> Profil / Layanan
+               <IconUser /> {user ? "Profil / Layanan" : "Sign In"}
              </button>
           </Link>
         </div>

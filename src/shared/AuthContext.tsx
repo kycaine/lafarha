@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { User } from "firebase/auth";
-import { onAuthChange } from "@/lib/auth";
+import { onAuthChange, handleRedirectResult } from "@/lib/auth";
 import { upsertUserProfile, UserProfile } from "@/lib/user-store";
 
 interface AuthContextType {
@@ -21,6 +21,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // Process any pending redirect results (crucial for mobile signInWithRedirect)
+  useEffect(() => {
+    handleRedirectResult().catch(err => {
+      console.error("Redirect login failed:", err);
+    });
+  }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthChange(async (firebaseUser) => {

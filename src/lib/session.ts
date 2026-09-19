@@ -8,17 +8,19 @@ export interface SessionData {
   isLoggedIn: boolean;
 }
 
-export const sessionOptions: SessionOptions = {
-  password: process.env.SESSION_SECRET || "complex_password_at_least_32_characters_long_for_iron_session",
-  cookieName: "kanza_auth_session",
-  cookieOptions: {
-    secure: process.env.NODE_ENV === "production",
-  },
-};
+export function getSessionOptions(): SessionOptions {
+  return {
+    password: process.env.SESSION_SECRET || "complex_password_at_least_32_characters_long_for_iron_session",
+    cookieName: "kanza_auth_session",
+    cookieOptions: {
+      secure: process.env.NODE_ENV === "production",
+    },
+  };
+}
 
 export async function getSession() {
   const cookieStore = await cookies();
-  const session = await getIronSession<SessionData>(cookieStore, sessionOptions);
+  const session = await getIronSession<SessionData>(cookieStore, getSessionOptions());
   
   if (!session.isLoggedIn) {
     session.isLoggedIn = false;

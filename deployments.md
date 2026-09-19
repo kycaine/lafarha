@@ -19,13 +19,14 @@ Dokumen ini berisi panduan deployment aplikasi LA ke ekosistem Cloudflare.
 
 ## Environment Files
 
-| File | Dipakai saat | Isi |
-|---|---|---|
-| `.env.local` | `npm run dev` | `NEXT_PUBLIC_API_URL=http://localhost:8787` |
-| *(inline via script)* | `npm run build:dev` | `NEXT_PUBLIC_API_URL=https://la-dev-api.rizkyap90s.workers.dev` |
-| *(inline via script)* | `npm run build:prod` | `NEXT_PUBLIC_API_URL=https://la-prod-api.rizkyap90s.workers.dev` |
+Mulai sekarang, kita menggunakan pemisahan file env secara standar Next.js:
 
-> **Kenapa inline?** `NEXT_PUBLIC_*` di-bake saat build time. `.env.local` selalu override env file lain di Next.js, jadi inject via CLI adalah cara yang paling reliable.
+| File | Dipakai saat | Deskripsi & Isi |
+|---|---|---|
+| `.env.development` | `npm run dev` (Lokal) | Digunakan untuk pengembangan lokal. Memuat konfigurasi seperti `NEXT_PUBLIC_API_URL=http://localhost:8788`. |
+| `.env.production` | `npm run deploy:dev` (Deploy) | Digunakan saat proses *build* untuk *deployment*. Memuat konfigurasi server seperti `NEXT_PUBLIC_API_URL=https://la-dev-api.rizkyap90s.workers.dev`. |
+
+> **Info Penting**: Jangan pernah menggunakan `.env.local` karena file tersebut akan mem-bypass dan menimpa lingkungan lain secara paksa, yang sering menyebabkan URL lokal (localhost) ikut terbawa (ter-bake) ke dalam build untuk *production*.
 
 ---
 

@@ -4,6 +4,7 @@ import { cors } from 'hono/cors';
 type Bindings = {
   DB: D1Database;
   API_SECRET_KEY: string;
+  MASTER_EMAIL?: string;
 };
 
 const app = new Hono<{ Bindings: Bindings }>();
@@ -22,7 +23,7 @@ app.use('/*', async (c, next) => {
   if (!apiKey || apiKey !== c.env.API_SECRET_KEY) {
     return c.json({ success: false, error: 'Unauthorized: Invalid or missing API Key' }, 401);
   }
-  
+
   await next();
 });
 
@@ -64,7 +65,7 @@ app.post('/users/upsert', async (c) => {
       "SELECT * FROM users WHERE id = ?"
     ).bind(id).first() as any;
 
-    const MASTER_EMAIL = 'kyxdx.id@gmail.com';
+    const MASTER_EMAIL = c.env.MASTER_EMAIL || 'talkto.rezki@gmail.com';
 
     if (!existing) {
       // New user — create with default role
@@ -217,7 +218,7 @@ app.post('/orders', async (c) => {
     }
 
     const services = specsJson.services || [];
-    
+
     // Prefix Mapping
     const prefixMap: Record<string, string> = {
       'HOTEL': 'HOT',
@@ -227,7 +228,7 @@ app.post('/orders', async (c) => {
       'TRANS_AIRPORT': 'TRA',
       'TRANS_TOUR': 'TRT'
     };
-    
+
     const titleMap: Record<string, string> = {
       'HOTEL': 'Hotel',
       'FLIGHT': 'Tiket Pesawat',
@@ -246,10 +247,10 @@ app.post('/orders', async (c) => {
       `INSERT INTO orders (id, client_name, client_whatsapp, status, token, token_expiry, created_at) 
        VALUES (?, ?, ?, 'AWAITING_VERIFICATION', ?, ?, ?)`
     ).bind(
-      orderId, 
-      formData.name, 
-      formData.whatsapp, 
-      token, 
+      orderId,
+      formData.name,
+      formData.whatsapp,
+      token,
       tokenExpiry,
       new Date().toISOString()
     ).run();
@@ -263,7 +264,7 @@ app.post('/orders', async (c) => {
       else if (srv === 'VISA') itemSpecs = specsJson.visa || {};
       else if (srv === 'TRANS_AIRPORT') itemSpecs = specsJson.transAirport || {};
       else if (srv === 'TRANS_TOUR') itemSpecs = specsJson.transTour || {};
-      
+
       // Inject generic pax info into each spec if needed
       itemSpecs = { ...itemSpecs, pax: specsJson.pax, customFields: specsJson.customFields?.[srv] };
 
@@ -288,7 +289,7 @@ app.put('/orders/:id/quote', async (c) => {
   try {
     const orderId = c.req.param('id');
     const quoteData = await c.req.json();
-    
+
     await c.env.DB.prepare(
       `UPDATE orders 
        SET status = 'QUOTATION_READY', 
@@ -345,7 +346,7 @@ app.get('/orders/:id', async (c) => {
     const id = c.req.param('id');
     const { results: orders } = await c.env.DB.prepare("SELECT * FROM orders WHERE id = ?").bind(id).all();
     if (orders.length === 0) return c.json({ success: false, error: 'Not found' }, 404);
-    
+
     const { results: items } = await c.env.DB.prepare("SELECT * FROM order_items WHERE order_id = ?").bind(id).all();
     return c.json({ success: true, data: { ...orders[0], items } });
   } catch (error: any) {
