@@ -38,6 +38,8 @@ export async function upsertUserProfile(
 ): Promise<UserProfile> {
   const isMaster = email === MASTER_EMAIL;
 
+  console.log("[user-store] upsertUserProfile dipanggil:", { uid, email, isMaster });
+
   const res = await fetchApi(`/users/upsert`, {
     method: "POST",
     body: JSON.stringify({
@@ -49,7 +51,11 @@ export async function upsertUserProfile(
     }),
   });
 
-  if (!res.success) throw new Error(res.error ?? "Failed to upsert user");
+  console.log("[user-store] upsert response:", res);
+
+  if (!res.success) {
+    throw new Error(res.error ?? "Failed to upsert user");
+  }
   return res.data as UserProfile;
 }
 

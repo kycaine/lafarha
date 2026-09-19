@@ -28,6 +28,8 @@ async function handleProxy(req: NextRequest) {
   // Build the target URL
   const targetUrl = `${API_WORKER_URL}${path}${url.search}`;
 
+  console.log(`[Proxy] ${req.method} ${path} | session.isLoggedIn=${session.isLoggedIn} | uid=${session.uid ?? 'none'} | role=${session.role ?? 'none'}`);
+
   // Forward headers, but attach secret key and user info
   const headers = new Headers(req.headers);
   headers.set("X-API-Key", API_SECRET_KEY);
@@ -53,6 +55,8 @@ async function handleProxy(req: NextRequest) {
     }
 
     const response = await fetch(targetUrl, fetchOptions);
+
+    console.log(`[Proxy] Response: ${response.status} from ${targetUrl}`);
 
     // Create a new response to send back to the client
     const proxyResponse = new NextResponse(response.body, {
