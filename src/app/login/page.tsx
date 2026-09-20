@@ -18,9 +18,9 @@ function LoginContent() {
   // Jika sudah login, redirect langsung
   useEffect(() => {
     if (!loading && user) {
-      router.replace(next);
+      window.location.href = next;
     }
-  }, [user, loading, next, router]);
+  }, [user, loading, next]);
 
   const handleLogin = async () => {
     setSigning(true);

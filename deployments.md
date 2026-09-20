@@ -50,8 +50,8 @@ npm run deploy:dev
 
 Yang dijalankan di balik layar:
 1. `cd api-worker && npx wrangler deploy --config wrangler.toml` → deploy worker ke `la-dev-api`
-2. `npm run build:dev` → build Next.js dengan URL `la-dev-api` di-bake
-3. `npx wrangler pages deploy out --project-name la-dev --branch main` → deploy ke Pages
+2. `npm run build:dev` → build Next.js (menggunakan `@cloudflare/next-on-pages` ke `.vercel/output/static` dan me-patch `async_hooks`)
+3. `npx wrangler pages deploy` → deploy ke Pages (menggunakan setting output dir dari `wrangler.toml`)
 
 ---
 

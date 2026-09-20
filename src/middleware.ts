@@ -15,6 +15,11 @@ const ROUTE_RULES: { pattern: RegExp; allowedRoles: Role[] }[] = [
     pattern: /^\/counter(\/.*)?$/,
     allowedRoles: ["counter", "master"],
   },
+  {
+    // /penawaran/*, /quote/*, /settings/* — semua user yang login
+    pattern: /^\/(penawaran|quote|settings)(\/.*)?$/,
+    allowedRoles: ["admin", "master", "counter", "user"],
+  },
 ];
 
 export async function middleware(req: NextRequest) {
@@ -48,5 +53,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/counter/:path*"],
+  matcher: ["/admin/:path*", "/counter/:path*", "/penawaran/:path*", "/quote/:path*", "/settings/:path*"],
 };

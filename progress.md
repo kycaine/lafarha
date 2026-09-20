@@ -59,6 +59,18 @@ Proses pendaftaran *user*, halaman *Mitra*, dan *Products* **SUDAH BERFUNGSI NOR
 - Jika `upsertUserProfile()` gagal (network error, worker belum ready), `setLoading(false)` tidak dipanggil dengan benar dan session tidak pernah di-set → user stuck.
 - **Fix**: Tambahkan fallback di catch block: set session dengan `role: "user"` dari Firebase UID secara langsung, agar user tidak stuck di loading screen.
 
-### Bug D — Tidak ada logging untuk debug
 - **Fix**: Tambahkan `console.log` di `user-store.ts`, `AuthContext.tsx`, dan proxy route untuk mempermudah debugging di masa depan.
 
+## 7. Bug Fixes — Next.js 16 Edge Runtime `async_hooks` Issue (2026-09-19)
+**Issue:** Endpoint proxy (`/api/proxy/...`) dan endpoint auth (`/api/auth/...`) selalu melempar `500 Internal Server Error` di Cloudflare Pages, yang menyebabkan semua pemanggilan API backend (termasuk penyimpanan data saat pendaftaran user) mati total.
+
+**Root Cause:**
+- Next.js (terutama saat memanggil fungsi `cookies()` atau `headers()`) menggunakan modul internal Node.js bernama `async_hooks`.
+- Saat Next.js di-*build* untuk lingkungan Edge Runtime, *compiler* menghasilkan kode pemanggilan tanpa awalan `node:` (i.e. `require("async_hooks")`).
+- Cloudflare Workers/Pages mensyaratkan semua modul native Node.js dipanggil dengan awalan `node:` (i.e. `require("node:async_hooks")`). 
+- Karena ketidakcocokan ini, Cloudflare mengira `async_hooks` adalah *file* lokal dan akhirnya mengalami *crash* "No Such Module".
+
+**Solusi yang telah diterapkan:**
+- Menambahkan **Post-Build Script Patch** di dalam `package.json`.
+- Script tersebut secara otomatis menggunakan perintah `sed` untuk mencari dan mengganti semua teks `"async_hooks"` dan `'async_hooks'` menjadi `"node:async_hooks"` dan `'node:async_hooks'` pada setiap file javascript yang dihasilkan (`_worker.js`) sebelum proses diunggah (deploy) ke Cloudflare.
+- **Hasil:** Aplikasi akhirnya dapat memuat _native module_ dari Node.js, error 500 hilang secara permanen, dan sinkronisasi data antar _frontend_ (Firebase) ke D1 Database via Proxy berjalan sempurna.
