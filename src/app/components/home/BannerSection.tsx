@@ -445,11 +445,31 @@ export default function BannerSection() {
             </a>
           ))}
           <div className="border-t border-slate-100 my-1"></div>
-          <Link href={user ? "/penawaran" : "/login"} onClick={() => setMobileMenuOpen(false)} className="px-4 py-3">
-             <button className="w-full py-3 bg-gradient-to-r from-[#C9A84C] to-[#8B6914] text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow-md shadow-[#C9A84C]/20 hover:-translate-y-0.5 transition-all">
-               <IconUser /> {user ? "Profil / Layanan" : "Sign In"}
-             </button>
-          </Link>
+          {user ? (
+            <div className="flex flex-col">
+              <div className="px-5 py-3 bg-slate-50/50">
+                <p className="text-sm font-semibold text-slate-800 truncate">{user.displayName}</p>
+                <p className="text-[11px] text-slate-500 truncate">{user.email}</p>
+              </div>
+              <Link href="/settings" onClick={() => setMobileMenuOpen(false)} className="px-5 py-3.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-2.5 transition-colors">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+                Pengaturan
+              </Link>
+              <button
+                onClick={() => { setMobileMenuOpen(false); setShowLogoutModal(true); }}
+                className="w-full text-left px-5 py-3.5 text-sm font-semibold text-red-600 hover:bg-red-50 flex items-center gap-2.5 transition-colors border-t border-slate-50"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Keluar
+              </button>
+            </div>
+          ) : (
+            <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3">
+               <button className="w-full py-3 bg-gradient-to-r from-[#C9A84C] to-[#8B6914] text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow-md shadow-[#C9A84C]/20 hover:-translate-y-0.5 transition-all">
+                 <IconUser /> Sign In
+               </button>
+            </Link>
+          )}
         </div>
       </div>
 
@@ -461,15 +481,12 @@ export default function BannerSection() {
       >
         {/* Background Video */}
         <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
-          {/* Desktop Video */}
-          <video autoPlay loop muted playsInline className="w-full h-full object-cover hidden sm:block" src="/banner.mp4" />
-          {/* Mobile Video */}
-          <video autoPlay loop muted playsInline className="w-full h-full object-cover block sm:hidden" src="/banner-hp.mp4" />
+          <video autoPlay loop muted playsInline className="w-full h-full object-cover" src="/banner.mp4" />
         </div>
 
         {/* Center content */}
-        <div className="relative z-10 flex-1 flex flex-col items-center justify-start sm:justify-center text-center px-4 mx-auto w-full overflow-hidden">
-          <div className="w-[90vw] max-w-[1200px] mx-auto flex flex-col mt-[20vh] sm:mt-0">
+        <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-4 mx-auto w-full overflow-hidden">
+          <div className="w-[90vw] max-w-[1200px] mx-auto flex flex-col">
             {/* Headline */}
             <h1 
               className="w-full flex justify-between items-center font-black text-[#1a1a1a] leading-none tracking-tighter whitespace-nowrap"
