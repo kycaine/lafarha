@@ -1,5 +1,5 @@
 {
-  "name": "la-app",
+  "name": "farha-app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,8 +9,11 @@
     "build": "next build --webpack",
     "build:dev": "npx @cloudflare/next-on-pages && find .vercel/output/static/_worker.js -type f -name '*.js' -exec sed -i 's/\"async_hooks\"/\"node:async_hooks\"/g' {} + && find .vercel/output/static/_worker.js -type f -name '*.js' -exec sed -i \"s/'async_hooks'/'node:async_hooks'/g\" {} +",
     "build:prod": "npx @cloudflare/next-on-pages && find .vercel/output/static/_worker.js -type f -name '*.js' -exec sed -i 's/\"async_hooks\"/\"node:async_hooks\"/g' {} + && find .vercel/output/static/_worker.js -type f -name '*.js' -exec sed -i \"s/'async_hooks'/'node:async_hooks'/g\" {} +",
-    "deploy:dev": "cd api-worker && npx wrangler deploy --config wrangler.toml && cd .. && npm run build:dev && npx wrangler pages deploy",
-    "deploy:prod": "cd api-worker && npx wrangler deploy --config wrangler.prod.toml && cd .. && npm run build:prod && npx wrangler pages deploy",
+    "deploy:dev": "cd api-worker && npx wrangler deploy --config wrangler.toml && cd .. && npm run build:dev && CLOUDFLARE_ACCOUNT_ID=ef964688891b9260ac3e9a712c69cd74 npx wrangler pages deploy .vercel/output/static --project-name dev-farha",
+    "deploy:prod": "cd api-worker && npx wrangler deploy --config wrangler.prod.toml && cd .. && npm run build:prod && CLOUDFLARE_ACCOUNT_ID=ef964688891b9260ac3e9a712c69cd74 npx wrangler pages deploy",
+    "db:init-local": "cd api-worker && npx wrangler d1 execute DB --local --file=../schema.sql",
+    "db:init-dev": "cd api-worker && npx wrangler d1 execute DB --remote --file=../schema.sql --config wrangler.toml",
+    "db:init-prod": "cd api-worker && npx wrangler d1 execute DB --remote --file=../schema.sql --config wrangler.prod.toml",
     "start": "next start",
     "lint": "eslint"
   },

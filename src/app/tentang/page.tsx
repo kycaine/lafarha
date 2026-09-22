@@ -3,8 +3,8 @@ import Link from "next/link";
 import FooterSection from "../components/home/FooterSection";
 
 export const metadata = {
-  title: "Tentang Kami — LA Kanza",
-  description: "Kenali lebih dekat tentang tim dan perusahaan LA Kanza.",
+  title: "Tentang Kami — FARHA",
+  description: "Kenali lebih dekat tentang tim dan perusahaan FARHA.",
 };
 
 const FOUNDERS = [
@@ -62,7 +62,7 @@ export default function TentangPage() {
           </h1>
 
           <p className="text-slate-500 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">
-            Kanza adalah platform B2B terpercaya yang berdedikasi untuk memfasilitasi kebutuhan Land Arrangement Umrah. Kami membantu travel agent di seluruh Indonesia memberikan pengalaman spiritual yang lancar dan tak terlupakan sejak tahun 2014.
+            FARHA adalah platform B2B terpercaya yang berdedikasi untuk memfasilitasi kebutuhan Land Arrangement Umrah. Kami membantu travel agent di seluruh Indonesia memberikan pengalaman spiritual yang lancar dan tak terlupakan sejak tahun 2014.
           </p>
         </div>
 

@@ -58,10 +58,10 @@ function LoginContent() {
           {/* Logo */}
           <div className="flex flex-col items-center gap-3">
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#C9A84C] to-[#8B6914] flex items-center justify-center shadow-lg shadow-[#C9A84C]/30">
-              <span className="text-white font-black text-2xl tracking-tight" style={{ fontFamily: 'var(--font-cinzel), serif' }}>K</span>
+              <span className="text-white font-black text-2xl tracking-tight" style={{ fontFamily: 'var(--font-cinzel), serif' }}>F</span>
             </div>
             <div className="text-center">
-              <p className="font-bold text-lg text-slate-800 tracking-wide" style={{ fontFamily: 'var(--font-cinzel), serif' }}>Kanza</p>
+              <p className="font-bold text-lg text-slate-800 tracking-wide" style={{ fontFamily: 'var(--font-cinzel), serif' }}>FARHA</p>
               <p className="text-[#C9A84C] text-[11px] font-semibold tracking-[0.25em] uppercase">Land Arrangement Umrah</p>
             </div>
           </div>
@@ -103,7 +103,7 @@ function LoginContent() {
           </button>
 
           <p className="text-xs text-slate-400 text-center leading-relaxed">
-            Dengan login, Anda menyetujui syarat dan ketentuan layanan Kanza.
+            Dengan login, Anda menyetujui syarat dan ketentuan layanan FARHA.
           </p>
         </div>
       </div>

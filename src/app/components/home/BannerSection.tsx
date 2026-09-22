@@ -51,7 +51,7 @@ const NAV_LINKS: { label: string; href: string; dropdown: { label: string; desc:
     href: "#footer",
     dropdown: [
       { label: "WhatsApp", desc: "+62 812 3456 7890", href: "#footer", Icon: IcoPhone },
-      { label: "Email", desc: "info@kanza.id", href: "#footer", Icon: IcoMail },
+      { label: "Email", desc: "info@farha.id", href: "#footer", Icon: IcoMail },
       { label: "Kantor Jakarta", desc: "Jakarta Selatan, Indonesia", href: "#footer", Icon: IcoPin },
     ],
   },
@@ -248,24 +248,15 @@ export default function BannerSection() {
 
             {/* Logo */}
             <div className="flex items-center gap-2.5 flex-1">
-              <div
-                className="rounded-lg bg-gradient-to-br from-[#C9A84C] to-[#8B6914] flex items-center justify-center shadow-md shadow-[#C9A84C]/30"
+              <img 
+                src="/farha-logo-only.svg" 
+                alt="FARHA Logo"
                 style={{
                   width: scrolled ? "28px" : "36px",
                   height: scrolled ? "28px" : "36px",
                   transition: "width 600ms cubic-bezier(0.4,0,0.2,1), height 600ms cubic-bezier(0.4,0,0.2,1)",
                 }}
-              >
-                <span
-                  className="text-white font-bold tracking-tight"
-                  style={{
-                    fontSize: scrolled ? "10px" : "13px",
-                    transition: "font-size 600ms cubic-bezier(0.4,0,0.2,1)",
-                  }}
-                >
-                  LA
-                </span>
-              </div>
+              />
               <div className="leading-tight">
                 <span
                   className="font-bold tracking-wide block"
@@ -276,7 +267,7 @@ export default function BannerSection() {
                     transition: "color 600ms cubic-bezier(0.4,0,0.2,1), font-size 600ms cubic-bezier(0.4,0,0.2,1)",
                   }}
                 >
-                  Kanza
+                  FARHA
                 </span>
                 <span
                   className="font-medium tracking-[0.2em] uppercase block"
@@ -403,10 +394,10 @@ export default function BannerSection() {
                     style={{
                       width: scrolled ? "34px" : "38px",
                       height: scrolled ? "34px" : "38px",
-                      background: "linear-gradient(135deg,#C9A84C,#8B6914)",
-                      boxShadow: "0 2px 12px rgba(201,168,76,0.3)",
-                      color: "#fff",
-                      transition: "width 600ms cubic-bezier(0.4,0,0.2,1), height 600ms cubic-bezier(0.4,0,0.2,1)",
+                      background: "transparent",
+                      border: "1.5px solid #1e293b",
+                      color: "#1e293b",
+                      transition: "width 600ms cubic-bezier(0.4,0,0.2,1), height 600ms cubic-bezier(0.4,0,0.2,1), color 600ms, border-color 600ms",
                     }}
                     title="Login"
                   >
@@ -487,10 +478,10 @@ export default function BannerSection() {
                 fontSize: 'clamp(3rem, 19vw, 15rem)' 
               }}
             >
-              <span>K</span>
+              <span>F</span>
               <span>A</span>
-              <span>N</span>
-              <span>Z</span>
+              <span>R</span>
+              <span>H</span>
               <span>A</span>
             </h1>
             {/* Subtitle */}

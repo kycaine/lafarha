@@ -37,7 +37,7 @@ const IconPin = () => (
 
 const CONTACTS = [
   { Icon: IconPhone, label: "WhatsApp", value: "+62 812 3456 7890" },
-  { Icon: IconMail, label: "Email", value: "info@kanza.id" },
+  { Icon: IconMail, label: "Email", value: "info@farha.id" },
   { Icon: IconPin, label: "Kantor", value: "Jakarta Selatan, Indonesia" },
 ];
 
@@ -52,13 +52,11 @@ export default function FooterSection() {
           {/* Brand column */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3 mb-5">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#C9A84C] to-[#8B6914] flex items-center justify-center shadow-lg shadow-[#C9A84C]/25">
-                <span className="text-white font-black text-sm">LA</span>
-              </div>
-              <div>
-                <p className="text-slate-800 font-bold text-base tracking-wide" style={{ fontFamily: 'var(--font-cinzel), serif' }}>Kanza</p>
-                <p className="text-[#C9A84C] text-[9px] font-semibold tracking-[0.25em] uppercase">Umrah Land Arrangement</p>
-              </div>
+              <img 
+                src="/farha-logo-full.svg" 
+                alt="FARHA Logo" 
+                className="h-24 w-auto object-contain"
+              />
             </div>
             <p className="text-slate-500 text-sm leading-relaxed max-w-xs mb-8">
               Platform B2B terpercaya untuk kebutuhan Land Arrangement Umrah. Melayani travel agent dan agen perjalanan di seluruh Indonesia sejak 2014.
@@ -116,7 +114,7 @@ export default function FooterSection() {
         {/* Bottom bar */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-slate-200">
           <p className="text-slate-400 text-xs">
-            © 2026 LA Kanza. Hak cipta dilindungi undang-undang.
+            © 2026 FARHA. Hak cipta dilindungi undang-undang.
           </p>
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />

@@ -6,7 +6,7 @@ import FooterSection from "./components/home/FooterSection";
 import RoleNavButtons from "./components/home/RoleNavButtons";
 
 export const metadata = {
-  title: "LA Kanza — Platform Land Arrangement Umrah Terpercaya",
+  title: "FARHA — Platform Land Arrangement Umrah Terpercaya",
   description:
     "Platform B2B terpercaya untuk kebutuhan Land Arrangement Umrah. Hotel, transportasi, penerbangan, visa, dan muthawif dalam satu platform untuk travel agent di Indonesia.",
 };

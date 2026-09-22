@@ -11,7 +11,7 @@ export interface SessionData {
 export function getSessionOptions(): SessionOptions {
   return {
     password: process.env.SESSION_SECRET || "complex_password_at_least_32_characters_long_for_iron_session",
-    cookieName: "kanza_auth_session",
+    cookieName: "farha_auth_session",
     cookieOptions: {
       secure: process.env.NODE_ENV === "production",
     },

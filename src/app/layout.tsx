@@ -28,8 +28,38 @@ const caveat = Caveat({
 });
 
 export const metadata: Metadata = {
-  title: "LA Kanza — Platform Land Arrangement Umrah",
+  title: "FARHA — Platform Land Arrangement Umrah",
   description: "Platform B2B Land Arrangement Umrah terpercaya untuk travel agent di Indonesia.",
+  icons: {
+    icon: "/farha-logo-only.svg",
+    apple: "/farha-logo-only.svg",
+  },
+  openGraph: {
+    title: "FARHA — Platform Land Arrangement Umrah",
+    description: "Platform B2B Land Arrangement Umrah terpercaya untuk travel agent di Indonesia.",
+    images: [
+      {
+        url: "/farha-logo-full.jpeg",
+        width: 1200,
+        height: 630,
+        alt: "FARHA Logo Full",
+      },
+      {
+        url: "/farha-logo-only.jpeg",
+        width: 1200,
+        height: 630,
+        alt: "FARHA Logo Only",
+      },
+    ],
+    locale: "id_ID",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "FARHA — Platform Land Arrangement Umrah",
+    description: "Platform B2B Land Arrangement Umrah terpercaya untuk travel agent di Indonesia.",
+    images: ["/farha-logo-full.jpeg", "/farha-logo-only.jpeg"],
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

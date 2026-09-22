@@ -1,13 +1,14 @@
-name = "la-dev-api"
+name = "dev-farha-worker"
 main = "src/index.ts"
 compatibility_date = "2024-02-28"
 compatibility_flags = ["nodejs_compat"]
+account_id = "ef964688891b9260ac3e9a712c69cd74"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "la-dev-db"
-database_id = "81476d9d-7cc6-452c-a161-ec9171a2977f"
+database_name = "dev-farha-db"
+database_id = "97ed7090-8f89-4b10-afc1-f47d43eae87d"
 
-[[r2_buckets]]
-binding = "STORAGE"
-bucket_name = "la-dev-storage"
+# [[r2_buckets]]
+# binding = "STORAGE"
+# bucket_name = "dev-farha-storage"
