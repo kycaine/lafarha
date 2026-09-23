@@ -39,36 +39,25 @@ export default function MitraSection() {
             Kami bermitra dengan institusi dan perusahaan terkemuka untuk menjamin kualitas layanan terbaik.
           </p>
         </div>
+      </div>
 
-        {/* Mitra logo grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {mitras.map((m) => {
-            const abbr = m.nama.split(' ').map((n: string) => n[0]).join('').substring(0, 2).toUpperCase();
-            return (
-              <div
-                key={m.id}
-                className="group relative rounded-xl border border-slate-200 bg-white hover:bg-slate-50 hover:border-[#C9A84C]/30 transition-all duration-300 p-6 flex flex-col items-center gap-3 hover:-translate-y-1 shadow-sm hover:shadow-md"
-              >
-                {/* Monogram avatar / Photo */}
-                {m.foto ? (
-                  <div className="w-14 h-14 rounded-2xl overflow-hidden border border-slate-100 shadow-sm">
-                    <img src={m.foto} alt={m.nama} className="w-full h-full object-cover" />
-                  </div>
-                ) : (
-                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center font-black text-lg bg-amber-50 border border-amber-200/60 text-[#8B6914] shadow-sm">
-                    {abbr}
-                  </div>
-                )}
-                <div className="text-center">
-                  <p className="text-slate-800 font-semibold text-sm leading-tight">{m.nama}</p>
-                  <p className="text-slate-400 text-[11px] mt-0.5">{m.kategori}</p>
+      {/* Mitra logo container */}
+      <div className="relative z-10 w-[90vw] mx-auto mt-8">
+        <div className="flex items-center justify-center flex-wrap gap-8 md:gap-16 py-8">
+          {mitras.map((m, idx) => (
+            <div
+              key={`${m.id}-${idx}`}
+              className="flex-none flex items-center justify-center opacity-50 hover:opacity-100 transition-all duration-500 grayscale hover:grayscale-0 cursor-pointer"
+            >
+              {m.foto ? (
+                <img src={m.foto} alt={m.nama} className="h-32 md:h-48 w-auto object-contain drop-shadow-sm" />
+              ) : (
+                <div className="text-3xl md:text-5xl font-bold text-slate-400 whitespace-nowrap">
+                  {m.nama}
                 </div>
-
-                {/* Hover gold underline */}
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 rounded-full bg-[#C9A84C] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </div>
-            );
-          })}
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </section>
