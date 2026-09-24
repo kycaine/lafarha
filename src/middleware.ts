@@ -6,6 +6,11 @@ type Role = "master" | "admin" | "counter" | "user";
 
 const ROUTE_RULES: { pattern: RegExp; allowedRoles: Role[] }[] = [
   {
+    // /admin/users — master saja
+    pattern: /^\/admin\/users(\/.*)?$/,
+    allowedRoles: ["master"],
+  },
+  {
     // /admin/* — admin dan master saja
     pattern: /^\/admin(\/.*)?$/,
     allowedRoles: ["admin", "master"],

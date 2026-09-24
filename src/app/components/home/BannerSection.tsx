@@ -55,6 +55,11 @@ const NAV_LINKS: { label: string; href: string; dropdown: { label: string; desc:
       { label: "Kantor Jakarta", desc: "Jakarta Selatan, Indonesia", href: "#footer", Icon: IcoPin },
     ],
   },
+  {
+    label: "Tentang",
+    href: "/tentang",
+    dropdown: [],
+  },
 ];
 
 const IconUser = () => (
@@ -95,89 +100,91 @@ function NavItem({
       </a>
 
       {/* Dropdown panel */}
-      <div
-        style={{
-          opacity: open ? 1 : 0,
-          transform: open ? "translateY(0px) scale(1)" : "translateY(-6px) scale(0.98)",
-          pointerEvents: open ? "auto" : "none",
-          transition: "opacity 200ms ease, transform 200ms ease",
-          transformOrigin: "top center",
-        }}
-        className="absolute top-full left-1/2 -translate-x-1/2 mt-3 z-50"
-      >
-        {/* Arrow */}
+      {link.dropdown.length > 0 && (
         <div
-          className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 rotate-45 border-l border-t"
           style={{
-            background: scrolled ? "#242424" : "#fff",
-            borderColor: scrolled ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.07)",
+            opacity: open ? 1 : 0,
+            transform: open ? "translateY(0px) scale(1)" : "translateY(-6px) scale(0.98)",
+            pointerEvents: open ? "auto" : "none",
+            transition: "opacity 200ms ease, transform 200ms ease",
+            transformOrigin: "top center",
           }}
-        />
-
-        <div
-          className="relative rounded-2xl border overflow-hidden min-w-[240px] shadow-2xl"
-          style={{
-            background: scrolled ? "#242424" : "#fff",
-            borderColor: scrolled ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.07)",
-            boxShadow: scrolled
-              ? "0 24px 60px rgba(0,0,0,0.45)"
-              : "0 16px 48px rgba(0,0,0,0.12)",
-          }}
+          className="absolute top-full left-1/2 -translate-x-1/2 mt-3 z-50"
         >
-          {link.dropdown.map((item, i) => (
-            <a
-              key={item.label}
-              href={item.href}
-              className="group flex items-center gap-3 px-4 py-3 transition-colors duration-150"
-              style={{
-                borderTop: i > 0
-                  ? `1px solid ${scrolled ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"}`
-                  : "none",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = scrolled
-                  ? "rgba(255,255,255,0.05)"
-                  : "rgba(201,168,76,0.06)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
-              }}
-            >
-              <div
-                className="w-7 h-7 flex-shrink-0 flex items-center justify-center rounded-lg"
+          {/* Arrow */}
+          <div
+            className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 rotate-45 border-l border-t"
+            style={{
+              background: scrolled ? "#242424" : "#fff",
+              borderColor: scrolled ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.07)",
+            }}
+          />
+
+          <div
+            className="relative rounded-2xl border overflow-hidden min-w-[240px] shadow-2xl"
+            style={{
+              background: scrolled ? "#242424" : "#fff",
+              borderColor: scrolled ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.07)",
+              boxShadow: scrolled
+                ? "0 24px 60px rgba(0,0,0,0.45)"
+                : "0 16px 48px rgba(0,0,0,0.12)",
+            }}
+          >
+            {link.dropdown.map((item, i) => (
+              <a
+                key={item.label}
+                href={item.href}
+                className="group flex items-center gap-3 px-4 py-3 transition-colors duration-150"
                 style={{
-                  background: scrolled ? "rgba(255,255,255,0.07)" : "rgba(201,168,76,0.08)",
-                  color: scrolled ? "rgba(255,255,255,0.55)" : "#8B6914",
+                  borderTop: i > 0
+                    ? `1px solid ${scrolled ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"}`
+                    : "none",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.backgroundColor = scrolled
+                    ? "rgba(255,255,255,0.05)"
+                    : "rgba(201,168,76,0.06)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
                 }}
               >
-                <item.Icon />
-              </div>
-              <div>
-                <p
-                  className="text-sm font-semibold leading-tight"
-                  style={{ color: scrolled ? "rgba(255,255,255,0.9)" : "#1e293b" }}
+                <div
+                  className="w-7 h-7 flex-shrink-0 flex items-center justify-center rounded-lg"
+                  style={{
+                    background: scrolled ? "rgba(255,255,255,0.07)" : "rgba(201,168,76,0.08)",
+                    color: scrolled ? "rgba(255,255,255,0.55)" : "#8B6914",
+                  }}
                 >
-                  {item.label}
-                </p>
-                <p
-                  className="text-xs mt-0.5"
-                  style={{ color: scrolled ? "rgba(255,255,255,0.4)" : "#94a3b8" }}
+                  <item.Icon />
+                </div>
+                <div>
+                  <p
+                    className="text-sm font-semibold leading-tight"
+                    style={{ color: scrolled ? "rgba(255,255,255,0.9)" : "#1e293b" }}
+                  >
+                    {item.label}
+                  </p>
+                  <p
+                    className="text-xs mt-0.5"
+                    style={{ color: scrolled ? "rgba(255,255,255,0.4)" : "#94a3b8" }}
+                  >
+                    {item.desc}
+                  </p>
+                </div>
+                {/* Arrow on hover */}
+                <svg
+                  width="14" height="14" viewBox="0 0 24 24" fill="none"
+                  stroke="#C9A84C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                  className="ml-auto opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all duration-150"
                 >
-                  {item.desc}
-                </p>
-              </div>
-              {/* Arrow on hover */}
-              <svg
-                width="14" height="14" viewBox="0 0 24 24" fill="none"
-                stroke="#C9A84C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                className="ml-auto opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all duration-150"
-              >
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </a>
-          ))}
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </a>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
@@ -221,7 +228,7 @@ export default function BannerSection() {
     transition:
       "opacity 600ms cubic-bezier(0.4,0,0.2,1), width 600ms cubic-bezier(0.4,0,0.2,1), border-radius 600ms cubic-bezier(0.4,0,0.2,1), background-color 600ms cubic-bezier(0.4,0,0.2,1), box-shadow 600ms cubic-bezier(0.4,0,0.2,1), margin-top 600ms cubic-bezier(0.4,0,0.2,1), height 600ms cubic-bezier(0.4,0,0.2,1), padding-left 600ms cubic-bezier(0.4,0,0.2,1), padding-right 600ms cubic-bezier(0.4,0,0.2,1)",
     willChange: "opacity, width, border-radius, background-color, margin-top, height",
-    width: scrolled ? "min(760px, calc(100vw - 2rem))" : "100%",
+    width: scrolled ? "min(1000px, calc(100vw - 2rem))" : "100%",
     borderRadius: scrolled ? "1rem" : "0px",
     marginTop: scrolled ? "12px" : "0px",
     height: scrolled ? "48px" : "64px",
@@ -248,8 +255,8 @@ export default function BannerSection() {
 
             {/* Logo */}
             <div className="flex items-center gap-2.5 flex-1">
-              <img 
-                src="/farha-logo-only.svg" 
+              <img
+                src="/farha-logo-only.svg"
                 alt="FARHA Logo"
                 style={{
                   width: scrolled ? "28px" : "36px",
@@ -262,7 +269,7 @@ export default function BannerSection() {
                   className="font-bold tracking-wide block"
                   style={{
                     color: scrolled ? "#fff" : "#1e293b",
-                    fontSize: scrolled ? "11px" : "13px",
+                    fontSize: scrolled ? "13px" : "15px",
                     fontFamily: 'var(--font-cinzel), serif',
                     transition: "color 600ms cubic-bezier(0.4,0,0.2,1), font-size 600ms cubic-bezier(0.4,0,0.2,1)",
                   }}
@@ -273,7 +280,7 @@ export default function BannerSection() {
                   className="font-medium tracking-[0.2em] uppercase block"
                   style={{
                     color: "#C9A84C",
-                    fontSize: scrolled ? "7px" : "9px",
+                    fontSize: scrolled ? "8px" : "10px",
                     transition: "font-size 600ms cubic-bezier(0.4,0,0.2,1)",
                   }}
                 >
@@ -372,7 +379,7 @@ export default function BannerSection() {
                         onClick={() => setProfileDropdown(false)}
                         className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
                       >
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" /></svg>
                         Pengaturan
                       </Link>
                       <div className="border-t border-slate-50 my-1" />
@@ -380,7 +387,7 @@ export default function BannerSection() {
                         onClick={() => { setProfileDropdown(false); setShowLogoutModal(true); }}
                         className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
                       >
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
                         Keluar
                       </button>
                     </div>
@@ -409,7 +416,7 @@ export default function BannerSection() {
 
             {/* Mobile Menu Button */}
             <div className="flex md:hidden justify-end flex-1">
-              <button 
+              <button
                 onClick={() => setMobileMenuOpen(true)}
                 className="p-2 transition-colors duration-300"
                 style={{ color: scrolled ? "#fff" : "#1e293b" }}
@@ -423,22 +430,22 @@ export default function BannerSection() {
 
       {/* ── Mobile Menu Backdrop (Click Outside to Close) ── */}
       {mobileMenuOpen && (
-        <div 
-          className="fixed inset-0 z-[55] bg-black/20 backdrop-blur-sm transition-opacity" 
-          onClick={() => setMobileMenuOpen(false)} 
+        <div
+          className="fixed inset-0 z-[55] bg-black/20 backdrop-blur-sm transition-opacity"
+          onClick={() => setMobileMenuOpen(false)}
         />
       )}
 
       {/* ── Mobile Menu Dropdown ── */}
-      <div 
+      <div
         className={`fixed top-16 right-4 md:hidden z-[60] bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden min-w-[220px] flex flex-col transition-all duration-300 origin-top-right ${mobileMenuOpen ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}`}
       >
         <div className="flex flex-col py-2">
           {NAV_LINKS.map(l => (
-            <a 
-              key={l.label} 
-              href={l.href} 
-              onClick={() => setMobileMenuOpen(false)} 
+            <a
+              key={l.label}
+              href={l.href}
+              onClick={() => setMobileMenuOpen(false)}
               className="px-5 py-3.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 hover:text-[#C9A84C] transition-colors flex items-center"
             >
               {l.label}
@@ -452,22 +459,22 @@ export default function BannerSection() {
                 <p className="text-[11px] text-slate-500 truncate">{user.email}</p>
               </div>
               <Link href="/settings" onClick={() => setMobileMenuOpen(false)} className="px-5 py-3.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-2.5 transition-colors">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" /></svg>
                 Pengaturan
               </Link>
               <button
                 onClick={() => { setMobileMenuOpen(false); setShowLogoutModal(true); }}
                 className="w-full text-left px-5 py-3.5 text-sm font-semibold text-red-600 hover:bg-red-50 flex items-center gap-2.5 transition-colors border-t border-slate-50"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
                 Keluar
               </button>
             </div>
           ) : (
             <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3">
-               <button className="w-full py-3 bg-gradient-to-r from-[#C9A84C] to-[#8B6914] text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow-md shadow-[#C9A84C]/20 hover:-translate-y-0.5 transition-all">
-                 <IconUser /> Sign In
-               </button>
+              <button className="w-full py-3 bg-gradient-to-r from-[#C9A84C] to-[#8B6914] text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow-md shadow-[#C9A84C]/20 hover:-translate-y-0.5 transition-all">
+                <IconUser /> Sign In
+              </button>
             </Link>
           )}
         </div>
@@ -488,11 +495,11 @@ export default function BannerSection() {
         <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-4 mx-auto w-full overflow-hidden">
           <div className="w-[90vw] max-w-[1200px] mx-auto flex flex-col">
             {/* Headline */}
-            <h1 
+            <h1
               className="w-full flex justify-between items-center font-black text-[#1a1a1a] leading-none tracking-tighter whitespace-nowrap"
-              style={{ 
+              style={{
                 fontFamily: 'var(--font-cinzel), serif',
-                fontSize: 'clamp(3rem, 19vw, 15rem)' 
+                fontSize: 'clamp(3rem, 19vw, 15rem)'
               }}
             >
               <span>F</span>
@@ -503,9 +510,9 @@ export default function BannerSection() {
             </h1>
             {/* Subtitle */}
             <div className="w-full flex justify-end">
-              <p 
+              <p
                 className="font-normal text-[#1a1a1a] tracking-wide whitespace-nowrap"
-                style={{ 
+                style={{
                   fontFamily: '"Times New Roman", Times, serif',
                   fontSize: 'clamp(0.9rem, 4.3vw, 3rem)',
                   marginTop: 'clamp(-8px, -2vw, -24px)'
@@ -533,7 +540,7 @@ export default function BannerSection() {
           <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={() => setShowLogoutModal(false)} />
           <div className="relative z-10 bg-white rounded-2xl shadow-2xl border border-slate-100 p-6 w-full max-w-sm">
             <div className="flex items-center justify-center w-12 h-12 rounded-full bg-red-50 mx-auto mb-4">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
             </div>
             <h2 className="text-center text-base font-bold text-slate-800 mb-1">Keluar dari Akun?</h2>
             <p className="text-center text-sm text-slate-500 mb-6">Sesi Anda akan berakhir dan diarahkan ke halaman login.</p>

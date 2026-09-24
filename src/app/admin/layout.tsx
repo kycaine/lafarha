@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { PackageSearch, ListOrdered, Users, Shield, Settings, LogOut, ChevronDown, User } from "lucide-react";
+import { PackageSearch, ListOrdered, Users, Shield, Settings, LogOut, ChevronDown, User, PhoneCall } from "lucide-react";
 import { useAuth } from "@/shared/AuthContext";
 import { signOut } from "@/lib/auth";
 import { useRouter } from "next/navigation";
@@ -93,6 +93,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </Link>
               <Link href="/admin/mitra" className="flex items-center gap-2 px-4 py-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-medium transition-colors">
                 <Users className="w-4 h-4" /> Manajemen Mitra
+              </Link>
+              <Link href="/admin/kontak" className="flex items-center gap-2 px-4 py-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-medium transition-colors">
+                <PhoneCall className="w-4 h-4" /> Kontak &amp; Sosmed
               </Link>
               {userProfile?.role === "master" && (
                 <Link href="/admin/users" className="flex items-center gap-2 px-4 py-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-medium text-purple-600 transition-colors">

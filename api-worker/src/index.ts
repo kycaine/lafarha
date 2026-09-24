@@ -404,4 +404,80 @@ app.delete('/mitra/:id', async (c) => {
   }
 });
 
+
+// -- Settings: Contact & Social Media --
+
+// GET /settings/contact — ambil settings (create default row jika belum ada)
+app.get('/settings/contact', async (c) => {
+  try {
+    let row = await c.env.DB.prepare(
+      "SELECT * FROM contact_settings WHERE key = 'contact'"
+    ).first() as any;
+
+    if (!row) {
+      // Insert default empty row
+      await c.env.DB.prepare(
+        `INSERT INTO contact_settings (key, updated_at) VALUES ('contact', ?)`
+      ).bind(Date.now()).run();
+      row = await c.env.DB.prepare(
+        "SELECT * FROM contact_settings WHERE key = 'contact'"
+      ).first();
+    }
+
+    // Remove the internal 'key' field before returning
+    const { key, updated_at, ...data } = row as any;
+    return c.json({ success: true, ...data });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
+// PUT /settings/contact — simpan/update settings
+app.put('/settings/contact', async (c) => {
+  try {
+    const data = await c.req.json();
+    const now = Date.now();
+
+    // Upsert: insert or replace
+    await c.env.DB.prepare(
+      `INSERT INTO contact_settings 
+        (key, whatsapp_number, whatsapp_label, email, office_address, office_city,
+         instagram, facebook, twitter, youtube, tiktok, linkedin, telegram, updated_at)
+       VALUES ('contact', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+       ON CONFLICT(key) DO UPDATE SET
+         whatsapp_number = excluded.whatsapp_number,
+         whatsapp_label  = excluded.whatsapp_label,
+         email           = excluded.email,
+         office_address  = excluded.office_address,
+         office_city     = excluded.office_city,
+         instagram       = excluded.instagram,
+         facebook        = excluded.facebook,
+         twitter         = excluded.twitter,
+         youtube         = excluded.youtube,
+         tiktok          = excluded.tiktok,
+         linkedin        = excluded.linkedin,
+         telegram        = excluded.telegram,
+         updated_at      = excluded.updated_at`
+    ).bind(
+      data.whatsapp_number ?? '',
+      data.whatsapp_label  ?? '',
+      data.email           ?? '',
+      data.office_address  ?? '',
+      data.office_city     ?? '',
+      data.instagram       ?? '',
+      data.facebook        ?? '',
+      data.twitter         ?? '',
+      data.youtube         ?? '',
+      data.tiktok          ?? '',
+      data.linkedin        ?? '',
+      data.telegram        ?? '',
+      now
+    ).run();
+
+    return c.json({ success: true });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
 export default app;

@@ -61,3 +61,20 @@ CREATE TABLE IF NOT EXISTS mitra (
   created_at INTEGER
 );
 
+-- Contact & Social Media settings (single row, key = 'contact')
+CREATE TABLE IF NOT EXISTS contact_settings (
+  key TEXT PRIMARY KEY DEFAULT 'contact',
+  whatsapp_number TEXT DEFAULT '',
+  whatsapp_label TEXT DEFAULT '',
+  email TEXT DEFAULT '',
+  office_address TEXT DEFAULT '',
+  office_city TEXT DEFAULT '',
+  instagram TEXT DEFAULT '',
+  facebook TEXT DEFAULT '',
+  twitter TEXT DEFAULT '',
+  youtube TEXT DEFAULT '',
+  tiktok TEXT DEFAULT '',
+  linkedin TEXT DEFAULT '',
+  telegram TEXT DEFAULT '',
+  updated_at INTEGER
+);
