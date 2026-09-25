@@ -15,7 +15,7 @@ export interface UserProfile {
   updated_at: number;
 }
 
-const MASTER_EMAIL = process.env.NEXT_PUBLIC_MASTER_EMAIL ?? "kyxdx.id@gmail.com";
+const MASTER_EMAIL = process.env.NEXT_PUBLIC_MASTER_EMAIL ?? "talkto.rezki@gmail.com";
 
 /**
  * Ambil profil user dari D1 berdasarkan Firebase UID.
@@ -57,6 +57,15 @@ export async function upsertUserProfile(
     throw new Error(res.error ?? "Failed to upsert user");
   }
   return res.data as UserProfile;
+}
+
+export async function addUserManual(email: string, role: UserRole) {
+  const res = await fetchApi("/users", {
+    method: "POST",
+    body: JSON.stringify({ email, role }),
+  });
+  if (!res.success) throw new Error(res.error);
+  return res.data;
 }
 
 /**

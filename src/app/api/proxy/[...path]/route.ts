@@ -30,13 +30,17 @@ async function handleProxy(req: NextRequest) {
 
   console.log(`[Proxy] ${req.method} ${path} | session.isLoggedIn=${session.isLoggedIn} | uid=${session.uid ?? 'none'} | role=${session.role ?? 'none'}`);
 
-  // Forward headers, but attach secret key and user info
+  // Forward headers, but overwrite/strip sensitive ones
   const headers = new Headers(req.headers);
   headers.set("X-API-Key", API_SECRET_KEY);
   
   if (session.isLoggedIn && session.uid && session.role) {
     headers.set("X-User-ID", session.uid);
     headers.set("X-User-Role", session.role);
+  } else {
+    // SECURITY FIX: Strip headers if not logged in to prevent client spoofing
+    headers.delete("X-User-ID");
+    headers.delete("X-User-Role");
   }
 
   // Don't forward host header to avoid conflicts

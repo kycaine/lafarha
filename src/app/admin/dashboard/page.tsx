@@ -1,24 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getOrders, getOrderById } from "@/modules/ordering/actions";
+import { getTransactions, getTransactionById } from "@/modules/ordering/actions";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 const STATUS_LABELS: Record<string, string> = {
-  AWAITING_VERIFICATION: "New (Awaiting WA)",
-  CALCULATING: "In Review",
-  QUOTATION_READY: "Quotation Ready",
-  ISSUED: "Deal Closed"
+  PENDING: "Baru (Awaiting WA)",
+  QUOTED: "Penawaran Terbit",
+  CLOSED: "Selesai (Deal)",
+  CANCELLED: "Dibatalkan"
 };
 
 const STATUS_COLORS: Record<string, string> = {
-  AWAITING_VERIFICATION: "bg-blue-100 text-blue-800",
-  CALCULATING: "bg-yellow-100 text-yellow-800",
-  QUOTATION_READY: "bg-purple-100 text-purple-800",
-  ISSUED: "bg-green-100 text-green-800"
+  PENDING: "bg-amber-100 text-amber-800",
+  QUOTED: "bg-blue-100 text-blue-800",
+  CLOSED: "bg-emerald-100 text-emerald-800",
+  CANCELLED: "bg-red-100 text-red-800"
 };
 
 export default function AdminDashboard() {
@@ -32,7 +32,7 @@ export default function AdminDashboard() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
-    getOrders().then(data => {
+    getTransactions().then(data => {
       // Pastikan disortir berdasarkan tanggal terbaru (descending)
       const sortedData = data.sort((a: any, b: any) => 
         new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()
@@ -48,7 +48,7 @@ export default function AdminDashboard() {
     setDetailsLoading(true);
     setIsDialogOpen(true);
     
-    const details = await getOrderById(order.id);
+    const details = await getTransactionById(order.id);
     setOrderDetails(details);
     setDetailsLoading(false);
   };

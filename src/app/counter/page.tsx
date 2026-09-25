@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getOrders } from "@/modules/ordering/actions";
+import { getTransactions } from "@/modules/ordering/actions";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import { Calculator, ArrowRight, User, ChevronDown, ChevronUp } from "lucide-react";
@@ -15,16 +15,15 @@ export default function CalculatorDashboard() {
   const [showIssued, setShowIssued] = useState(true);
 
   useEffect(() => {
-    getOrders().then(data => {
-      // Filter ONLY orders that need calculation
-      const pendingOrders = data.filter((o: any) => 
-        o.status === 'AWAITING_VERIFICATION' || o.status === 'CALCULATING'
+    getTransactions().then(data => {
+      const pendingOrders = data.filter((o: any) =>
+        o.status === 'PENDING'
       );
-      const quoted = data.filter((o: any) => 
-        o.status === 'QUOTATION_READY'
+      const quoted = data.filter((o: any) =>
+        o.status === 'QUOTED'
       );
-      const issued = data.filter((o: any) => 
-        o.status === 'ISSUED' || o.status === 'CLOSED'
+      const issued = data.filter((o: any) =>
+        o.status === 'CLOSED' || o.status === 'CANCELLED'
       );
       setOrders(pendingOrders);
       setQuotedOrders(quoted);
@@ -59,7 +58,7 @@ export default function CalculatorDashboard() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {orders.map((order: any) => (
-              <Link key={order.id} href={`/counter/calculate?id=${order.id}`}>
+              <Link key={order.id} href={`/counter/penawaran/${order.id}`}>
                 <Card className="hover:shadow-lg transition-all cursor-pointer border-t-4 border-t-blue-500 bg-white/60 dark:bg-slate-900/60 backdrop-blur-sm group">
                   <CardHeader className="p-5 pb-3">
                     <CardTitle className="text-lg font-bold flex items-center gap-2">
@@ -97,7 +96,7 @@ export default function CalculatorDashboard() {
             {showQuoted && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
                 {quotedOrders.map((order: any) => (
-                  <Link key={order.id} href={`/counter/calculate?id=${order.id}`}>
+                  <Link key={order.id} href={`/counter/penawaran/${order.id}`}>
                     <Card className="hover:shadow-lg transition-all cursor-pointer border-t-4 border-t-amber-500 bg-slate-50 dark:bg-slate-900/40 backdrop-blur-sm group opacity-80 hover:opacity-100">
                       <CardHeader className="p-5 pb-3">
                         <CardTitle className="text-lg font-bold flex items-center gap-2">
@@ -137,7 +136,7 @@ export default function CalculatorDashboard() {
             {showIssued && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
                 {issuedOrders.map((order: any) => (
-                  <Link key={order.id} href={`/counter/calculate?id=${order.id}`}>
+                  <Link key={order.id} href={`/counter/penawaran/${order.id}`}>
                     <Card className="hover:shadow-lg transition-all cursor-pointer border-t-4 border-t-emerald-500 bg-slate-50 dark:bg-slate-900/40 backdrop-blur-sm group opacity-80 hover:opacity-100">
                       <CardHeader className="p-5 pb-3">
                         <CardTitle className="text-lg font-bold flex items-center gap-2">

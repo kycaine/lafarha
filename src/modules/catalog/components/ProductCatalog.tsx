@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { createOrder } from "@/modules/ordering/actions";
-import { Building2, Bus, Ticket, User, Phone, Plane, CheckCircle2, UploadCloud, Users, Check, Briefcase, Car, CalendarDays, MapPin, HelpCircle } from "lucide-react";
+import { createTransaction } from "@/modules/ordering/actions";
+import { fetchApi } from "@/lib/api";
+import { Building2, Bus, Ticket, User, Phone, Plane, CheckCircle2, UploadCloud, Users, Check, Briefcase, Car, CalendarDays, MapPin, HelpCircle, X, MessageCircle } from "lucide-react";
 
 const ICON_MAP: Record<string, any> = {
   Building2,
@@ -55,8 +56,8 @@ const AIRPORT_OPTIONS = [
 function SearchableSelect({ value, onChange, options, placeholder }: { value: string, onChange: (val: string) => void, options: any[], placeholder: string }) {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  
-  const filtered = options.flatMap((group: any) => 
+
+  const filtered = options.flatMap((group: any) =>
     group.options.filter((opt: any) => opt.label.toLowerCase().includes(query.toLowerCase()))
   );
 
@@ -64,15 +65,15 @@ function SearchableSelect({ value, onChange, options, placeholder }: { value: st
 
   return (
     <div className="relative">
-      <input 
-        type="text" 
-        className="absolute inset-0 w-full h-full opacity-0 pointer-events-none -z-10" 
-        value={value} 
-        onChange={() => {}} 
-        required 
+      <input
+        type="text"
+        className="absolute inset-0 w-full h-full opacity-0 pointer-events-none -z-10"
+        value={value}
+        onChange={() => { }}
+        required
         onFocus={() => setIsOpen(true)}
       />
-      <div 
+      <div
         className="flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white dark:border-slate-800 dark:bg-slate-950 cursor-pointer focus:ring-2 focus:ring-emerald-500"
         onClick={() => setIsOpen(!isOpen)}
       >
@@ -81,28 +82,27 @@ function SearchableSelect({ value, onChange, options, placeholder }: { value: st
         </span>
         <span className="text-slate-400 text-xs">▼</span>
       </div>
-      
+
       {isOpen && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)}></div>
           <div className="absolute z-50 mt-1 w-full rounded-md border border-slate-200 bg-white dark:border-slate-800 dark:bg-[#1a1a1a] shadow-xl p-2 animate-in fade-in zoom-in-95 duration-100">
-            <input 
-              type="text" 
-              className="w-full rounded-md bg-slate-100 dark:bg-black border border-slate-200 dark:border-slate-800 px-3 py-2 text-sm outline-none mb-2 focus:ring-2 focus:ring-emerald-500 transition-shadow" 
-              placeholder="Ketik untuk mencari..." 
+            <input
+              type="text"
+              className="w-full rounded-md bg-slate-100 dark:bg-black border border-slate-200 dark:border-slate-800 px-3 py-2 text-sm outline-none mb-2 focus:ring-2 focus:ring-emerald-500 transition-shadow"
+              placeholder="Ketik untuk mencari..."
               autoFocus
-              value={query} 
-              onChange={e => setQuery(e.target.value)} 
+              value={query}
+              onChange={e => setQuery(e.target.value)}
             />
             <div className="max-h-48 overflow-y-auto space-y-1 pr-1 custom-scrollbar">
               {filtered.map((opt: any) => (
-                <div 
-                  key={opt.value} 
-                  className={`cursor-pointer rounded-md px-3 py-2 text-sm transition-colors ${
-                    value === opt.value 
-                      ? "bg-emerald-500 text-white font-semibold" 
+                <div
+                  key={opt.value}
+                  className={`cursor-pointer rounded-md px-3 py-2 text-sm transition-colors ${value === opt.value
+                      ? "bg-emerald-500 text-white font-semibold"
                       : "hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-100"
-                  }`}
+                    }`}
                   onClick={() => {
                     onChange(opt.value);
                     setIsOpen(false);
@@ -139,20 +139,20 @@ function DatePickerNative({ value, onChange }: { value: string, onChange: (val: 
   return (
     <div className="relative h-10 w-full group">
       <CalendarDays className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400 group-hover:text-emerald-500 transition-colors pointer-events-none z-10" />
-      
+
       <div className="absolute inset-0 pl-10 pr-3 flex items-center text-sm border border-slate-200 dark:border-slate-800 rounded-md bg-white dark:bg-slate-950 pointer-events-none group-focus-within:ring-2 group-focus-within:ring-emerald-500">
         <span className={value ? "text-slate-900 dark:text-slate-100 font-medium" : "text-slate-500"}>
           {formatDate(value)}
         </span>
       </div>
 
-      <input 
-        type="date" 
-        onClick={handleDateClick} 
-        className="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-20" 
-        value={value} 
-        onChange={e => onChange(e.target.value)} 
-        required 
+      <input
+        type="date"
+        onClick={handleDateClick}
+        className="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-20"
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        required
       />
     </div>
   );
@@ -180,11 +180,13 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
 
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  
-  // Contact & group data
+
+  // Modal konfirmasi kontak
+  const [showContactModal, setShowContactModal] = useState(false);
+  const [contactForm, setContactForm] = useState({ name: "", whatsapp: "" });
+
+  // Pax & manifest data (tidak termasuk nama/WA lagi)
   const [formData, setFormData] = useState({
-    name: "",
-    whatsapp: "",
     pax: "",
     manifestFileName: "",
     notes: "",
@@ -214,7 +216,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const toggleService = (id: string) => {
-    setSelectedServices(prev => 
+    setSelectedServices(prev =>
       prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id]
     );
   };
@@ -255,7 +257,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
           </div>
           <div className="space-y-2">
             <Label>Preferensi Bintang</Label>
-            <select 
+            <select
               className="flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:focus:ring-emerald-500"
               value={specs.rating}
               onChange={e => updateModuleSpec(srvId, 'rating', e.target.value)}
@@ -279,21 +281,21 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
         <div key={i} className="space-y-4">
           <div className="flex flex-col gap-3 mb-2">
             <div className="flex items-center gap-2">
-              <input 
-                type="checkbox" 
-                id="roundTrip" 
-                className="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer accent-emerald-600" 
-                checked={specs.isRoundTrip} 
+              <input
+                type="checkbox"
+                id="roundTrip"
+                className="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer accent-emerald-600"
+                checked={specs.isRoundTrip}
                 onChange={e => updateModuleSpec(srvId, 'isRoundTrip', e.target.checked)}
               />
               <Label htmlFor="roundTrip" className="cursor-pointer font-semibold text-sm">Penerbangan Pulang Pergi (Round Trip)</Label>
             </div>
             <div className="flex items-center gap-2">
-              <input 
-                type="checkbox" 
-                id="cheapestFlight" 
-                className="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer accent-emerald-600" 
-                checked={specs.isCheapest} 
+              <input
+                type="checkbox"
+                id="cheapestFlight"
+                className="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer accent-emerald-600"
+                checked={specs.isCheapest}
                 onChange={e => {
                   const isChecked = e.target.checked;
                   setModuleSpecs(prev => ({
@@ -305,14 +307,14 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
               <Label htmlFor="cheapestFlight" className="cursor-pointer font-semibold text-sm">Carikan tiket termurah (Fleksibel Maskapai)</Label>
             </div>
           </div>
-          
+
           <div className="space-y-2 mb-6">
             <Label className="text-base text-slate-800 dark:text-slate-200">Maskapai Harapan</Label>
-            <Input 
-              placeholder="Contoh: Saudia / Garuda" 
-              value={specs.airline} 
-              onChange={e => updateModuleSpec(srvId, 'airline', e.target.value)} 
-              required 
+            <Input
+              placeholder="Contoh: Saudia / Garuda"
+              value={specs.airline}
+              onChange={e => updateModuleSpec(srvId, 'airline', e.target.value)}
+              required
               disabled={specs.isCheapest}
               className={`h-12 text-lg ${specs.isCheapest ? "opacity-60 cursor-not-allowed bg-slate-100 dark:bg-slate-900" : "bg-white dark:bg-slate-950"}`}
             />
@@ -325,20 +327,20 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
             <div className="grid md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Bandara Asal (Origin)</Label>
-                <SearchableSelect 
+                <SearchableSelect
                   placeholder="Pilih Bandara Asal..."
-                  options={AIRPORT_OPTIONS} 
-                  value={specs.origin} 
-                  onChange={(val: string) => updateModuleSpec(srvId, 'origin', val)} 
+                  options={AIRPORT_OPTIONS}
+                  value={specs.origin}
+                  onChange={(val: string) => updateModuleSpec(srvId, 'origin', val)}
                 />
               </div>
               <div className="space-y-2">
                 <Label>Bandara Tujuan (Destination)</Label>
-                <SearchableSelect 
+                <SearchableSelect
                   placeholder="Pilih Bandara Tujuan..."
-                  options={AIRPORT_OPTIONS} 
-                  value={specs.destination} 
-                  onChange={(val: string) => updateModuleSpec(srvId, 'destination', val)} 
+                  options={AIRPORT_OPTIONS}
+                  value={specs.destination}
+                  onChange={(val: string) => updateModuleSpec(srvId, 'destination', val)}
                 />
               </div>
             </div>
@@ -391,7 +393,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
         <div key={i} className="grid md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label>Jenis Visa</Label>
-            <select 
+            <select
               className="flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:focus:ring-emerald-500"
               value={specs.type}
               onChange={e => updateModuleSpec(srvId, 'type', e.target.value)}
@@ -453,11 +455,11 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
     TextInput: (srvId, mod, i) => (
       <div key={i} className="space-y-2">
         <Label>{mod.label}</Label>
-        <Input 
+        <Input
           placeholder="Ketik jawaban..."
-          value={genericData[srvId]?.[mod.name] || ""} 
-          onChange={e => handleGenericChange(srvId, mod.name, e.target.value)} 
-          required 
+          value={genericData[srvId]?.[mod.name] || ""}
+          onChange={e => handleGenericChange(srvId, mod.name, e.target.value)}
+          required
         />
       </div>
     ),
@@ -465,25 +467,47 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
     DatePickerNative: (srvId, mod, i) => (
       <div key={i} className="space-y-2">
         <Label>{mod.label}</Label>
-        <DatePickerNative 
-          value={genericData[srvId]?.[mod.name] || ""} 
-          onChange={val => handleGenericChange(srvId, mod.name, val)} 
+        <DatePickerNative
+          value={genericData[srvId]?.[mod.name] || ""}
+          onChange={val => handleGenericChange(srvId, mod.name, val)}
         />
       </div>
     ),
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  /** Step 1: Validasi form layanan → tampilkan modal kontak */
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (selectedServices.length === 0) {
       alert("Silakan pilih minimal 1 layanan.");
       return;
     }
+    // Form layanan valid — tampilkan modal isi nama & nomor WA
+    setShowContactModal(true);
+  };
 
+  /** Step 2: Dari modal — kirim order, buka tab quote + redirect WA admin */
+  const doSubmitOrder = async (e: React.FormEvent) => {
+    e.preventDefault();
     setLoading(true);
-    
-    // Attach dynamically typed custom fields for selected services
+
+    let counterWa = "";
+    try {
+      const contactData = await fetchApi('/settings/contact');
+      const apiWa = contactData?.whatsapp_counter || contactData?.whatsapp_number;
+      if (apiWa) {
+        counterWa = apiWa.replace(/\D/g, '');
+      }
+    } catch (e) {
+      console.warn("Failed to fetch contact settings", e);
+    }
+
+    if (!counterWa) {
+      alert("Service sedang maintain.");
+      setLoading(false);
+      return;
+    }
+
     const customFields: any = {};
     selectedServices.forEach(id => {
       if (genericData[id]) customFields[id] = genericData[id];
@@ -506,28 +530,56 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
       transTour: selectedServices.includes("TRANS_TOUR") ? moduleSpecs['TRANS_TOUR'] : null,
       customFields
     });
+    // Buka tab baru sebelum await untuk menghindari popup blocker
+    const waTab = window.open('about:blank', '_blank');
 
     try {
-      const res = await createOrder({
-        name: formData.name,
-        whatsapp: formData.whatsapp,
+      const res = await createTransaction({
+        name: contactForm.name,
+        whatsapp: "", // Sudah tidak pakai input WA dari user
         pax: needsPax ? formData.pax : "0",
         hotelRating: moduleSpecs['HOTEL']?.rating || "4",
         notes: specsJson,
       });
 
       if (res.success) {
-        alert("Penawaran terkirim! Silakan periksa halaman Counter.");
-        // Reset form
-        setFormData({ name: "", whatsapp: "", pax: "", manifestFileName: "", notes: "" });
+        const txId = res.transactionId;
+
+        const adminLink = `${typeof window !== 'undefined' ? window.location.origin : ''}/counter/penawaran/${txId}`;
+
+        // Bangun pesan WA untuk admin (Laporan)
+        const waMessage = [
+          `*LAPORAN PESANAN BARU MASUK*`,
+          ``,
+          `• ID Pesanan : ${txId}`,
+          `• Nama       : ${contactForm.name}`,
+          `• Layanan    : ${selectedServices.join(", ")}`,
+          ``,
+          `lihat transaksi berikut`,
+          adminLink
+        ].join("\n");
+
+        const waUrl = `https://wa.me/${counterWa}?text=${encodeURIComponent(waMessage)}`;
+        const txUrl = `/penawaran/${txId}`;
+
+        // Arahkan tab baru ke WA, dan tab saat ini ke halaman penawaran
+        if (waTab) waTab.location.href = waUrl;
+        window.location.href = txUrl;
+
+        // Reset semua state
+        setShowContactModal(false);
+        setContactForm({ name: "", whatsapp: "" });
+        setFormData({ pax: "", manifestFileName: "", notes: "" });
         setSelectedServices([]);
-        setLoading(false);
       } else {
+        if (waTab) waTab.close();
         alert("Gagal mengirim pesanan: " + res.error);
-        setLoading(false);
       }
     } catch (err) {
+      if (waTab) waTab.close();
       console.error(err);
+      alert("Terjadi kesalahan. Silakan coba lagi.");
+    } finally {
       setLoading(false);
     }
   };
@@ -544,16 +596,15 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
           {products.map((srv) => {
             const isSelected = selectedServices.includes(srv.id);
             const IconComp = ICON_MAP[srv.icon] || HelpCircle;
-            
+
             return (
-              <div 
+              <div
                 key={srv.id}
                 onClick={() => toggleService(srv.id)}
-                className={`relative cursor-pointer flex flex-col items-center justify-center p-6 rounded-2xl border-2 transition-all duration-200 ${
-                  isSelected 
-                    ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 shadow-md scale-105' 
+                className={`relative cursor-pointer flex flex-col items-center justify-center p-6 rounded-2xl border-2 transition-all duration-200 ${isSelected
+                    ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 shadow-md scale-105'
                     : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-black/40 text-slate-500 hover:border-emerald-300'
-                }`}
+                  }`}
               >
                 <IconComp className="h-8 w-8" />
                 <span className="mt-4 font-semibold text-center text-sm">{srv.title}</span>
@@ -576,7 +627,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
       {/* Show Forms if any service is selected */}
       {selectedServices.length > 0 && (
         <form onSubmit={handleSubmit} className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-500">
-          
+
           {/* 2. Dynamic Service Forms */}
           <section className="space-y-6">
             <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
@@ -584,11 +635,11 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
               Detail Layanan
             </h2>
             <div className="grid gap-6">
-              
+
               {selectedServices.map(srvId => {
                 const service = productMap[srvId]; // O(1) lookup
                 if (!service) return null;
-                
+
                 const IconComp = ICON_MAP[service.icon] || HelpCircle;
 
                 return (
@@ -596,7 +647,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
                     <div className="flex items-center gap-3 text-lg font-bold border-b border-slate-100 dark:border-slate-800 pb-3">
                       <IconComp className="text-emerald-500 h-5 w-5" /> Spesifikasi {service.title}
                     </div>
-                    
+
                     {/* Registry lookup — O(1) instead of linear if-chain */}
                     <div className="space-y-4">
                       {service.form_schema.map((mod: any, i: number) => {
@@ -618,19 +669,19 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
                 Data Rombongan
               </h2>
               <div className="bg-white dark:bg-[#111] border border-slate-200 dark:border-slate-800 p-6 rounded-2xl space-y-6">
-                
+
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2 flex flex-col justify-center">
                     <Label>Total Jamaah (PAX)</Label>
                     <div className="relative">
                       <Users className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
-                      <Input type="number" required={needsPax} placeholder="Contoh: 45" className="pl-10 h-10" value={formData.pax} onChange={e => setFormData({...formData, pax: e.target.value})} />
+                      <Input type="number" required={needsPax} placeholder="Contoh: 45" className="pl-10 h-10" value={formData.pax} onChange={e => setFormData({ ...formData, pax: e.target.value })} />
                     </div>
                   </div>
 
                   <div className="space-y-2">
                     <Label>Upload Manifest (Opsional)</Label>
-                    <div 
+                    <div
                       className="flex items-center gap-4 p-2 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors h-[4.5rem]"
                       onClick={() => fileInputRef.current?.click()}
                     >
@@ -651,49 +702,82 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
 
                 <div className="space-y-2">
                   <Label>Catatan Tambahan</Label>
-                  <Textarea placeholder="Tulis instruksi khusus di sini..." className="min-h-[100px]" value={formData.notes} onChange={e => setFormData({...formData, notes: e.target.value})} />
+                  <Textarea placeholder="Tulis instruksi khusus di sini..." className="min-h-[100px]" value={formData.notes} onChange={e => setFormData({ ...formData, notes: e.target.value })} />
                 </div>
 
               </div>
             </section>
           )}
 
-          {/* 4. Contact & Submit */}
+          {/* 3/4. Submit Button */}
           <section className="space-y-6">
-            <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
-              <span className="flex h-8 w-8 rounded-full bg-emerald-100 text-emerald-600 items-center justify-center text-sm">{needsPax ? "4" : "3"}</span>
-              Kirim Permintaan
-            </h2>
-            <div className="bg-white dark:bg-[#111] border border-slate-200 dark:border-slate-800 p-6 rounded-2xl space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label>Nama Pemesan</Label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
-                    <Input required placeholder="Masukkan nama Anda" className="pl-10 h-10 w-full" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Nomor WhatsApp</Label>
-                  <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
-                    <Input required placeholder="Contoh: 08123456789" className="pl-10 h-10 w-full" value={formData.whatsapp} onChange={e => setFormData({...formData, whatsapp: e.target.value})} />
-                  </div>
-                </div>
-              </div>
-
-              <Button 
-                type="submit" 
+            <div className="bg-white dark:bg-[#111] border border-slate-200 dark:border-slate-800 p-6 rounded-2xl">
+              <Button
+                type="submit"
                 disabled={loading}
-                className="w-full h-14 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-lg shadow-lg mt-4"
+                className="w-full h-14 rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 text-white font-bold text-lg shadow-lg flex items-center justify-center gap-3"
               >
-                {loading ? "Memproses..." : "Kirim & Langsung Hitung (Testing)"}
+                <MessageCircle className="h-5 w-5" />
+                {loading ? "Memproses..." : "Buat Penawaran"}
               </Button>
+              <p className="text-center text-xs text-slate-400 mt-3">Anda akan diminta mengisi nama, lalu diarahkan ke WhatsApp admin.</p>
             </div>
           </section>
 
         </form>
+      )}
+
+      {/* ── Modal Konfirmasi Kontak ─────────────────────────────────────────── */}
+      {showContactModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ background: "rgba(0,0,0,0.7)", backdropFilter: "blur(6px)" }}
+          onClick={(e) => { if (e.target === e.currentTarget) setShowContactModal(false); }}
+        >
+          <div className="w-full max-w-md bg-white dark:bg-[#111] rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            {/* Header modal */}
+            <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 dark:border-slate-800">
+              <div>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white">Satu Langkah Lagi!</h3>
+                <p className="text-sm text-slate-500 mt-0.5">Masukkan data diri untuk mengirim penawaran.</p>
+              </div>
+              <button
+                onClick={() => setShowContactModal(false)}
+                className="h-8 w-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            {/* Form kontak */}
+            <form onSubmit={doSubmitOrder} className="px-6 py-6 space-y-5">
+              <div className="space-y-2">
+                <Label htmlFor="modal-name">Nama Lengkap</Label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+                  <Input
+                    id="modal-name"
+                    required
+                    autoFocus
+                    placeholder="Masukkan nama Anda"
+                    className="pl-10 h-11"
+                    value={contactForm.name}
+                    onChange={e => setContactForm({ ...contactForm, name: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <Button
+                type="submit"
+                disabled={loading}
+                className="w-full h-12 rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 text-white font-bold flex items-center justify-center gap-2"
+              >
+                <MessageCircle className="h-5 w-5" />
+                {loading ? "Mengirim..." : "Kirim & Buka WhatsApp Admin"}
+              </Button>
+            </form>
+          </div>
+        </div>
       )}
     </div>
   );

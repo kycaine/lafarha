@@ -1,8 +1,8 @@
 import { fetchApi } from "@/lib/api";
 
-export async function createOrder(formData: any) {
+export async function createTransaction(formData: any) {
   try {
-    return await fetchApi('/orders', {
+    return await fetchApi('/transactions', {
       method: 'POST',
       body: JSON.stringify(formData)
     });
@@ -11,9 +11,42 @@ export async function createOrder(formData: any) {
   }
 }
 
-export async function updateOrderQuote(orderId: string, quoteData: any) {
+export async function getTransactions() {
   try {
-    return await fetchApi(`/orders/${orderId}/quote`, {
+    const res = await fetchApi('/transactions');
+    return res.data || [];
+  } catch {
+    return [];
+  }
+}
+
+export async function getTransactionById(id: string) {
+  try {
+    const res = await fetchApi(`/transactions/${id}`);
+    return res.data;
+  } catch {
+    return null;
+  }
+}
+
+export async function updateTransactionContact(id: string, whatsapp: string) {
+  try {
+    return await fetchApi(`/transactions/${id}/contact`, {
+      method: 'PATCH',
+      body: JSON.stringify({ whatsapp })
+    });
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+export async function updateTransactionQuote(id: string, quoteData: {
+  totalAmount: number;
+  validityHours?: number;
+  items: Record<number, string>;
+}) {
+  try {
+    return await fetchApi(`/transactions/${id}/quote`, {
       method: 'PUT',
       body: JSON.stringify(quoteData)
     });
@@ -22,31 +55,13 @@ export async function updateOrderQuote(orderId: string, quoteData: any) {
   }
 }
 
-export async function issueOrder(orderId: string) {
+export async function updateTransactionStatus(id: string, status: 'PENDING' | 'QUOTED' | 'CLOSED' | 'CANCELLED') {
   try {
-    return await fetchApi(`/orders/${orderId}/issue`, {
-      method: 'PUT'
+    return await fetchApi(`/transactions/${id}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status })
     });
   } catch (error: any) {
     return { success: false, error: error.message };
   }
 }
-
-export async function getOrders() {
-  try {
-    const res = await fetchApi('/orders');
-    return res.data || [];
-  } catch (error) {
-    return [];
-  }
-}
-
-export async function getOrderById(id: string) {
-  try {
-    const res = await fetchApi(`/orders/${id}`);
-    return res.data;
-  } catch (error) {
-    return null;
-  }
-}
-

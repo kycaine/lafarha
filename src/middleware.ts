@@ -10,6 +10,7 @@ const ROUTE_RULES: { pattern: RegExp; allowedRoles: Role[] }[] = [
     pattern: /^\/admin\/users(\/.*)?$/,
     allowedRoles: ["master"],
   },
+
   {
     // /admin/* — admin dan master saja
     pattern: /^\/admin(\/.*)?$/,
@@ -20,11 +21,7 @@ const ROUTE_RULES: { pattern: RegExp; allowedRoles: Role[] }[] = [
     pattern: /^\/counter(\/.*)?$/,
     allowedRoles: ["counter", "master"],
   },
-  {
-    // /penawaran/*, /quote/*, /settings/* — semua user yang login
-    pattern: /^\/(penawaran|quote|settings)(\/.*)?$/,
-    allowedRoles: ["admin", "master", "counter", "user"],
-  },
+  // /penawaran/*, /quote/* — public, tidak perlu login
 ];
 
 export async function middleware(req: NextRequest) {
@@ -58,5 +55,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/counter/:path*", "/penawaran/:path*", "/quote/:path*", "/settings/:path*"],
+  matcher: ["/admin/:path*", "/counter/:path*"],
 };

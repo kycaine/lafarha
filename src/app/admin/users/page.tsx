@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/shared/AuthContext";
-import { getAllUsers, setUserRole, UserProfile, UserRole } from "@/lib/user-store";
+import { getAllUsers, setUserRole, addUserManual, UserProfile, UserRole } from "@/lib/user-store";
 import { useRouter } from "next/navigation";
+import { UserPlus, X } from "lucide-react";
 
 const ROLE_LABELS: Record<UserRole, string> = {
   master: "Master",
@@ -25,6 +26,12 @@ export default function UsersPage() {
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [fetching, setFetching] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
+
+  // Manual Add User State
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newEmail, setNewEmail] = useState("");
+  const [newRole, setNewRole] = useState<UserRole>("counter");
+  const [addingUser, setAddingUser] = useState(false);
 
   useEffect(() => {
     if (!loading && userProfile?.role !== "master") {
@@ -55,6 +62,24 @@ export default function UsersPage() {
     }
   };
 
+  const handleAddUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newEmail.trim()) return;
+    setAddingUser(true);
+    try {
+      const newUser = await addUserManual(newEmail.trim(), newRole);
+      setUsers(prev => [newUser, ...prev]);
+      setShowAddModal(false);
+      setNewEmail("");
+      setNewRole("counter");
+      alert("Berhasil mendaftarkan email!");
+    } catch (err: any) {
+      alert("Gagal: " + err.message);
+    } finally {
+      setAddingUser(false);
+    }
+  };
+
   if (loading || fetching) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -64,13 +89,68 @@ export default function UsersPage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-slate-800">Manajemen User</h1>
-        <p className="text-slate-500 text-sm mt-1">
-          Kelola akses dan role seluruh pengguna platform. Hanya <span className="font-semibold text-purple-600">Master</span> yang dapat mengubah role.
-        </p>
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 relative">
+      <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-800">Manajemen User</h1>
+          <p className="text-slate-500 text-sm mt-1">
+            Kelola akses pengguna. Hanya email terdaftar yang bisa login sebagai Admin/Counter.
+          </p>
+        </div>
+        <button
+          onClick={() => setShowAddModal(true)}
+          className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors"
+        >
+          <UserPlus className="w-4 h-4" /> Tambah User
+        </button>
       </div>
+
+      {showAddModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-2xl w-full max-w-md shadow-xl overflow-hidden animate-in fade-in zoom-in-95">
+            <div className="flex items-center justify-between p-6 border-b border-slate-100">
+              <h3 className="font-bold text-lg text-slate-800">Daftarkan Email Akses</h3>
+              <button onClick={() => setShowAddModal(false)} className="text-slate-400 hover:text-slate-600">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <form onSubmit={handleAddUser} className="p-6 space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-sm font-semibold text-slate-700">Email Akun Google</label>
+                <input
+                  type="email"
+                  required
+                  placeholder="nama@gmail.com"
+                  value={newEmail}
+                  onChange={e => setNewEmail(e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-sm font-semibold text-slate-700">Role Akses</label>
+                <select
+                  value={newRole}
+                  onChange={e => setNewRole(e.target.value as UserRole)}
+                  className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                >
+                  <option value="counter">Counter</option>
+                  <option value="admin">Admin</option>
+                  <option value="master">Master</option>
+                </select>
+              </div>
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  disabled={addingUser}
+                  className="w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-bold transition-colors disabled:opacity-50"
+                >
+                  {addingUser ? "Mendaftarkan..." : "Daftarkan Email"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         <table className="w-full">

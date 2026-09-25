@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { updateOrderQuote, issueOrder } from "@/modules/ordering/actions";
-import { Clock, CheckCircle2, Copy, Ban, Percent, CreditCard, Package, Calculator, MessageCircle, Edit } from "lucide-react";
+import { updateOrderQuote, updateOrderContact, issueOrder } from "@/modules/ordering/actions";
+import { Clock, CheckCircle2, Copy, Ban, CreditCard, Package, Calculator, MessageCircle, Edit, Save, Phone } from "lucide-react";
 
 export function CalculateForm({ order, items }: { order: any, items: any[] }) {
   
@@ -28,7 +28,12 @@ export function CalculateForm({ order, items }: { order: any, items: any[] }) {
 
   const [validityHours, setValidityHours] = useState(24);
   const [loading, setLoading] = useState(false);
-  
+
+  // State untuk edit nomor WA (diisi counter setelah terima chat WA dari user)
+  const [waInput, setWaInput] = useState(order.client_whatsapp || "");
+  const [waEditing, setWaEditing] = useState(false);
+  const [waSaving, setWaSaving] = useState(false);
+
   const isOriginallyPublished = order.status === 'QUOTATION_READY' || order.status === 'ISSUED';
   const isIssued = order.status === 'ISSUED';
   
@@ -109,11 +114,24 @@ export function CalculateForm({ order, items }: { order: any, items: any[] }) {
 
   const handleChatWA = () => {
     const text = generateWhatsAppMessage();
-    let phone = (order.client_whatsapp || "").replace(/\D/g, '');
+    let phone = (waInput || order.client_whatsapp || "").replace(/\D/g, '');
     if (phone.startsWith('0')) {
       phone = '62' + phone.substring(1);
     }
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank');
+  };
+
+  const handleSaveWa = async () => {
+    if (!waInput.trim()) return;
+    setWaSaving(true);
+    const res = await updateOrderContact(order.id, waInput.trim());
+    setWaSaving(false);
+    if (res.success) {
+      setWaEditing(false);
+      alert("Nomor WA berhasil disimpan!");
+    } else {
+      alert("Gagal menyimpan: " + res.error);
+    }
   };
 
   return (
@@ -312,7 +330,60 @@ export function CalculateForm({ order, items }: { order: any, items: any[] }) {
           <CardHeader className="pb-4">
              <CardTitle className="text-base text-slate-800 dark:text-slate-200">Komunikasi Pelanggan</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="space-y-4">
+
+            {/* ── Nomor WA Terverifikasi ── */}
+            <div className="space-y-2">
+              <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wide flex items-center gap-1">
+                <Phone className="w-3.5 h-3.5" /> Nomor WA
+                <span className="ml-1 text-amber-500 font-normal">(isi dari chat WA masuk)</span>
+              </Label>
+              {waEditing ? (
+                <div className="flex gap-2">
+                  <Input
+                    autoFocus
+                    type="tel"
+                    placeholder="Contoh: 08123456789"
+                    value={waInput}
+                    onChange={e => setWaInput(e.target.value)}
+                    className="h-9 text-sm"
+                  />
+                  <Button
+                    size="sm"
+                    className="h-9 px-3 bg-emerald-600 hover:bg-emerald-700 text-white shrink-0"
+                    onClick={handleSaveWa}
+                    disabled={waSaving || !waInput.trim()}
+                  >
+                    {waSaving ? "..." : <Save className="w-4 h-4" />}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-9 px-3 shrink-0"
+                    onClick={() => { setWaEditing(false); setWaInput(order.client_whatsapp || ""); }}
+                  >
+                    ✕
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                  <span className="flex-1 text-sm font-mono text-slate-700 dark:text-slate-300">
+                    {waInput || <span className="text-slate-400 italic">Belum diisi</span>}
+                  </span>
+                  <button
+                    onClick={() => setWaEditing(true)}
+                    className="text-slate-400 hover:text-blue-600 transition-colors p-1 rounded"
+                    title="Edit nomor WA"
+                  >
+                    <Edit className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )}
+              <p className="text-[11px] text-slate-400 leading-relaxed">
+                Counter isi nomor ini dari nomor yang terlihat saat customer chat via WA. Nomor ini yang tersimpan di database.
+              </p>
+            </div>
+
             <Button 
               size="lg"
               variant="outline" 

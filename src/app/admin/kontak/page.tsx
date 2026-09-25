@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { fetchApi } from "@/lib/api";
+import { useAuth } from "@/shared/AuthContext";
 import { Phone, Mail, MapPin, Save, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 
 // ── Social Media SVG Icons ─────────────────────────────────────────────────────
@@ -51,6 +52,7 @@ const IcoTikTok = ({ size = 16 }: { size?: number }) => (
 interface ContactSettings {
   whatsapp_number: string;
   whatsapp_label: string;
+  whatsapp_counter: string;
   email: string;
   office_address: string;
   office_city: string;
@@ -66,6 +68,7 @@ interface ContactSettings {
 const DEFAULT_SETTINGS: ContactSettings = {
   whatsapp_number: "",
   whatsapp_label: "",
+  whatsapp_counter: "",
   email: "",
   office_address: "",
   office_city: "",
@@ -156,6 +159,9 @@ function Field({
 
 // ── Main Component ─────────────────────────────────────────────────────────────
 export default function KontakManagement() {
+  const { userProfile } = useAuth();
+  const isMaster = userProfile?.role === "master";
+
   const [settings, setSettings] = useState<ContactSettings>(DEFAULT_SETTINGS);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -274,7 +280,7 @@ export default function KontakManagement() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field
             id="whatsapp_number"
-            label="Nomor WhatsApp"
+            label="Nomor WhatsApp (Info Umum)"
             value={settings.whatsapp_number}
             onChange={set("whatsapp_number")}
             placeholder="628123456789"
@@ -289,6 +295,19 @@ export default function KontakManagement() {
             placeholder="Customer Service FARHA"
           />
         </div>
+        {isMaster && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2 mb-2 p-4 border border-emerald-100 bg-emerald-50/50 rounded-xl">
+            <Field
+              id="whatsapp_counter"
+              label="Nomor WA Counter (Penerima Order)"
+              value={settings.whatsapp_counter}
+              onChange={set("whatsapp_counter")}
+              placeholder="6281398824346"
+              prefix="+62"
+              type="tel"
+            />
+          </div>
+        )}
         <Field
           id="email"
           label="Email"
@@ -341,17 +360,19 @@ export default function KontakManagement() {
         icon={<MapPin className="w-4 h-4" />}
       >
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/10 rounded-xl border border-green-100 dark:border-green-800">
-            <div className="w-8 h-8 rounded-lg bg-green-500 flex items-center justify-center flex-shrink-0">
-              <Phone className="w-4 h-4 text-white" />
+          {isMaster && (
+            <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/10 rounded-xl border border-green-100 dark:border-green-800">
+              <div className="w-8 h-8 rounded-lg bg-green-500 flex items-center justify-center flex-shrink-0">
+                <Phone className="w-4 h-4 text-white" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs font-semibold text-green-700 dark:text-green-400">WhatsApp</p>
+                <p className="text-xs text-slate-600 dark:text-slate-400 truncate">
+                  {settings.whatsapp_number || "—"}
+                </p>
+              </div>
             </div>
-            <div className="min-w-0">
-              <p className="text-xs font-semibold text-green-700 dark:text-green-400">WhatsApp</p>
-              <p className="text-xs text-slate-600 dark:text-slate-400 truncate">
-                {settings.whatsapp_number || "—"}
-              </p>
-            </div>
-          </div>
+          )}
           <div className="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-900/10 rounded-xl border border-blue-100 dark:border-blue-800">
             <div className="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center flex-shrink-0">
               <Mail className="w-4 h-4 text-white" />

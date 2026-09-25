@@ -27,10 +27,17 @@ app.use('/*', async (c, next) => {
   await next();
 });
 
+// Helper for Role Verification
+const requireRole = (c: any, allowedRoles: string[]) => {
+  const role = c.req.header('X-User-Role');
+  return role && allowedRoles.includes(role);
+};
+
 // -- Users API --
 // Primary key = Firebase UID
 
 app.get('/users', async (c) => {
+  if (!requireRole(c, ['master', 'admin'])) return c.json({ success: false, error: 'Forbidden' }, 403);
   try {
     const { results } = await c.env.DB.prepare(
       "SELECT * FROM users ORDER BY created_at DESC"
@@ -54,6 +61,31 @@ app.get('/users/:id', async (c) => {
   }
 });
 
+// Create user manually (by Master)
+app.post('/users', async (c) => {
+  if (!requireRole(c, ['master'])) return c.json({ success: false, error: 'Forbidden' }, 403);
+  try {
+    const { email, role } = await c.req.json();
+    if (!email || !role) return c.json({ success: false, error: 'Email and role required' }, 400);
+
+    const existing = await c.env.DB.prepare("SELECT * FROM users WHERE email = ?").bind(email).first();
+    if (existing) return c.json({ success: false, error: 'Email sudah terdaftar' }, 400);
+
+    // Use a dummy ID for now, it will be overwritten with Firebase UID when they first log in
+    const dummyId = `manual_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+    const now = Date.now();
+
+    await c.env.DB.prepare(
+      `INSERT INTO users (id, email, display_name, photo_url, role, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`
+    ).bind(dummyId, email, '', '', role, now, now).run();
+
+    return c.json({ success: true, data: { id: dummyId, email, role } });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
 // Upsert user on login — Firebase UID is the primary key
 app.post('/users/upsert', async (c) => {
   try {
@@ -61,32 +93,39 @@ app.post('/users/upsert', async (c) => {
     const { id, email, display_name, photo_url, is_master } = data;
     const now = Date.now();
 
-    const existing = await c.env.DB.prepare(
-      "SELECT * FROM users WHERE id = ?"
-    ).bind(id).first() as any;
-
     const MASTER_EMAIL = c.env.MASTER_EMAIL || 'talkto.rezki@gmail.com';
 
-    if (!existing) {
-      // New user — create with default role
-      const role = is_master || email === MASTER_EMAIL ? 'master' : 'user';
-      await c.env.DB.prepare(
-        `INSERT INTO users (id, email, display_name, photo_url, role, created_at, updated_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?)`
-      ).bind(id, email, display_name, photo_url, role, now, now).run();
+    // Cari berdasarkan email terlebih dahulu (bukan berdasarkan ID karena ID di awal berupa dummy)
+    let existing = await c.env.DB.prepare(
+      "SELECT * FROM users WHERE email = ?"
+    ).bind(email).first() as any;
 
-      const newUser = await c.env.DB.prepare("SELECT * FROM users WHERE id = ?").bind(id).first();
-      return c.json({ success: true, data: newUser });
+    if (!existing) {
+      if (is_master || email === MASTER_EMAIL) {
+        // Jika master login pertama kali, kita buatkan akunnya
+        await c.env.DB.prepare(
+          `INSERT INTO users (id, email, display_name, photo_url, role, created_at, updated_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?)`
+        ).bind(id, email, display_name, photo_url, 'master', now, now).run();
+        existing = await c.env.DB.prepare("SELECT * FROM users WHERE id = ?").bind(id).first();
+      } else {
+        // Email tidak ada di database, artinya belum didaftarkan master -> Blokir!
+        return c.json({ success: false, error: 'Email Anda belum terdaftar. Hubungi Master Admin.' }, 403);
+      }
+    } else {
+      // User ada di database (sudah didaftarkan master). 
+      // Update ID-nya dengan Firebase UID (karena ID dari master adalah dummy_xxx), 
+      // dan update info dari Firebase
+      const role = (email === MASTER_EMAIL) ? 'master' : existing.role;
+
+      await c.env.DB.prepare(
+        `UPDATE users SET id = ?, display_name = ?, photo_url = ?, role = ?, updated_at = ? WHERE email = ?`
+      ).bind(id, display_name, photo_url, role, now, email).run();
+
+      existing = await c.env.DB.prepare("SELECT * FROM users WHERE id = ?").bind(id).first();
     }
 
-    // Existing user — always enforce master role for master email, update display info
-    const role = (email === MASTER_EMAIL) ? 'master' : existing.role;
-    await c.env.DB.prepare(
-      `UPDATE users SET display_name = ?, photo_url = ?, role = ?, updated_at = ? WHERE id = ?`
-    ).bind(display_name, photo_url, role, now, id).run();
-
-    const updatedUser = await c.env.DB.prepare("SELECT * FROM users WHERE id = ?").bind(id).first();
-    return c.json({ success: true, data: updatedUser });
+    return c.json({ success: true, data: existing });
   } catch (error: any) {
     return c.json({ success: false, error: error.message }, 500);
   }
@@ -94,6 +133,7 @@ app.post('/users/upsert', async (c) => {
 
 // Set user role (master only — enforced in UI layer)
 app.patch('/users/:id/role', async (c) => {
+  if (!requireRole(c, ['master'])) return c.json({ success: false, error: 'Forbidden' }, 403);
   try {
     const id = c.req.param('id');
     const { role } = await c.req.json();
@@ -205,110 +245,133 @@ app.post('/products/reset', async (c) => {
 });
 
 
-// -- Orders API --
+// ── Transactions API ──────────────────────────────────────────────────────
 
-app.post('/orders', async (c) => {
+// POST /transactions — buat transaksi baru dari form user
+app.post('/transactions', async (c) => {
   try {
     const formData = await c.req.json();
     let specsJson: any = {};
     try {
       specsJson = JSON.parse(formData.notes);
-    } catch (e) {
-      specsJson = { services: ['HOTEL'] };
+    } catch {
+      specsJson = { services: [] };
     }
 
-    const services = specsJson.services || [];
+    const services: string[] = specsJson.services || [];
 
-    // Prefix Mapping
     const prefixMap: Record<string, string> = {
-      'HOTEL': 'HOT',
-      'FLIGHT': 'PES',
-      'BAGGAGE': 'BAG',
-      'VISA': 'VIS',
-      'TRANS_AIRPORT': 'TRA',
-      'TRANS_TOUR': 'TRT'
+      'HOTEL': 'HOT', 'FLIGHT': 'PES', 'BAGGAGE': 'BAG',
+      'VISA': 'VIS', 'TRANS_AIRPORT': 'TRA', 'TRANS_TOUR': 'TRT',
     };
-
     const titleMap: Record<string, string> = {
-      'HOTEL': 'Hotel',
-      'FLIGHT': 'Tiket Pesawat',
-      'BAGGAGE': 'Bagasi',
-      'VISA': 'Visa',
-      'TRANS_AIRPORT': 'Transportasi Bandara',
-      'TRANS_TOUR': 'Transportasi Tour'
+      'HOTEL': 'Hotel', 'FLIGHT': 'Tiket Pesawat', 'BAGGAGE': 'Bagasi',
+      'VISA': 'Visa', 'TRANS_AIRPORT': 'Transportasi Bandara', 'TRANS_TOUR': 'Transportasi Tour',
     };
 
-    const prefixes = services.map((s: string) => prefixMap[s] || s.substring(0, 3)).join('-');
-    const token = Math.random().toString(36).substring(2, 8).toUpperCase();
-    const orderId = `${prefixes}-${Math.floor(Math.random() * 10000)}`;
-    const tokenExpiry = new Date(Date.now() + 20 * 60000).toISOString();
+    const prefixes = services.map((s) => prefixMap[s] || s.substring(0, 3)).join('-') || 'TRX';
+    const txId = `${prefixes}-${Math.floor(Math.random() * 90000) + 10000}`;
 
     await c.env.DB.prepare(
-      `INSERT INTO orders (id, client_name, client_whatsapp, status, token, token_expiry, created_at) 
-       VALUES (?, ?, ?, 'AWAITING_VERIFICATION', ?, ?, ?)`
+      `INSERT INTO transactions (id, client_name, client_whatsapp, status, notes, created_at)
+       VALUES (?, ?, ?, 'PENDING', ?, ?)`
     ).bind(
-      orderId,
+      txId,
       formData.name,
-      formData.whatsapp,
-      token,
-      tokenExpiry,
-      new Date().toISOString()
+      formData.whatsapp || null,
+      formData.notes,
+      Date.now()
     ).run();
 
-    // Insert each service as a distinct order item
     for (const srv of services) {
-      let itemSpecs = {};
-      if (srv === 'HOTEL') itemSpecs = specsJson.hotel || {};
-      else if (srv === 'FLIGHT') itemSpecs = specsJson.flight || {};
-      else if (srv === 'BAGGAGE') itemSpecs = specsJson.baggage || {};
-      else if (srv === 'VISA') itemSpecs = specsJson.visa || {};
-      else if (srv === 'TRANS_AIRPORT') itemSpecs = specsJson.transAirport || {};
-      else if (srv === 'TRANS_TOUR') itemSpecs = specsJson.transTour || {};
-
-      // Inject generic pax info into each spec if needed
-      itemSpecs = { ...itemSpecs, pax: specsJson.pax, customFields: specsJson.customFields?.[srv] };
+      const specMap: Record<string, any> = {
+        HOTEL: specsJson.hotel, FLIGHT: specsJson.flight,
+        BAGGAGE: specsJson.baggage, VISA: specsJson.visa,
+        TRANS_AIRPORT: specsJson.transAirport, TRANS_TOUR: specsJson.transTour,
+      };
+      const itemSpecs = {
+        ...(specMap[srv] || {}),
+        pax: specsJson.pax,
+        customFields: specsJson.customFields?.[srv],
+      };
 
       await c.env.DB.prepare(
-        `INSERT INTO order_items (order_id, category, title, specs)
+        `INSERT INTO transaction_items (transaction_id, category, title, specs)
          VALUES (?, ?, ?, ?)`
-      ).bind(
-        orderId,
-        srv,
-        titleMap[srv] || srv,
-        JSON.stringify(itemSpecs)
-      ).run();
+      ).bind(txId, srv, titleMap[srv] || srv, JSON.stringify(itemSpecs)).run();
     }
 
-    return c.json({ success: true, orderId, token });
+    return c.json({ success: true, transactionId: txId });
   } catch (error: any) {
     return c.json({ success: false, error: error.message }, 500);
   }
 });
 
-app.put('/orders/:id/quote', async (c) => {
+// GET /transactions — semua transaksi (admin/counter)
+app.get('/transactions', async (c) => {
   try {
-    const orderId = c.req.param('id');
-    const quoteData = await c.req.json();
+    const { results } = await c.env.DB.prepare(
+      'SELECT * FROM transactions ORDER BY created_at DESC'
+    ).all();
+    return c.json({ success: true, data: results });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
+// GET /transactions/:id — detail transaksi + items
+app.get('/transactions/:id', async (c) => {
+  try {
+    const id = c.req.param('id');
+    const tx = await c.env.DB.prepare(
+      'SELECT * FROM transactions WHERE id = ?'
+    ).bind(id).first();
+    if (!tx) return c.json({ success: false, error: 'Not found' }, 404);
+
+    const { results: items } = await c.env.DB.prepare(
+      'SELECT * FROM transaction_items WHERE transaction_id = ?'
+    ).bind(id).all();
+
+    return c.json({ success: true, data: { ...tx, items } });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
+// PATCH /transactions/:id/contact — counter update nomor WA terverifikasi
+app.patch('/transactions/:id/contact', async (c) => {
+  if (!requireRole(c, ['counter', 'admin', 'master'])) return c.json({ success: false, error: 'Forbidden' }, 403);
+  try {
+    const id = c.req.param('id');
+    const { whatsapp } = await c.req.json();
+    if (!whatsapp) return c.json({ success: false, error: 'whatsapp required' }, 400);
 
     await c.env.DB.prepare(
-      `UPDATE orders 
-       SET status = 'QUOTATION_READY', 
-           total_amount_idr = ?,
-           dp_amount_idr = ?,
-           pelunasan_amount_idr = ?,
-           quote_expiry = ? 
-       WHERE id = ?`
-    ).bind(
-      quoteData.totalAmount,
-      quoteData.dpAmount,
-      quoteData.pelunasanAmount,
-      new Date(Date.now() + (quoteData.validityHours || 24) * 60 * 60000).toISOString(),
-      orderId
-    ).run();
+      'UPDATE transactions SET client_whatsapp = ? WHERE id = ?'
+    ).bind(whatsapp, id).run();
 
-    if (quoteData.items) {
-      for (const [itemId, price] of Object.entries(quoteData.items)) {
-        await c.env.DB.prepare(`UPDATE order_items SET subtotal = ? WHERE id = ?`)
+    return c.json({ success: true });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
+// PUT /transactions/:id/quote — counter submit harga → status QUOTED
+app.put('/transactions/:id/quote', async (c) => {
+  if (!requireRole(c, ['counter', 'admin', 'master'])) return c.json({ success: false, error: 'Forbidden' }, 403);
+  try {
+    const id = c.req.param('id');
+    const { totalAmount, validityHours = 24, items } = await c.req.json();
+
+    const expiry = new Date(Date.now() + validityHours * 3600_000).toISOString();
+
+    await c.env.DB.prepare(
+      `UPDATE transactions SET status = 'QUOTED', total_amount_idr = ?, quote_expiry = ? WHERE id = ?`
+    ).bind(totalAmount, expiry, id).run();
+
+    if (items) {
+      for (const [itemId, price] of Object.entries(items)) {
+        await c.env.DB.prepare('UPDATE transaction_items SET subtotal = ? WHERE id = ?')
           .bind(Number(price), itemId).run();
       }
     }
@@ -319,42 +382,29 @@ app.put('/orders/:id/quote', async (c) => {
   }
 });
 
-// Admin fetching all orders
-app.put('/orders/:id/issue', async (c) => {
+// PATCH /transactions/:id/status — update status (CLOSED / CANCELLED)
+app.patch('/transactions/:id/status', async (c) => {
+  if (!requireRole(c, ['counter', 'admin', 'master'])) return c.json({ success: false, error: 'Forbidden' }, 403);
   try {
-    const orderId = c.req.param('id');
-    await c.env.DB.prepare(
-      `UPDATE orders SET status = 'ISSUED' WHERE id = ?`
-    ).bind(orderId).run();
+    const id = c.req.param('id');
+    const { status } = await c.req.json();
+    const allowed = ['PENDING', 'QUOTED', 'CLOSED', 'CANCELLED'];
+    if (!allowed.includes(status)) {
+      return c.json({ success: false, error: 'Invalid status' }, 400);
+    }
+
+    await c.env.DB.prepare('UPDATE transactions SET status = ? WHERE id = ?')
+      .bind(status, id).run();
+
     return c.json({ success: true });
   } catch (error: any) {
     return c.json({ success: false, error: error.message }, 500);
   }
 });
-app.get('/orders', async (c) => {
-  try {
-    const { results } = await c.env.DB.prepare("SELECT * FROM orders ORDER BY created_at DESC").all();
-    return c.json({ success: true, data: results });
-  } catch (error: any) {
-    return c.json({ success: false, error: error.message }, 500);
-  }
-});
 
-// Get a single order
-app.get('/orders/:id', async (c) => {
-  try {
-    const id = c.req.param('id');
-    const { results: orders } = await c.env.DB.prepare("SELECT * FROM orders WHERE id = ?").bind(id).all();
-    if (orders.length === 0) return c.json({ success: false, error: 'Not found' }, 404);
-
-    const { results: items } = await c.env.DB.prepare("SELECT * FROM order_items WHERE order_id = ?").bind(id).all();
-    return c.json({ success: true, data: { ...orders[0], items } });
-  } catch (error: any) {
-    return c.json({ success: false, error: error.message }, 500);
-  }
-});
 
 // -- Mitra API --
+
 app.get('/mitra', async (c) => {
   try {
     const { results } = await c.env.DB.prepare("SELECT * FROM mitra ORDER BY created_at DESC").all();
@@ -441,13 +491,14 @@ app.put('/settings/contact', async (c) => {
     // Upsert: insert or replace
     await c.env.DB.prepare(
       `INSERT INTO contact_settings 
-        (key, whatsapp_number, whatsapp_label, email, office_address, office_city,
+        (key, whatsapp_number, whatsapp_label, whatsapp_counter, email, office_address, office_city,
          instagram, facebook, twitter, youtube, tiktok, linkedin, telegram, updated_at)
-       VALUES ('contact', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+       VALUES ('contact', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
        ON CONFLICT(key) DO UPDATE SET
-         whatsapp_number = excluded.whatsapp_number,
-         whatsapp_label  = excluded.whatsapp_label,
-         email           = excluded.email,
+         whatsapp_number  = excluded.whatsapp_number,
+         whatsapp_label   = excluded.whatsapp_label,
+         whatsapp_counter = excluded.whatsapp_counter,
+         email            = excluded.email,
          office_address  = excluded.office_address,
          office_city     = excluded.office_city,
          instagram       = excluded.instagram,
@@ -460,17 +511,18 @@ app.put('/settings/contact', async (c) => {
          updated_at      = excluded.updated_at`
     ).bind(
       data.whatsapp_number ?? '',
-      data.whatsapp_label  ?? '',
-      data.email           ?? '',
-      data.office_address  ?? '',
-      data.office_city     ?? '',
-      data.instagram       ?? '',
-      data.facebook        ?? '',
-      data.twitter         ?? '',
-      data.youtube         ?? '',
-      data.tiktok          ?? '',
-      data.linkedin        ?? '',
-      data.telegram        ?? '',
+      data.whatsapp_label ?? '',
+      data.whatsapp_counter ?? '',
+      data.email ?? '',
+      data.office_address ?? '',
+      data.office_city ?? '',
+      data.instagram ?? '',
+      data.facebook ?? '',
+      data.twitter ?? '',
+      data.youtube ?? '',
+      data.tiktok ?? '',
+      data.linkedin ?? '',
+      data.telegram ?? '',
       now
     ).run();
 
