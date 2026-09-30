@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { createTransaction } from "@/modules/ordering/actions";
 import { fetchApi } from "@/lib/api";
+import { useAlert } from "@/shared/AlertContext";
 import { Building2, Bus, Ticket, User, Phone, Plane, CheckCircle2, UploadCloud, Users, Check, Briefcase, Car, CalendarDays, MapPin, HelpCircle, X, MessageCircle, Search, ChevronDown, ChevronUp } from "lucide-react";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
@@ -58,6 +59,7 @@ import { TransportModuleComponent } from "./modules/TransportModule";
 type ModuleSpecs = Record<string, any>;
 
 export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any[] }) {
+  const { showAlert } = useAlert();
 
   // Memoize parsed products + O(1) lookup map together
   const { products, productMap } = useMemo(() => {
@@ -108,6 +110,76 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
   const [genericData, setGenericData] = useState<Record<string, Record<string, string>>>({});
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  
+  // ─── Deep Linking / URL Query Initialization ──────────────────────────────
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const product = params.get("product");
+      
+      if (product) {
+        setSelectedServices([product]);
+        
+        setModuleSpecs((prev) => {
+          const newSpecs = { ...prev };
+          
+          if (product === "HOTEL") {
+            const city = params.get("city");
+            const checkin = params.get("checkin");
+            if (!newSpecs.HOTEL) newSpecs.HOTEL = { ...DEFAULT_MODULE_SPECS.HOTEL };
+            if (city === "Mekah") {
+              newSpecs.HOTEL.needsMekah = true;
+              newSpecs.HOTEL.needsMadinah = false;
+              if (checkin) newSpecs.HOTEL.mekahCheckIn = checkin;
+            } else if (city === "Madinah") {
+              newSpecs.HOTEL.needsMadinah = true;
+              newSpecs.HOTEL.needsMekah = false;
+              if (checkin) newSpecs.HOTEL.madinahCheckIn = checkin;
+            }
+          } 
+          else if (product === "FLIGHT_INTL") {
+            const route = params.get("route");
+            const date = params.get("date");
+            const rt = params.get("round_trip");
+            if (!newSpecs.FLIGHT_INTL) newSpecs.FLIGHT_INTL = { ...(DEFAULT_MODULE_SPECS.FLIGHT || {}) };
+            if (route) {
+              const [origin, dest] = route.split("-");
+              if (origin) newSpecs.FLIGHT_INTL.origin = origin;
+              if (dest) newSpecs.FLIGHT_INTL.destination = dest;
+            }
+            if (date) newSpecs.FLIGHT_INTL.departureDate = date;
+            if (rt !== null) newSpecs.FLIGHT_INTL.isRoundTrip = rt === "true";
+          }
+          else if (product === "TRANSPORTASI") {
+            const type = params.get("type");
+            if (!newSpecs.TRANSPORTASI) newSpecs.TRANSPORTASI = { ...DEFAULT_MODULE_SPECS.TRANSPORTASI };
+            if (type) {
+              const t = type.toLowerCase();
+              newSpecs.TRANSPORTASI.tripType = t === "single trip" ? "single" : t === "full trip" ? "full" : "full_plus";
+            }
+          }
+          else if (product === "VISA") {
+            const type = params.get("type");
+            const pax = params.get("pax");
+            if (!newSpecs.VISA) newSpecs.VISA = { ...DEFAULT_MODULE_SPECS.VISA };
+            if (type) newSpecs.VISA.type = type;
+            // Pax is handled globally in formData, so we do it outside prev
+          }
+          
+          return newSpecs;
+        });
+
+        // Set pax if product is VISA
+        if (product === "VISA") {
+          const pax = params.get("pax");
+          if (pax) {
+            setFormData(prevForm => ({ ...prevForm, pax }));
+          }
+        }
+      }
+    }
+  }, []);
 
   const toggleService = (id: string) => {
     setSelectedServices(prev =>
@@ -175,7 +247,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (selectedServices.length === 0) {
-      alert("Silakan pilih minimal 1 layanan.");
+      showAlert({ title: "Perhatian", message: "Silakan pilih minimal 1 layanan.", type: "warning" });
       return;
     }
     // Form layanan valid — tampilkan modal isi nama & nomor WA
@@ -199,7 +271,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
     }
 
     if (!counterWa) {
-      alert("Service sedang maintain.");
+      showAlert({ title: "Maaf", message: "Service sedang maintain.", type: "error" });
       setLoading(false);
       return;
     }
@@ -269,12 +341,12 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
         setSelectedServices([]);
       } else {
         if (waTab) waTab.close();
-        alert("Gagal mengirim pesanan: " + res.error);
+        showAlert({ title: "Gagal", message: "Gagal mengirim pesanan: " + res.error, type: "error" });
       }
     } catch (err) {
       if (waTab) waTab.close();
       console.error(err);
-      alert("Terjadi kesalahan. Silakan coba lagi.");
+      showAlert({ title: "Error", message: "Terjadi kesalahan. Silakan coba lagi.", type: "error" });
     } finally {
       setLoading(false);
     }
@@ -395,9 +467,13 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
                           <button
                             type="button"
                             onClick={() => {
-                              if (service.id === 'VISA') setShowVisaPricingModal(true);
-                              else if (service.id === 'HOTEL') alert("Estimasi harga hotel belum tersedia");
-                              else setShowPricingModal(true);
+                              if (service.id === 'VISA') {
+                                setShowVisaPricingModal(true);
+                              } else if (service.id === 'HOTEL') {
+                                showAlert({ title: "Info", message: "Estimasi harga hotel belum tersedia", type: "info" });
+                              } else {
+                                setShowPricingModal(true);
+                              }
                             }}
                             className="inline-flex items-center justify-center px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-500 text-[10px] hover:bg-yellow-200 hover:text-yellow-900 dark:hover:bg-yellow-900/60 dark:hover:text-yellow-400 transition-colors cursor-pointer font-medium"
                             title="Lihat Referensi Harga"
@@ -508,7 +584,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full h-14 rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 text-white font-bold text-lg shadow-lg flex items-center justify-center gap-3"
+                className="w-full h-14 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-lg shadow-lg flex items-center justify-center gap-3 transition-colors"
               >
                 <MessageCircle className="h-5 w-5" />
                 {loading ? "Memproses..." : "Buat Penawaran"}

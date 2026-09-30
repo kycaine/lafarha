@@ -49,7 +49,7 @@ export default function TentangPage() {
         {/* Title */}
         <div className="relative z-10 text-center px-6">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight font-heading drop-shadow-xl">
-            Bertumbuh Karena <br className="hidden md:block" />
+            Bertumbuh karena <br className="hidden md:block" />
             <span className="text-slate-800 tracking-tighter text-5xl md:text-6xl lg:text-7xl">
               INTEGRITAS
             </span>

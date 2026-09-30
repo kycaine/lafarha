@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display, Cinzel, Caveat } from "next/font/google";
 import { AuthProvider } from "@/shared/AuthContext";
+import { AlertProvider } from "@/shared/AlertContext";
 import "./globals.css";
 
 const inter = Inter({
@@ -30,10 +31,6 @@ const caveat = Caveat({
 export const metadata: Metadata = {
   title: "FARHA — Platform Land Arrangement Umrah",
   description: "Platform B2B Land Arrangement Umrah terpercaya untuk travel agent di Indonesia.",
-  icons: {
-    icon: "/farha-logo-only.svg",
-    apple: "/farha-logo-only.svg",
-  },
   openGraph: {
     title: "FARHA — Platform Land Arrangement Umrah",
     description: "Platform B2B Land Arrangement Umrah terpercaya untuk travel agent di Indonesia.",
@@ -69,7 +66,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${inter.variable} ${playfair.variable} ${cinzel.variable} ${caveat.variable} h-full antialiased scroll-smooth`}
     >
       <body className="min-h-full flex flex-col bg-white">
-        <AuthProvider>{children}</AuthProvider>
+        <AlertProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </AlertProvider>
       </body>
     </html>
   );

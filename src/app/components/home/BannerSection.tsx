@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronDown, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/shared/AuthContext";
@@ -25,8 +26,8 @@ type IconComp = () => React.JSX.Element;
 // ── Dropdown definitions ──────────────────────────────────────────────────────
 const NAV_LINKS: { label: string; href: string; dropdown: { label: string; desc: string; href: string; Icon: IconComp }[] }[] = [
   {
-    label: "Produk",
-    href: "#product",
+    label: "Layanan",
+    href: "#layanan",
     dropdown: [
       { label: "Akomodasi Hotel", desc: "Bintang 3–5 Makkah & Madinah", href: "#product", Icon: IcoHotel },
       { label: "Transportasi Darat", desc: "Bus & coaster premium", href: "#product", Icon: IcoBus },
@@ -37,14 +38,21 @@ const NAV_LINKS: { label: string; href: string; dropdown: { label: string; desc:
     ],
   },
   {
-    label: "Mitra",
-    href: "#mitra",
+    label: "Produk",
+    href: "/penawaran",
     dropdown: [
-      { label: "Mitra Maskapai", desc: "Garuda, Saudi Airlines & lainnya", href: "#mitra", Icon: IcoFlight },
-      { label: "Mitra Hotel", desc: "Pullman, Movenpick & premium lainnya", href: "#mitra", Icon: IcoHotel },
-      { label: "Mitra Transportasi", desc: "Naqaba & armada terpercaya", href: "#mitra", Icon: IcoBus },
-      { label: "Institusi Resmi", desc: "KEMENAG RI & Al Rajhi Bank", href: "#mitra", Icon: IcoBuilding },
+      { label: "Hotel", desc: "Pemesanan Hotel Bintang 3-5", href: "/penawaran", Icon: IcoHotel },
+      { label: "Tkt Pesawat Intr", desc: "Penerbangan Internasional", href: "/penawaran", Icon: IcoFlight },
+      { label: "Tkt Pesawat Domestik", desc: "Penerbangan Domestik", href: "/penawaran", Icon: IcoFlight },
+      { label: "Transportasi", desc: "Transportasi Bus & Mobil", href: "/penawaran", Icon: IcoBus },
+      { label: "Visa", desc: "Pengurusan Visa Umrah", href: "/penawaran", Icon: IcoVisa },
+      { label: "Visa & Transportasi", desc: "Paket bundling lengkap", href: "/penawaran", Icon: IcoBus },
     ],
+  },
+  {
+    label: "Blog",
+    href: "/blog",
+    dropdown: [],
   },
   {
     label: "Kontak",
@@ -56,9 +64,14 @@ const NAV_LINKS: { label: string; href: string; dropdown: { label: string; desc:
     ],
   },
   {
-    label: "Tentang",
-    href: "/tentang",
-    dropdown: [],
+    label: "Mitra",
+    href: "#mitra",
+    dropdown: [
+      { label: "Mitra Maskapai", desc: "Garuda, Saudi Airlines & lainnya", href: "#mitra", Icon: IcoFlight },
+      { label: "Mitra Hotel", desc: "Pullman, Movenpick & premium lainnya", href: "#mitra", Icon: IcoHotel },
+      { label: "Mitra Transportasi", desc: "Naqaba & armada terpercaya", href: "#mitra", Icon: IcoBus },
+      { label: "Institusi Resmi", desc: "KEMENAG RI & Al Rajhi Bank", href: "#mitra", Icon: IcoBuilding },
+    ],
   },
 ];
 
@@ -93,8 +106,8 @@ function NavItem({
       {/* Trigger */}
       <a
         href={link.href}
-        className="text-sm font-medium transition-colors duration-300 hover:text-[#C9A84C] select-none"
-        style={{ color: scrolled ? "rgba(255,255,255,0.65)" : "#475569" }}
+        className="text-[15px] font-bold transition-colors duration-300 hover:text-[#C9A84C] select-none drop-shadow-sm"
+        style={{ color: scrolled ? "rgba(255,255,255,0.85)" : "#ffffff" }}
       >
         {link.label}
       </a>
@@ -190,6 +203,290 @@ function NavItem({
 }
 
 // ── Main component ────────────────────────────────────────────────────────────
+
+// ── Widget Product Ala Traveloka ───────────────────────────────────────────────
+// ── Widget Product Ala Traveloka ───────────────────────────────────────────────
+// ── Widget Product Ala Traveloka ───────────────────────────────────────────────
+// ── Widget Product Ala Traveloka ───────────────────────────────────────────────
+// ── Widget Product Ala Traveloka ───────────────────────────────────────────────
+function BannerWidget() {
+  const [activeTab, setActiveTab] = useState(0);
+  const router = useRouter();
+
+  // Tab 0: Hotel
+  const [hotelCity, setHotelCity] = useState("Mekah");
+  const [hotelDate, setHotelDate] = useState("");
+
+  // Tab 1: Pesawat
+  const [flightRoute, setFlightRoute] = useState("JKT-JED");
+  const [flightDate, setFlightDate] = useState("");
+
+  // Tab 2: Transportasi
+  const [transportType, setTransportType] = useState("Single trip");
+
+  // Tab 3: Visa
+  const [visaPax, setVisaPax] = useState("");
+  const [visaType, setVisaType] = useState("Umrah");
+
+  const TABS = [
+    { label: "Hotel", icon: <IcoHotel /> },
+    { label: "Tkt Pesawat", icon: <IcoFlight /> },
+    { label: "Transportasi", icon: <IcoBus /> },
+    { label: "Visa", icon: <IcoVisa /> },
+  ];
+
+
+  const isFormValid = () => {
+    if (activeTab === 0) return hotelDate !== "";
+    if (activeTab === 1) return flightDate !== "";
+    if (activeTab === 2) return transportType !== "";
+    if (activeTab === 3) return visaPax !== "" && parseInt(visaPax) > 0;
+    return true;
+  };
+
+  const handleSearch = () => {
+    let url = "/penawaran?";
+    if (activeTab === 0) {
+      url += `product=HOTEL&city=${encodeURIComponent(hotelCity)}&checkin=${encodeURIComponent(hotelDate)}`;
+    } else if (activeTab === 1) {
+      url += `product=FLIGHT_INTL&route=${encodeURIComponent(flightRoute)}&date=${encodeURIComponent(flightDate)}`;
+    } else if (activeTab === 2) {
+      url += `product=TRANSPORTASI&type=${encodeURIComponent(transportType)}`;
+    } else if (activeTab === 3) {
+      url += `product=VISA&type=${encodeURIComponent(visaType)}&pax=${encodeURIComponent(visaPax)}`;
+    }
+    router.push(url);
+  };
+
+  const renderForm = () => {
+    switch (activeTab) {
+      case 0: // Hotel
+        return (
+          <>
+            <div className="relative col-span-1 md:col-span-1 border border-slate-200 rounded-xl px-4 py-3 hover:border-[#C9A84C] focus-within:border-[#C9A84C] transition-colors cursor-pointer group flex flex-col justify-center">
+              <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Kota & Area</p>
+              <div className="flex items-center gap-2 text-slate-800">
+                <IcoPin />
+                <span className="text-sm font-semibold truncate group-hover:text-[#8B6914] transition-colors">{hotelCity}</span>
+                <ChevronDown className="w-4 h-4 text-slate-400 ml-auto" />
+              </div>
+              <select
+                value={hotelCity}
+                onChange={(e) => setHotelCity(e.target.value)}
+                className="absolute inset-0 w-full h-full opacity-0 z-10 cursor-pointer"
+              >
+                <option value="Mekah">Mekah</option>
+                <option value="Madinah">Madinah</option>
+              </select>
+            </div>
+            <div
+              className="relative col-span-1 md:col-span-1 border border-slate-200 rounded-xl px-4 py-3 hover:border-[#C9A84C] focus-within:border-[#C9A84C] transition-colors cursor-pointer group flex flex-col justify-center"
+              onClick={(e) => {
+                const input = e.currentTarget.querySelector('input');
+                try { if (input) input.showPicker(); } catch (err) { }
+              }}
+            >
+              <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Jadwal Check-in</p>
+              <div className="flex items-center gap-2 text-slate-800">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                <span className="text-sm font-semibold truncate group-hover:text-[#8B6914] transition-colors z-10">
+                  {hotelDate ? new Date(hotelDate).toLocaleDateString("id-ID", { day: 'numeric', month: 'short', year: 'numeric' }) : "Pilih Tanggal"}
+                </span>
+                <input
+                  type="date"
+                  value={hotelDate}
+                  onChange={(e) => setHotelDate(e.target.value)}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
+                />
+              </div>
+            </div>
+          </>
+        );
+      case 1: // Tkt Pesawat Intr
+        return (
+          <>
+            <div className="relative col-span-1 md:col-span-1 border border-slate-200 rounded-xl px-4 py-3 hover:border-[#C9A84C] focus-within:border-[#C9A84C] transition-colors cursor-pointer group flex flex-col justify-center">
+              <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Rute Penerbangan</p>
+              <div className="flex items-center gap-2 text-slate-800">
+                <IcoFlight />
+                <span className="text-sm font-semibold truncate group-hover:text-[#8B6914] transition-colors">{flightRoute}</span>
+                <ChevronDown className="w-4 h-4 text-slate-400 ml-auto" />
+              </div>
+              <select
+                value={flightRoute}
+                onChange={(e) => setFlightRoute(e.target.value)}
+                className="absolute inset-0 w-full h-full opacity-0 z-10 cursor-pointer"
+              >
+                <option value="JKT-JED">JKT - JED</option>
+                <option value="JKT-MED">JKT - MED</option>
+              </select>
+            </div>
+            <div
+              className="relative col-span-1 md:col-span-1 border border-slate-200 rounded-xl px-4 py-3 hover:border-[#C9A84C] focus-within:border-[#C9A84C] transition-colors flex flex-col justify-center cursor-pointer group"
+              onClick={(e) => {
+                const input = e.currentTarget.querySelector('input[type="date"]');
+                try { if (input) (input as any).showPicker(); } catch (err) { }
+              }}
+            >
+              <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Tgl Berangkat</p>
+              <div className="flex items-center gap-2 text-slate-800">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                <span className="text-sm font-semibold truncate group-hover:text-[#8B6914] transition-colors z-10">
+                  {flightDate ? new Date(flightDate).toLocaleDateString("id-ID", { day: 'numeric', month: 'short', year: 'numeric' }) : "Pilih Tanggal"}
+                </span>
+                <input
+                  type="date"
+                  value={flightDate}
+                  onChange={(e) => setFlightDate(e.target.value)}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
+                />
+              </div>
+            </div>
+          </>
+        );
+      case 2: // Transportasi
+        return (
+          <>
+            <div className="col-span-1 md:col-span-2 border border-slate-200 rounded-xl px-4 py-3 hover:border-[#C9A84C] transition-colors flex flex-col justify-center">
+              <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Jenis Perjalanan</p>
+              <div className="flex w-full items-center gap-2 text-slate-800">
+                {["Single trip", "Full trip", "Full trip ++"].map((type) => (
+                  <label key={type} className={`flex-1 flex justify-center items-center gap-2 px-3 py-2.5 rounded-lg border transition-all cursor-pointer ${transportType === type ? "border-[#C9A84C] bg-[#C9A84C]/10 text-[#8B6914] shadow-sm" : "border-slate-200 hover:border-[#C9A84C]/50 text-slate-600 hover:text-slate-800"}`}>
+                    <input
+                      type="radio"
+                      name="transportType"
+                      value={type}
+                      checked={transportType === type}
+                      onChange={(e) => setTransportType(e.target.value)}
+                      className="hidden"
+                    />
+                    <span className="text-xs font-bold">{type}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </>
+        );
+      case 3: // Visa
+        return (
+          <>
+            <div className="relative col-span-1 md:col-span-1 border border-slate-200 rounded-xl px-4 py-3 hover:border-[#C9A84C] focus-within:border-[#C9A84C] transition-colors cursor-pointer group flex flex-col justify-center">
+              <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Jenis Visa</p>
+              <div className="flex items-center gap-2 text-slate-800">
+                <IcoVisa />
+                <span className="text-sm font-semibold truncate group-hover:text-[#8B6914] transition-colors">{visaType}</span>
+                <ChevronDown className="w-4 h-4 text-slate-400 ml-auto" />
+              </div>
+              <select
+                value={visaType}
+                onChange={(e) => setVisaType(e.target.value)}
+                className="absolute inset-0 w-full h-full opacity-0 z-10 cursor-pointer"
+              >
+                <option value="Umrah">Umrah</option>
+                <option value="Turis">Turis</option>
+                <option value="Ziarah">Ziarah</option>
+                <option value="Bisnis">Bisnis</option>
+              </select>
+            </div>
+            <label className="col-span-1 md:col-span-1 border border-slate-200 rounded-xl px-4 py-3 hover:border-[#C9A84C] focus-within:border-[#C9A84C] transition-colors cursor-text group flex flex-col justify-center">
+              <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Jumlah Pax</p>
+              <div className="flex items-center gap-2 text-slate-800">
+                <IconUser />
+                <input
+                  type="number"
+                  min="1"
+                  placeholder="Contoh: 45"
+                  value={visaPax}
+                  onChange={(e) => {
+                    // Prevent 0 or minus
+                    const val = parseInt(e.target.value);
+                    if (val < 1) setVisaPax("1");
+                    else setVisaPax(e.target.value);
+                  }}
+                  className="w-full bg-transparent text-sm font-semibold outline-none placeholder:text-slate-300 placeholder:font-normal group-hover:text-[#8B6914] transition-colors"
+                />
+              </div>
+            </label>
+          </>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="relative z-20 w-full px-4 flex flex-col items-center -mt-24 sm:-mt-24 mb-6 sm:mb-10">
+      <div className="w-full max-w-5xl bg-white rounded-2xl shadow-2xl p-3 sm:p-6 flex flex-col gap-4 sm:gap-6 border border-slate-100 mb-4 sm:mb-6">
+        {/* Products Nav */}
+        <div className="flex overflow-x-auto pb-2 scrollbar-hide gap-2 sm:gap-4 justify-start lg:justify-center border-b border-slate-100">
+          {TABS.map((p, i) => {
+            const isActive = activeTab === i;
+            return (
+              <button
+                key={i}
+                onClick={() => setActiveTab(i)}
+                className={`flex flex-col items-center gap-2 px-4 py-2 min-w-[90px] transition-all border-b-2 ${isActive ? "border-[#C9A84C] text-[#C9A84C]" : "border-transparent text-slate-500 hover:text-slate-800"
+                  }`}
+              >
+                <div className={`p-2.5 rounded-full ${isActive ? "bg-[#C9A84C]/10" : "bg-slate-50 transition-colors hover:bg-slate-100"}`}>
+                  {p.icon}
+                </div>
+                <span className="text-[11px] sm:text-xs font-bold whitespace-nowrap">{p.label}</span>
+              </button>
+            );
+          })}
+
+          {/* Lihat 10+ produk lainnya - Tab */}
+          <Link href="/penawaran" className="flex flex-col items-center gap-2 px-4 py-2 min-w-[90px] transition-all border-b-2 border-transparent text-slate-400 hover:text-slate-800 group">
+            <div className="p-2.5 rounded-full bg-slate-50 transition-colors group-hover:bg-slate-100">
+              <IcoMenu />
+            </div>
+            <span className="text-[11px] sm:text-xs font-bold whitespace-nowrap">Lihat 10+ produk lainnya</span>
+          </Link>
+        </div>
+
+        {/* Dynamic Form */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {renderForm()}
+          <div className="col-span-1 md:col-span-1 flex items-center justify-end">
+            <button
+              onClick={handleSearch}
+              disabled={!isFormValid()}
+              className="w-full h-full min-h-[50px] bg-gradient-to-r from-[#C9A84C] to-[#8B6914] text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#C9A84C]/30 transition-all hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              Cari Ketersediaan
+            </button>
+          </div>
+        </div>
+
+        {/* Trusted by bottom text */}
+        <div className="flex items-center justify-center gap-4 pt-2">
+          <span className="text-xs text-slate-400 font-medium italic">Partner Resmi:</span>
+          <div className="flex gap-4 opacity-50 grayscale">
+            <span className="text-xs font-bold text-slate-700">KEMENAG RI</span>
+            <span className="text-xs font-bold text-slate-700">SAUDIA AIRLINES</span>
+          </div>
+        </div>
+      </div>
+      <Link href="/penawaran" className="mt-4 px-8 py-4 bg-gradient-to-r from-[#C9A84C] to-[#8B6914] text-white rounded-full font-bold text-base shadow-xl shadow-[#C9A84C]/40 hover:opacity-90 hover:shadow-2xl transition-all flex items-center gap-2 group">
+        ke Halaman Produk
+        <div className="flex items-center -space-x-1.5" style={{ animation: 'bounce-x 1s infinite' }}>
+          <ChevronRight className="w-5 h-5 opacity-40" />
+          <ChevronRight className="w-5 h-5 opacity-70" />
+          <ChevronRight className="w-5 h-5" />
+        </div>
+        <style>{`
+          @keyframes bounce-x {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(4px); }
+          }
+        `}</style>
+      </Link>
+    </div>
+  );
+}
+
 export default function BannerSection() {
   const { user } = useAuth();
   const router = useRouter();
@@ -262,16 +559,18 @@ export default function BannerSection() {
                   width: scrolled ? "28px" : "36px",
                   height: scrolled ? "28px" : "36px",
                   transition: "width 600ms cubic-bezier(0.4,0,0.2,1), height 600ms cubic-bezier(0.4,0,0.2,1)",
+                  filter: "drop-shadow(0px 4px 10px rgba(0, 0, 0, 0.95)) drop-shadow(0px 2px 6px rgba(0, 0, 0, 0.9))",
                 }}
               />
               <div className="leading-tight">
                 <span
                   className="font-bold tracking-wide block"
                   style={{
-                    color: scrolled ? "#fff" : "#1e293b",
+                    color: scrolled ? "#fff" : "#ffffff",
                     fontSize: scrolled ? "13px" : "15px",
                     fontFamily: 'var(--font-cinzel), serif',
                     transition: "color 600ms cubic-bezier(0.4,0,0.2,1), font-size 600ms cubic-bezier(0.4,0,0.2,1)",
+                    textShadow: "0 4px 14px rgba(0, 0, 0, 0.95), 0 2px 4px rgba(0, 0, 0, 0.9), 0 0 20px rgba(0, 0, 0, 0.85)"
                   }}
                 >
                   FARHA
@@ -282,6 +581,7 @@ export default function BannerSection() {
                     color: "#C9A84C",
                     fontSize: scrolled ? "8px" : "10px",
                     transition: "font-size 600ms cubic-bezier(0.4,0,0.2,1)",
+                    textShadow: "0 3px 10px rgba(0, 0, 0, 0.95), 0 1px 3px rgba(0, 0, 0, 0.9)"
                   }}
                 >
                   Umrah Services
@@ -289,15 +589,15 @@ export default function BannerSection() {
               </div>
             </div>
 
-            {/* Nav links with dropdowns */}
-            <div className="hidden md:flex items-center justify-center gap-7 flex-shrink-0">
+            {/* Nav links & Profile icon (Desktop) */}
+            <div className="hidden md:flex items-center justify-end flex-1 gap-8">
               {NAV_LINKS.map((l) => (
                 <NavItem key={l.label} link={l} scrolled={scrolled} />
               ))}
-            </div>
 
-            {/* Profile icon (Desktop) */}
-            <div className="hidden md:flex justify-end flex-1">
+              <div className="w-[1px] h-6 bg-white/20 mx-1"></div>
+
+              {/* Profile icon */}
               {user ? (
                 // Sudah login — dropdown
                 <div className="relative" ref={profileRef}>
@@ -332,13 +632,13 @@ export default function BannerSection() {
                     <div className="text-left leading-tight hidden lg:block">
                       <p
                         className="text-xs font-semibold truncate max-w-[120px]"
-                        style={{ color: scrolled ? "rgba(255,255,255,0.9)" : "#1e293b" }}
+                        style={{ color: scrolled ? "rgba(255,255,255,0.9)" : "#ffffff", textShadow: "0 1px 2px rgba(0,0,0,0.3)" }}
                       >
                         {user.displayName ?? "Pengguna"}
                       </p>
                       <p
                         className="text-[10px] truncate max-w-[120px]"
-                        style={{ color: scrolled ? "rgba(255,255,255,0.5)" : "#94a3b8" }}
+                        style={{ color: scrolled ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.7)" }}
                       >
                         {user.email ?? ""}
                       </p>
@@ -350,7 +650,7 @@ export default function BannerSection() {
                       stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
                       className="flex-shrink-0 hidden lg:block transition-transform duration-200"
                       style={{
-                        color: scrolled ? "rgba(255,255,255,0.4)" : "#94a3b8",
+                        color: scrolled ? "rgba(255,255,255,0.4)" : "rgba(255,255,255,0.6)",
                         transform: profileDropdown ? "rotate(180deg)" : "rotate(0deg)",
                       }}
                     >
@@ -402,8 +702,8 @@ export default function BannerSection() {
                       width: scrolled ? "34px" : "38px",
                       height: scrolled ? "34px" : "38px",
                       background: "transparent",
-                      border: "1.5px solid #1e293b",
-                      color: "#1e293b",
+                      border: "1.5px solid rgba(255,255,255,0.7)",
+                      color: "#ffffff",
                       transition: "width 600ms cubic-bezier(0.4,0,0.2,1), height 600ms cubic-bezier(0.4,0,0.2,1), color 600ms, border-color 600ms",
                     }}
                     title="Login"
@@ -481,71 +781,39 @@ export default function BannerSection() {
       </div>
 
       {/* ── Hero ── */}
-      <section
-        ref={heroRef}
-        id="banner"
-        className="relative min-h-screen flex flex-col overflow-hidden bg-white"
-      >
-        {/* Background Video */}
-        <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
-          <video autoPlay loop muted playsInline className="w-full h-full object-cover" src="/banner.mp4" />
-        </div>
+      <div className="relative min-h-[100vh] flex flex-col w-full mb-8">
+        <section
+          ref={heroRef}
+          id="banner"
+          className="relative h-[50vh] sm:h-[60vh] min-h-[320px] sm:min-h-[450px] flex flex-col bg-slate-900"
+        >
+          {/* Background Image */}
+          <div
+            className="absolute inset-0 w-full h-full z-0 bg-cover bg-bottom"
+            style={{ backgroundImage: "url('/bg-banner.jpg')" }}
+          >
+            {/* Overlay to ensure text readability */}
+            <div className="absolute inset-0 bg-black/50"></div>
+          </div>
 
-        {/* Center content */}
-        <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-4 mx-auto w-full overflow-hidden">
-          <div className="w-[90vw] max-w-[1200px] mx-auto flex flex-col">
-            {/* Headline */}
-            <h1
-              className="w-full flex justify-between items-center font-black text-[#1a1a1a] leading-none tracking-tighter whitespace-nowrap"
-              style={{
-                fontFamily: 'var(--font-cinzel), serif',
-                fontSize: 'clamp(3rem, 19vw, 15rem)'
-              }}
-            >
-              <span>F</span>
-              <span>A</span>
-              <span>R</span>
-              <span>H</span>
-              <span>A</span>
-            </h1>
-            {/* Subtitle */}
-            <div className="w-full flex justify-end">
-              <p
-                className="font-normal text-[#1a1a1a] tracking-wide whitespace-nowrap"
-                style={{
-                  fontFamily: '"Times New Roman", Times, serif',
-                  fontSize: 'clamp(0.9rem, 4.3vw, 3rem)',
-                  marginTop: 'clamp(-8px, -2vw, -24px)'
-                }}
-              >
-                Land Arrangement Umrah Service
+          {/* Center content */}
+          <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 pt-6 sm:pt-16 mx-auto w-full h-full">
+            <div className="max-w-4xl mx-auto flex flex-col gap-1 sm:gap-2 -translate-y-8 sm:-translate-y-10">
+              <h1 className="text-3xl sm:text-5xl md:text-6xl font-black text-white leading-tight font-heading drop-shadow-xl">
+                <span style={{ fontFamily: 'var(--font-cinzel), serif' }}>FARHA</span>
+                <br />
+                <span className="text-xl sm:text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#C9A84C] to-[#E5C77A]">Land Arrangement Umrah</span>
+              </h1>
+              <p className="text-xs sm:text-base text-slate-300 max-w-2xl mx-auto font-medium leading-snug sm:leading-relaxed">
+                Platform B2B terpercaya untuk Travel Agent Umrah di Indonesia. Nikmati kemudahan akses instan untuk pemesanan Hotel, Tiket Penerbangan, Visa, dan Transportasi.
               </p>
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* CTAs mentok di bawah */}
-        <div className="absolute bottom-[10vh] left-0 right-0 z-10 w-full px-4 flex flex-row flex-nowrap gap-2 sm:gap-4 justify-center items-center">
-          <Link href="/penawaran">
-            <button className="group px-6 sm:px-8 py-2.5 sm:py-3.5 rounded-full font-bold text-black border-2 border-black hover:bg-black hover:text-white transition-all duration-300 text-xs sm:text-sm tracking-wide whitespace-nowrap flex items-center gap-3 bg-transparent">
-              <span>Lihat Produk</span>
-              <svg 
-                className="w-4 h-4 ml-1 transition-all duration-500 group-hover:w-12" 
-                viewBox="0 0 24 24" 
-                fill="none" 
-                stroke="currentColor" 
-                strokeWidth="2" 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                preserveAspectRatio="xMaxYMid meet"
-              >
-                <path d="M-50 12h69" />
-                <path d="m12 5 7 7-7 7" />
-              </svg>
-            </button>
-          </Link>
-        </div>
-      </section>
+        {/* Floating Product Widget */}
+        <BannerWidget />
+      </div>
 
       {/* Logout Confirmation Modal */}
       {showLogoutModal && (

@@ -5,6 +5,10 @@ import { User } from "firebase/auth";
 import { onAuthChange, handleRedirectResult } from "@/lib/auth";
 import { upsertUserProfile, UserProfile } from "@/lib/user-store";
 
+import { AlertTriangle } from "lucide-react";
+
+import { useAlert } from "@/shared/AlertContext";
+
 interface AuthContextType {
   user: User | null;
   userProfile: UserProfile | null;
@@ -21,6 +25,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const { showAlert } = useAlert();
 
   // Process any pending redirect results (crucial for mobile signInWithRedirect)
   useEffect(() => {
@@ -57,21 +62,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (!sessionRes.ok) {
             console.error("[AuthContext] Gagal menyimpan session cookie:", await sessionRes.text());
           }
-        } catch (err) {
+        } catch (err: any) {
           console.error("[AuthContext] Gagal sync profil user ke D1:", err);
 
-          // Fallback: set session dengan role 'user' agar user tidak stuck di loading.
-          // Data D1 akan di-retry saat refresh berikutnya.
-          try {
-            const token = await firebaseUser.getIdToken();
-            await fetch("/api/auth/session", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ token, role: "user", uid: firebaseUser.uid }),
-            });
-          } catch (sessionErr) {
-            console.error("[AuthContext] Bahkan fallback session gagal:", sessionErr);
-          }
+          // Sign out dari firebase agar session bersih
+          const { signOut } = await import("@/lib/auth");
+          await signOut();
+          
+          setUserProfile(null);
+          setUser(null);
+          
+          // Tampilkan modal peringatan global
+          showAlert({
+            title: "Akses Ditolak",
+            message: "Email Anda belum terdaftar di sistem kami. Silakan hubungi Master Admin untuk mendapatkan akses.",
+            type: "error",
+            confirmText: "Kembali ke Beranda",
+            onConfirm: () => { window.location.href = "/" }
+          });
+          return;
         }
       } else {
         setUserProfile(null);
@@ -83,7 +92,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [showAlert]);
 
   return (
     <AuthContext.Provider value={{ user, userProfile, loading }}>

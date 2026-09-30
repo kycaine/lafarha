@@ -406,7 +406,7 @@ app.patch('/transactions/:id/status', async (c) => {
 
 app.get('/mitra', async (c) => {
   try {
-    const { results } = await c.env.DB.prepare("SELECT * FROM mitra ORDER BY created_at DESC").all();
+    const { results } = await c.env.DB.prepare("SELECT * FROM mitra ORDER BY created_at ASC").all();
     return c.json({ success: true, data: results });
   } catch (error: any) {
     return c.json({ success: false, error: error.message }, 500);

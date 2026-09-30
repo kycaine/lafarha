@@ -55,7 +55,10 @@ async function handleProxy(req: NextRequest) {
 
     // Forward body if not GET/HEAD
     if (req.method !== "GET" && req.method !== "HEAD") {
-      fetchOptions.body = await req.arrayBuffer();
+      const bodyBuffer = await req.arrayBuffer();
+      if (bodyBuffer.byteLength > 0) {
+        fetchOptions.body = bodyBuffer;
+      }
     }
 
     const response = await fetch(targetUrl, fetchOptions);

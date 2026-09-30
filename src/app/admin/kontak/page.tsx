@@ -246,15 +246,6 @@ export default function KontakManagement() {
             Kelola informasi kontak dan akun sosial media yang tampil di website
           </p>
         </div>
-        <button
-          id="btn-save-kontak"
-          onClick={handleSave}
-          disabled={saving}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold transition-all shadow-md shadow-emerald-500/20 disabled:opacity-60 disabled:cursor-not-allowed shrink-0"
-        >
-          {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-          {saving ? "Menyimpan..." : "Simpan Perubahan"}
-        </button>
       </div>
 
       {/* Status Toast */}
