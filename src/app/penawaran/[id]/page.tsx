@@ -96,7 +96,7 @@ function TransactionStatusPage() {
           <XCircle className="w-16 h-16 text-red-500 mx-auto" />
           <h1 className="text-2xl font-bold">Transaksi Tidak Ditemukan</h1>
           <p className="text-slate-500">ID: {id}</p>
-          <Link href="/penawaran" className="inline-block mt-4 text-[#C9A84C] hover:text-[#8B6914] font-semibold">
+          <Link href="/penawaran" className="inline-flex items-center justify-center gap-2 mt-6 bg-black text-white hover:bg-gray-900 px-6 py-3 rounded-xl transition-all text-base font-black shadow-md uppercase tracking-wide">
             ← Kembali ke Penawaran
           </Link>
         </div>
@@ -112,12 +112,32 @@ function TransactionStatusPage() {
     <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50 text-slate-800">
       {/* Navbar */}
       <nav className="w-full border-b border-slate-200 bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-10">
-        <div className="container mx-auto px-6 h-16 flex items-center gap-4">
-          <Link href="/penawaran" className="flex items-center gap-2 text-slate-500 hover:text-[#C9A84C] transition-colors text-sm font-semibold">
-            <ArrowLeft className="w-4 h-4" /> Buat Penawaran Baru
+        <div className="container mx-auto px-6 h-16 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2.5">
+            <img
+              src="/farha-logo-only.svg"
+              alt="FARHA Logo"
+              className="w-9 h-9"
+            />
+            <div className="leading-tight">
+              <span 
+                className="font-bold tracking-wide block text-[15px] text-slate-900"
+                style={{ fontFamily: 'var(--font-cinzel), serif' }}
+              >
+                FARHA
+              </span>
+              <span className="font-medium tracking-[0.2em] uppercase block text-[10px] text-[#C9A84C]">
+                Umrah Services
+              </span>
+            </div>
           </Link>
-          <div className="flex-1" />
-          <div className="text-xs text-slate-400 font-mono font-medium">{tx.id}</div>
+          
+          <div className="flex items-center gap-4">
+            <div className="text-xs text-slate-400 font-mono font-medium hidden sm:block">ID: {tx.id}</div>
+            <Link href="/penawaran" className="flex items-center gap-2 bg-black text-white hover:bg-gray-900 px-4 py-2 rounded-xl transition-all text-sm font-bold shadow-md uppercase tracking-wide">
+              Buat Penawaran Baru
+            </Link>
+          </div>
         </div>
       </nav>
 

@@ -1,0 +1,98 @@
+{
+  "airportOptions": [
+    {
+      "label": "Indonesia",
+      "options": [
+        {
+          "value": "CGK",
+          "label": "Jakarta (CGK)"
+        },
+        {
+          "value": "SUB",
+          "label": "Surabaya (SUB)"
+        },
+        {
+          "value": "KNO",
+          "label": "Medan (KNO)"
+        },
+        {
+          "value": "UPG",
+          "label": "Makassar (UPG)"
+        },
+        {
+          "value": "SOC",
+          "label": "Solo (SOC)"
+        },
+        {
+          "value": "YIA",
+          "label": "Yogyakarta (YIA)"
+        },
+        {
+          "value": "BTH",
+          "label": "Batam (BTH)"
+        },
+        {
+          "value": "PDG",
+          "label": "Padang (PDG)"
+        },
+        {
+          "value": "PLM",
+          "label": "Palembang (PLM)"
+        },
+        {
+          "value": "BPN",
+          "label": "Balikpapan (BPN)"
+        },
+        {
+          "value": "BDJ",
+          "label": "Banjarmasin (BDJ)"
+        },
+        {
+          "value": "LOP",
+          "label": "Lombok (LOP)"
+        },
+        {
+          "value": "BTJ",
+          "label": "Banda Aceh (BTJ)"
+        },
+        {
+          "value": "PKU",
+          "label": "Pekanbaru (PKU)"
+        },
+        {
+          "value": "KJT",
+          "label": "Kertajati (KJT)"
+        }
+      ]
+    },
+    {
+      "label": "Arab Saudi",
+      "options": [
+        {
+          "value": "JED",
+          "label": "Jeddah (JED)"
+        },
+        {
+          "value": "MED",
+          "label": "Madinah (MED)"
+        },
+        {
+          "value": "RUH",
+          "label": "Riyadh (RUH)"
+        },
+        {
+          "value": "TIF",
+          "label": "Taif (TIF)"
+        },
+        {
+          "value": "DMM",
+          "label": "Dammam (DMM)"
+        },
+        {
+          "value": "ULH",
+          "label": "Al-Ula (ULH)"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,439 @@
+{
+  "hotelOptions": [
+    {
+      "location": "Mekah",
+      "name": "Fairmont Makkah",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Marwa Rotana Rayhaan",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Movenpick Makkah",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Pullman Zamzam",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Al Safwa (Tower 1)",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Al Safwa (Tower 3)",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Olayan Ajyad",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Elaf Kinda",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Makarem Ajyad (Front Tower)",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Makkah Tower",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Le Meridien Tower",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Anjum",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Azka Al Maqam",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Al Massa Grand",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Prestige Ajyad",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Orinsis Al Haram",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Azka Al Safa",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Maysan Al Mashaer",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Villa Hilton",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Villa Retaj",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Snood Ajyad",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Al Miqat Hotel",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Al Massa Dar Al Fayzeen",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Nada Ajyad",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Maysan Al Maqam",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Waha Ajyad",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Badr Al Massah",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Sawaed Al Khair",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Nada Al Diafa",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Al Barakah Mawaddah",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Hibba Al Muhajreen",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Rawabi Zamzam",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Jada Ajyad",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Zowar Al Bait",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Tara Al Zahabi",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Al Amin Ajyad",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Nawazi Tower",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Zelal Al Nuzala",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Address Ajyad",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Kayan Al Raya",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Makareem Al Hijrah",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Elaf Bakkah",
+      "star": null
+    },
+    {
+      "location": "Mekah",
+      "name": "Snood Al Rayyan",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Millennium Al Aqeeq",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Dar Al Eiman Al Haram",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Dalla Taibah",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Ruve",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Millenium Taibah",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Al Andalus Al Fakher",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Al Ansar Golden Tulip",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Grand Plaza Al Madinah",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Grand Plaza Al Maqam",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Concord Dar Al Khair",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Ritz Al Madinah",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Waqf Othman Bin Affan",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Jiwar Al Saha",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Manazil Al Marsa",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Aston East Taiba",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Dar Al Naem",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Araek Taiba",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Zowar International",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Rua International",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Kayan International",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Nusuk Al Madinah",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Lu'Luah Al Madinah",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Odest",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Triple One",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Qasr Al Ansar Golden Tulip",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Al Muhktara International",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Nusuk Al Hijrah",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "One Inn",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Nusuk Al Eiman",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Gulnar Taiba",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Jawharat Rashid",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Al Mokhtara Golden",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Azhar Salsabil",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Mirage Al Salam",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Majmu'ah Az Zahra",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Al Mukhtara Gharbi",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Taiba Hills",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Arjuan Saadah",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Arjuan Al Zahaby",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Al Barkah Karem",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Rowa Al Baraka Kareem",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Hayah Al Huda",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Baraa Taibah",
+      "star": null
+    },
+    {
+      "location": "Madinah",
+      "name": "Kayan Al Masi",
+      "star": null
+    }
+  ]
+}

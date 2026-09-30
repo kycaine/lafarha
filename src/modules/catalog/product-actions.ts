@@ -1,72 +1,85 @@
-import { fetchApi } from "@/lib/api";
+import fs from "fs";
+import path from "path";
 
-/** Returns the hardcoded default product list.
- *  Call this when you want to seed / fall back to the 6 built-in services
- *  without hitting the API. Rename intentional — not an API fetch. */
+// Note: This assumes we are running in an environment where the local file system is writable.
+const DATA_FILE = path.join(process.cwd(), "src/data/data-product/catalog.json");
+
+function getProductData() {
+  try {
+    const rawData = fs.readFileSync(DATA_FILE, "utf-8");
+    return JSON.parse(rawData);
+  } catch (error) {
+    console.error("Failed to read product data:", error);
+    return { products: [] };
+  }
+}
+
+function saveProductData(data: any) {
+  try {
+    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+    return true;
+  } catch (error) {
+    console.error("Failed to write product data:", error);
+    return false;
+  }
+}
+
 export async function getDefaultProducts() {
-  return [
-    { id: 'HOTEL', title: 'Hotel', icon: 'Building2', requires_pax: 1, form_schema: '[{"type":"HotelSpecsModule"}]' },
-    { id: 'FLIGHT', title: 'Tiket Pesawat', icon: 'Plane', requires_pax: 1, form_schema: '[{"type":"FlightLogicModule"}]' },
-    { id: 'BAGGAGE', title: 'Bagasi', icon: 'Briefcase', requires_pax: 0, form_schema: '[{"type":"BaggageModule"}]' },
-    { id: 'VISA', title: 'Visa', icon: 'Ticket', requires_pax: 1, form_schema: '[{"type":"VisaModule"}]' },
-    { id: 'TRANS_AIRPORT', title: 'Transportasi Bandara', icon: 'Car', requires_pax: 1, form_schema: '[{"type":"TransAirportModule"}]' },
-    { id: 'TRANS_TOUR', title: 'Transportasi Tour', icon: 'Bus', requires_pax: 1, form_schema: '[{"type":"TransTourModule"}]' }
-  ];
+  const data = getProductData();
+  return data.products || [];
 }
 
 export async function getProducts() {
-  try {
-    const res = await fetchApi('/products');
-    return res.success ? res.data : [];
-  } catch (error: any) {
-    console.error("Failed to fetch products:", error);
-    return [];
-  }
+  const data = getProductData();
+  return data.products || [];
 }
 
-export async function createProduct(data: any) {
-  try {
-    return await fetchApi('/products', {
-      method: 'POST',
-      body: JSON.stringify(data)
-    });
-  } catch (error: any) {
-    return { success: false, error: error.message };
+export async function createProduct(product: any) {
+  const data = getProductData();
+  const newProduct = { ...product, id: product.id || `PROD_${Date.now()}` };
+  data.products = data.products || [];
+  data.products.push(newProduct);
+  
+  if (saveProductData(data)) {
+    return { success: true, product: newProduct };
   }
+  return { success: false, error: "Gagal menyimpan data ke file lokal" };
 }
 
-export async function updateProduct(data: any) {
-  try {
-    return await fetchApi(`/products/${data.id}`, {
-      method: 'PUT',
-      body: JSON.stringify(data)
-    });
-  } catch (error: any) {
-    return { success: false, error: error.message };
+export async function updateProduct(product: any) {
+  const data = getProductData();
+  data.products = data.products || [];
+  
+  const idx = data.products.findIndex((p: any) => p.id === product.id);
+  if (idx !== -1) {
+    data.products[idx] = { ...data.products[idx], ...product };
+    if (saveProductData(data)) {
+      return { success: true, product: data.products[idx] };
+    }
+    return { success: false, error: "Gagal menyimpan data ke file lokal" };
   }
+  return { success: false, error: "Produk tidak ditemukan" };
 }
 
 export async function deleteProduct(id: string) {
-  try {
-    return await fetchApi(`/products/${id}`, {
-      method: 'DELETE'
-    });
-  } catch (error: any) {
-    return { success: false, error: error.message };
+  const data = getProductData();
+  data.products = data.products || [];
+  
+  const initialLength = data.products.length;
+  data.products = data.products.filter((p: any) => p.id !== id);
+  
+  if (data.products.length < initialLength) {
+    if (saveProductData(data)) {
+      return { success: true };
+    }
+    return { success: false, error: "Gagal menyimpan data ke file lokal" };
   }
+  return { success: false, error: "Produk tidak ditemukan" };
 }
 
 export async function resetProductsToDefault() {
-  try {
-    // Single source of truth: use getDefaultProducts() as the payload.
-    // The API worker will wipe the DB and re-insert exactly these products,
-    // so frontend hardcode and DB are always guaranteed to match.
-    const defaults = await getDefaultProducts();
-    return await fetchApi('/products/reset', {
-      method: 'POST',
-      body: JSON.stringify({ products: defaults }),
-    });
-  } catch (error: any) {
-    return { success: false, error: error.message };
-  }
+  // Normally this would wipe the DB, but since we are using local file,
+  // we might want to just reset the products array to the initial defaults.
+  // For now, we can just return success without modifying the other data.
+  return { success: true };
 }

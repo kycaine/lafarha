@@ -34,3 +34,14 @@ Do not flood the context window upfront. Dynamically locate and read relevant fi
 2. **Scope & Plan:** Clarify requirements and break down multi-step tasks.
 3. **Execute & Verify:** Apply relevant domain skills (TDD, contract-first, clean architecture) and verify against build/type errors.
 4. **Audit:** Ensure no secrets are leaked, unnecessary dependencies are added, or dead code remains.
+---
+
+## 5. Custom Workspace Commands
+
+- **`/add-product`**:
+  Jika user mengirim prompt `/add-product`, agen harus:
+  1. Membaca `src/data/data-product/catalog.json`.
+  2. Menanyakan interaktif kepada user mengenai: `ID Produk`, `Judul`, `Nama Icon`, `Membutuhkan jumlah Pax? (y/n)`, dan `Schema form module (jika ada)`.
+  3. Setelah user menjawab, agen otomatis mengedit file `catalog.json` dengan menambahkan objek produk baru ke dalam array `products` dan menambahkan state kosong ke `defaultModuleSpecs` sesuai ID tersebut.
+  4. Agen juga harus mengecek apabila ada ID duplikat.
+  5. **Penting:** Pastikan mengecek direktori `src/modules/catalog/components/modules/` terlebih dahulu untuk melihat apakah ada *form module* yang sudah ada dan bisa dipakai ulang (reusable) sebelum memutuskan untuk membuat file module baru.

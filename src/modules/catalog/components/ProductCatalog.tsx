@@ -7,7 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { createTransaction } from "@/modules/ordering/actions";
 import { fetchApi } from "@/lib/api";
-import { Building2, Bus, Ticket, User, Phone, Plane, CheckCircle2, UploadCloud, Users, Check, Briefcase, Car, CalendarDays, MapPin, HelpCircle, X, MessageCircle } from "lucide-react";
+import { Building2, Bus, Ticket, User, Phone, Plane, CheckCircle2, UploadCloud, Users, Check, Briefcase, Car, CalendarDays, MapPin, HelpCircle, X, MessageCircle, Search, ChevronDown, ChevronUp } from "lucide-react";
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
 
 const ICON_MAP: Record<string, any> = {
   Building2,
@@ -19,144 +21,38 @@ const ICON_MAP: Record<string, any> = {
   HelpCircle,
 };
 
-const AIRPORT_OPTIONS = [
-  {
-    label: "Indonesia",
-    options: [
-      { value: "CGK", label: "Jakarta (CGK)" },
-      { value: "SUB", label: "Surabaya (SUB)" },
-      { value: "KNO", label: "Medan (KNO)" },
-      { value: "UPG", label: "Makassar (UPG)" },
-      { value: "SOC", label: "Solo (SOC)" },
-      { value: "YIA", label: "Yogyakarta (YIA)" },
-      { value: "BTH", label: "Batam (BTH)" },
-      { value: "PDG", label: "Padang (PDG)" },
-      { value: "PLM", label: "Palembang (PLM)" },
-      { value: "BPN", label: "Balikpapan (BPN)" },
-      { value: "BDJ", label: "Banjarmasin (BDJ)" },
-      { value: "LOP", label: "Lombok (LOP)" },
-      { value: "BTJ", label: "Banda Aceh (BTJ)" },
-      { value: "PKU", label: "Pekanbaru (PKU)" },
-      { value: "KJT", label: "Kertajati (KJT)" },
-    ]
-  },
-  {
-    label: "Arab Saudi",
-    options: [
-      { value: "JED", label: "Jeddah (JED)" },
-      { value: "MED", label: "Madinah (MED)" },
-      { value: "RUH", label: "Riyadh (RUH)" },
-      { value: "TIF", label: "Taif (TIF)" },
-      { value: "DMM", label: "Dammam (DMM)" },
-      { value: "ULH", label: "Al-Ula (ULH)" },
-    ]
-  }
-];
+import transportData from "@/data/data-product/transport.json";
+import hotelData from "@/data/data-product/hotel.json";
+import airportData from "@/data/data-product/airport.json";
+import visaData from "@/data/data-product/visa.json";
+import catalogData from "@/data/data-product/catalog.json";
 
-function SearchableSelect({ value, onChange, options, placeholder }: { value: string, onChange: (val: string) => void, options: any[], placeholder: string }) {
-  const [query, setQuery] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
+const {
+  transportPrices: TRANSPORT_PRICES,
+  fullTripPrices: FULL_TRIP_PRICES,
+  transportVehicles: TRANSPORT_VEHICLES,
+  fullTripRoutes: FULL_TRIP_ROUTES,
+  fullPlusRoutes: FULL_PLUS_ROUTES
+} = transportData;
 
-  const filtered = options.flatMap((group: any) =>
-    group.options.filter((opt: any) => opt.label.toLowerCase().includes(query.toLowerCase()))
-  );
+const { hotelOptions: HOTEL_OPTIONS } = hotelData;
+const { airportOptions: AIRPORT_OPTIONS } = airportData;
 
-  const selectedOpt = options.flatMap((g: any) => g.options).find((o: any) => o.value === value);
+const {
+  visaTypes: VISA_TYPES,
+  visaCategories: VISA_CATEGORIES,
+  visaPricing: VISA_PRICING
+} = visaData;
 
-  return (
-    <div className="relative">
-      <input
-        type="text"
-        className="absolute inset-0 w-full h-full opacity-0 pointer-events-none -z-10"
-        value={value}
-        onChange={() => { }}
-        required
-        onFocus={() => setIsOpen(true)}
-      />
-      <div
-        className="flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white dark:border-slate-800 dark:bg-slate-950 cursor-pointer focus:ring-2 focus:ring-emerald-500"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <span className={selectedOpt ? "text-slate-900 dark:text-slate-100" : "text-slate-500"}>
-          {selectedOpt ? selectedOpt.label : placeholder}
-        </span>
-        <span className="text-slate-400 text-xs">▼</span>
-      </div>
+const { defaultModuleSpecs: DEFAULT_MODULE_SPECS } = catalogData;
 
-      {isOpen && (
-        <>
-          <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)}></div>
-          <div className="absolute z-50 mt-1 w-full rounded-md border border-slate-200 bg-white dark:border-slate-800 dark:bg-[#1a1a1a] shadow-xl p-2 animate-in fade-in zoom-in-95 duration-100">
-            <input
-              type="text"
-              className="w-full rounded-md bg-slate-100 dark:bg-black border border-slate-200 dark:border-slate-800 px-3 py-2 text-sm outline-none mb-2 focus:ring-2 focus:ring-emerald-500 transition-shadow"
-              placeholder="Ketik untuk mencari..."
-              autoFocus
-              value={query}
-              onChange={e => setQuery(e.target.value)}
-            />
-            <div className="max-h-48 overflow-y-auto space-y-1 pr-1 custom-scrollbar">
-              {filtered.map((opt: any) => (
-                <div
-                  key={opt.value}
-                  className={`cursor-pointer rounded-md px-3 py-2 text-sm transition-colors ${value === opt.value
-                      ? "bg-emerald-500 text-white font-semibold"
-                      : "hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-100"
-                    }`}
-                  onClick={() => {
-                    onChange(opt.value);
-                    setIsOpen(false);
-                    setQuery("");
-                  }}
-                >
-                  {opt.label}
-                </div>
-              ))}
-              {filtered.length === 0 && (
-                <div className="px-3 py-4 text-center text-sm text-slate-500">Tidak ditemukan.</div>
-              )}
-            </div>
-          </div>
-        </>
-      )}
-    </div>
-  );
-}
 
-function DatePickerNative({ value, onChange }: { value: string, onChange: (val: string) => void }) {
-  const formatDate = (d: string) => {
-    if (!d) return "Pilih Tanggal...";
-    const date = new Date(d);
-    return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-  };
-
-  const handleDateClick = (e: React.MouseEvent<HTMLInputElement>) => {
-    if ("showPicker" in e.currentTarget) {
-      (e.currentTarget as HTMLInputElement).showPicker();
-    }
-  };
-
-  return (
-    <div className="relative h-10 w-full group">
-      <CalendarDays className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400 group-hover:text-emerald-500 transition-colors pointer-events-none z-10" />
-
-      <div className="absolute inset-0 pl-10 pr-3 flex items-center text-sm border border-slate-200 dark:border-slate-800 rounded-md bg-white dark:bg-slate-950 pointer-events-none group-focus-within:ring-2 group-focus-within:ring-emerald-500">
-        <span className={value ? "text-slate-900 dark:text-slate-100 font-medium" : "text-slate-500"}>
-          {formatDate(value)}
-        </span>
-      </div>
-
-      <input
-        type="date"
-        onClick={handleDateClick}
-        className="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-20"
-        value={value}
-        onChange={e => onChange(e.target.value)}
-        required
-      />
-    </div>
-  );
-}
+import { SearchableSelect, DatePickerNative, CatalogModuleProps } from "./UtilsCatalog";
+import { HotelSpecsModuleComponent } from "./modules/HotelSpecsModule";
+import { FlightLogicModuleComponent } from "./modules/FlightLogicModule";
+import { BaggageModuleComponent } from "./modules/BaggageModule";
+import { VisaModuleComponent } from "./modules/VisaModule";
+import { TransportModuleComponent } from "./modules/TransportModule";
 
 /** Unified specs keyed by service ID — replaces 6 separate useState hooks */
 type ModuleSpecs = Record<string, any>;
@@ -180,9 +76,14 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
 
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const [showAllProducts, setShowAllProducts] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Modal konfirmasi kontak
   const [showContactModal, setShowContactModal] = useState(false);
+  const [showPricingModal, setShowPricingModal] = useState(false);
+  const [showVisaPricingModal, setShowVisaPricingModal] = useState(false);
+  const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
   const [contactForm, setContactForm] = useState({ name: "", whatsapp: "" });
 
   // Pax & manifest data (tidak termasuk nama/WA lagi)
@@ -194,19 +95,12 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
 
   // Unified module specs state — keyed by service ID
   // Replaces the 6 separate useState hooks (flightData, hotelData, etc.)
-  const [moduleSpecs, setModuleSpecs] = useState<Record<string, ModuleSpecs>>({
-    FLIGHT: { origin: "CGK", destination: "JED", airline: "", departureDate: "", returnDate: "", isRoundTrip: true, isCheapest: false },
-    HOTEL: { checkInDate: "", checkOutDate: "", rating: "4", roomDetails: "" },
-    BAGGAGE: { weight: "", description: "", flightDate: "" },
-    VISA: { type: "Umrah", entryDate: "" },
-    TRANS_AIRPORT: { vehicle: "", flightDetails: "", pickupDate: "" },
-    TRANS_TOUR: { vehicle: "", route: "", tourDate: "" },
-  });
+  const [moduleSpecs, setModuleSpecs] = useState<Record<string, ModuleSpecs>>(DEFAULT_MODULE_SPECS);
 
   const updateModuleSpec = (serviceId: string, field: string, value: any) => {
     setModuleSpecs(prev => ({
       ...prev,
-      [serviceId]: { ...prev[serviceId], [field]: value }
+      [serviceId]: { ...(prev[serviceId] || {}), [field]: value }
     }));
   };
 
@@ -243,213 +137,15 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
   // ─────────────────────────────────────────────────────────────────────────
   const moduleRenderers: Record<string, (srvId: string, mod: any, i: number) => React.ReactNode> = {
 
-    HotelSpecsModule: (srvId, _mod, i) => {
-      const specs = moduleSpecs[srvId];
-      return (
-        <div key={i} className="grid md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label>Tanggal Check-In</Label>
-            <DatePickerNative value={specs.checkInDate} onChange={val => updateModuleSpec(srvId, 'checkInDate', val)} />
-          </div>
-          <div className="space-y-2">
-            <Label>Tanggal Check-Out</Label>
-            <DatePickerNative value={specs.checkOutDate} onChange={val => updateModuleSpec(srvId, 'checkOutDate', val)} />
-          </div>
-          <div className="space-y-2">
-            <Label>Preferensi Bintang</Label>
-            <select
-              className="flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:focus:ring-emerald-500"
-              value={specs.rating}
-              onChange={e => updateModuleSpec(srvId, 'rating', e.target.value)}
-            >
-              <option value="3">Bintang 3 (Ekonomis)</option>
-              <option value="4">Bintang 4 (Premium)</option>
-              <option value="5">Bintang 5 (VIP)</option>
-            </select>
-          </div>
-          <div className="space-y-2">
-            <Label>Kebutuhan Kamar</Label>
-            <Input placeholder="Contoh: 10 Quad, 2 Double" value={specs.roomDetails} onChange={e => updateModuleSpec(srvId, 'roomDetails', e.target.value)} required />
-          </div>
-        </div>
-      );
-    },
+    HotelSpecsModule: (srvId, _mod, i) => <HotelSpecsModuleComponent key={i} srvId={srvId} mod={_mod} i={i} moduleSpecs={moduleSpecs} updateModuleSpec={updateModuleSpec} tripType={moduleSpecs[srvId]?.tripType || 'single'} />,
 
-    FlightLogicModule: (srvId, _mod, i) => {
-      const specs = moduleSpecs[srvId];
-      return (
-        <div key={i} className="space-y-4">
-          <div className="flex flex-col gap-3 mb-2">
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="roundTrip"
-                className="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer accent-emerald-600"
-                checked={specs.isRoundTrip}
-                onChange={e => updateModuleSpec(srvId, 'isRoundTrip', e.target.checked)}
-              />
-              <Label htmlFor="roundTrip" className="cursor-pointer font-semibold text-sm">Penerbangan Pulang Pergi (Round Trip)</Label>
-            </div>
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="cheapestFlight"
-                className="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer accent-emerald-600"
-                checked={specs.isCheapest}
-                onChange={e => {
-                  const isChecked = e.target.checked;
-                  setModuleSpecs(prev => ({
-                    ...prev,
-                    [srvId]: { ...prev[srvId], isCheapest: isChecked, airline: isChecked ? "Termurah / Fleksibel" : "" }
-                  }));
-                }}
-              />
-              <Label htmlFor="cheapestFlight" className="cursor-pointer font-semibold text-sm">Carikan tiket termurah (Fleksibel Maskapai)</Label>
-            </div>
-          </div>
+    FlightLogicModule: (srvId, _mod, i) => <FlightLogicModuleComponent key={i} srvId={srvId} mod={_mod} i={i} moduleSpecs={moduleSpecs} updateModuleSpec={updateModuleSpec} tripType={moduleSpecs[srvId]?.tripType || 'single'} />,
 
-          <div className="space-y-2 mb-6">
-            <Label className="text-base text-slate-800 dark:text-slate-200">Maskapai Harapan</Label>
-            <Input
-              placeholder="Contoh: Saudia / Garuda"
-              value={specs.airline}
-              onChange={e => updateModuleSpec(srvId, 'airline', e.target.value)}
-              required
-              disabled={specs.isCheapest}
-              className={`h-12 text-lg ${specs.isCheapest ? "opacity-60 cursor-not-allowed bg-slate-100 dark:bg-slate-900" : "bg-white dark:bg-slate-950"}`}
-            />
-          </div>
+    BaggageModule: (srvId, _mod, i) => <BaggageModuleComponent key={i} srvId={srvId} mod={_mod} i={i} moduleSpecs={moduleSpecs} updateModuleSpec={updateModuleSpec} tripType={moduleSpecs[srvId]?.tripType || 'single'} />,
 
-          <div className="p-5 border-2 border-emerald-200 dark:border-emerald-800/50 bg-emerald-50/50 dark:bg-emerald-900/10 rounded-2xl mb-6">
-            <div className="flex items-center gap-2 mb-4 text-emerald-700 dark:text-emerald-400 font-bold">
-              <MapPin className="w-5 h-5" /> Rute Perjalanan
-            </div>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Bandara Asal (Origin)</Label>
-                <SearchableSelect
-                  placeholder="Pilih Bandara Asal..."
-                  options={AIRPORT_OPTIONS}
-                  value={specs.origin}
-                  onChange={(val: string) => updateModuleSpec(srvId, 'origin', val)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Bandara Tujuan (Destination)</Label>
-                <SearchableSelect
-                  placeholder="Pilih Bandara Tujuan..."
-                  options={AIRPORT_OPTIONS}
-                  value={specs.destination}
-                  onChange={(val: string) => updateModuleSpec(srvId, 'destination', val)}
-                />
-              </div>
-            </div>
-          </div>
+    VisaModule: (srvId, _mod, i) => <VisaModuleComponent key={i} srvId={srvId} mod={_mod} i={i} moduleSpecs={moduleSpecs} updateModuleSpec={updateModuleSpec} tripType={moduleSpecs[srvId]?.tripType || 'single'} />,
 
-          <div className="p-5 border-2 border-blue-200 dark:border-blue-800/50 bg-blue-50/50 dark:bg-blue-900/10 rounded-2xl">
-            <div className="flex items-center gap-2 mb-4 text-blue-700 dark:text-blue-400 font-bold">
-              <CalendarDays className="w-5 h-5" /> Jadwal Penerbangan
-            </div>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Tanggal Keberangkatan</Label>
-                <DatePickerNative value={specs.departureDate} onChange={val => updateModuleSpec(srvId, 'departureDate', val)} />
-              </div>
-              {specs.isRoundTrip && (
-                <div className="space-y-2">
-                  <Label>Tanggal Kepulangan</Label>
-                  <DatePickerNative value={specs.returnDate} onChange={val => updateModuleSpec(srvId, 'returnDate', val)} />
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      );
-    },
-
-    BaggageModule: (srvId, _mod, i) => {
-      const specs = moduleSpecs[srvId];
-      return (
-        <div key={i} className="grid md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label>Total Berat Tambahan (Kg)</Label>
-            <Input type="number" placeholder="Contoh: 100" value={specs.weight} onChange={e => updateModuleSpec(srvId, 'weight', e.target.value)} required />
-          </div>
-          <div className="space-y-2">
-            <Label>Tanggal Penerbangan</Label>
-            <DatePickerNative value={specs.flightDate} onChange={val => updateModuleSpec(srvId, 'flightDate', val)} />
-          </div>
-          <div className="md:col-span-2 space-y-2">
-            <Label>Catatan Bagasi</Label>
-            <Input placeholder="Contoh: 10 koper air zamzam" value={specs.description} onChange={e => updateModuleSpec(srvId, 'description', e.target.value)} />
-          </div>
-        </div>
-      );
-    },
-
-    VisaModule: (srvId, _mod, i) => {
-      const specs = moduleSpecs[srvId];
-      return (
-        <div key={i} className="grid md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label>Jenis Visa</Label>
-            <select
-              className="flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:focus:ring-emerald-500"
-              value={specs.type}
-              onChange={e => updateModuleSpec(srvId, 'type', e.target.value)}
-            >
-              <option value="Umrah">Visa Umrah</option>
-              <option value="Turis">Visa Turis</option>
-              <option value="Ziarah">Visa Ziarah</option>
-            </select>
-          </div>
-          <div className="space-y-2">
-            <Label>Rencana Tanggal Masuk (Entry)</Label>
-            <DatePickerNative value={specs.entryDate} onChange={val => updateModuleSpec(srvId, 'entryDate', val)} />
-          </div>
-        </div>
-      );
-    },
-
-    TransAirportModule: (srvId, _mod, i) => {
-      const specs = moduleSpecs[srvId];
-      return (
-        <div key={i} className="grid md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label>Armada (Hiace / Bus / Sedan)</Label>
-            <Input placeholder="Contoh: Toyota Hiace" value={specs.vehicle} onChange={e => updateModuleSpec(srvId, 'vehicle', e.target.value)} required />
-          </div>
-          <div className="space-y-2">
-            <Label>Tanggal Penjemputan</Label>
-            <DatePickerNative value={specs.pickupDate} onChange={val => updateModuleSpec(srvId, 'pickupDate', val)} />
-          </div>
-          <div className="md:col-span-2 space-y-2">
-            <Label>Detail Penerbangan</Label>
-            <Input placeholder="Contoh: SV 818 ETA 14:00 JED" value={specs.flightDetails} onChange={e => updateModuleSpec(srvId, 'flightDetails', e.target.value)} required />
-          </div>
-        </div>
-      );
-    },
-
-    TransTourModule: (srvId, _mod, i) => {
-      const specs = moduleSpecs[srvId];
-      return (
-        <div key={i} className="grid md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label>Kebutuhan Armada</Label>
-            <Input placeholder="Contoh: 1 Bus VIP 45 Seat" value={specs.vehicle} onChange={e => updateModuleSpec(srvId, 'vehicle', e.target.value)} required />
-          </div>
-          <div className="space-y-2">
-            <Label>Tanggal Tour</Label>
-            <DatePickerNative value={specs.tourDate} onChange={val => updateModuleSpec(srvId, 'tourDate', val)} />
-          </div>
-          <div className="md:col-span-2 space-y-2">
-            <Label>Rute Ziarah</Label>
-            <Input placeholder="Contoh: Makkah - Madinah - Thaif" value={specs.route} onChange={e => updateModuleSpec(srvId, 'route', e.target.value)} required />
-          </div>
-        </div>
-      );
-    },
+    TransportModule: (srvId, _mod, i) => <TransportModuleComponent key={i} srvId={srvId} mod={_mod} i={i} moduleSpecs={moduleSpecs} updateModuleSpec={updateModuleSpec} tripType={moduleSpecs[srvId]?.tripType || 'single'} />,
 
     // Generic modules — also in registry for uniformity
     TextInput: (srvId, mod, i) => (
@@ -584,8 +280,36 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
     }
   };
 
+  const filteredProducts = products.filter(p => p.title.toLowerCase().includes(searchQuery.toLowerCase()));
+  const displayedProducts = (searchQuery || showAllProducts) ? filteredProducts : filteredProducts.slice(0, 6);
+
   return (
     <div className="max-w-4xl mx-auto space-y-12 pb-24">
+      {/* Search Bar */}
+      <div className="relative w-full">
+        <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+          <Search className="h-5 w-5 text-emerald-500" />
+        </div>
+        <input
+          type="text"
+          className="w-full h-14 pl-12 pr-28 rounded-2xl border-2 border-emerald-500 bg-white dark:bg-slate-900 text-base text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-emerald-500/20 transition-all shadow-sm"
+          placeholder="Cari layanan..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        {searchQuery && (
+          <button
+            type="button"
+            onClick={() => setSearchQuery("")}
+            className="absolute inset-y-0 right-3 flex items-center text-red-500 hover:text-red-600 transition-colors bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 px-3 my-2 rounded-xl"
+            title="Hapus pencarian"
+          >
+            <span className="text-sm font-medium mr-1">Hapus</span>
+            <X className="h-4 w-4" />
+          </button>
+        )}
+      </div>
+
       {/* 1. Services Selection Grid */}
       <section className="space-y-6">
         <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
@@ -593,7 +317,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
           Pilih Layanan
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {products.map((srv) => {
+          {displayedProducts.map((srv) => {
             const isSelected = selectedServices.includes(srv.id);
             const IconComp = ICON_MAP[srv.icon] || HelpCircle;
 
@@ -602,8 +326,8 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
                 key={srv.id}
                 onClick={() => toggleService(srv.id)}
                 className={`relative cursor-pointer flex flex-col items-center justify-center p-6 rounded-2xl border-2 transition-all duration-200 ${isSelected
-                    ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 shadow-md scale-105'
-                    : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-black/40 text-slate-500 hover:border-emerald-300'
+                  ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 shadow-md scale-105'
+                  : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-black/40 text-slate-500 hover:border-emerald-300'
                   }`}
               >
                 <IconComp className="h-8 w-8" />
@@ -616,12 +340,32 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
               </div>
             );
           })}
-          {products.length === 0 && (
+          {filteredProducts.length === 0 && (
             <div className="col-span-2 md:col-span-3 p-10 border-2 border-dashed rounded-xl text-center text-slate-500">
               Belum ada layanan tersedia. Hubungi Administrator.
             </div>
           )}
         </div>
+        {!searchQuery && products.length > 6 && (
+          <div className="flex justify-center mt-6">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setShowAllProducts(!showAllProducts)}
+              className="text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 group transition-all"
+            >
+              {showAllProducts ? (
+                <>
+                  Sembunyikan semua paket <ChevronUp className="ml-2 h-4 w-4 group-hover:-translate-y-0.5 transition-transform" />
+                </>
+              ) : (
+                <>
+                  Lihat semua paket ({products.length}) <ChevronDown className="ml-2 h-4 w-4 group-hover:translate-y-0.5 transition-transform" />
+                </>
+              )}
+            </Button>
+          </div>
+        )}
       </section>
 
       {/* Show Forms if any service is selected */}
@@ -645,7 +389,43 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
                 return (
                   <div key={srvId} className="bg-white dark:bg-[#111] border border-slate-200 dark:border-slate-800 p-6 rounded-2xl space-y-4">
                     <div className="flex items-center gap-3 text-lg font-bold border-b border-slate-100 dark:border-slate-800 pb-3">
-                      <IconComp className="text-emerald-500 h-5 w-5" /> Spesifikasi {service.title}
+                      <div className="flex items-center gap-2">
+                        <IconComp className="text-emerald-500 h-5 w-5" /> Spesifikasi {service.title}
+                        {(service.id === 'TRANSPORTASI' || service.id === 'VISA' || service.id === 'HOTEL') && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (service.id === 'VISA') setShowVisaPricingModal(true);
+                              else if (service.id === 'HOTEL') alert("Estimasi harga hotel belum tersedia");
+                              else setShowPricingModal(true);
+                            }}
+                            className="inline-flex items-center justify-center px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-500 text-[10px] hover:bg-yellow-200 hover:text-yellow-900 dark:hover:bg-yellow-900/60 dark:hover:text-yellow-400 transition-colors cursor-pointer font-medium"
+                            title="Lihat Referensi Harga"
+                          >
+                            Cek Estimasi Harga
+                          </button>
+                        )}
+                        {service.id === 'VISA_BUS' && (
+                          <>
+                            <button
+                              type="button"
+                              onClick={() => setShowVisaPricingModal(true)}
+                              className="inline-flex items-center justify-center px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-500 text-[10px] hover:bg-yellow-200 hover:text-yellow-900 dark:hover:bg-yellow-900/60 dark:hover:text-yellow-400 transition-colors cursor-pointer font-medium"
+                              title="Lihat Referensi Harga Visa"
+                            >
+                              Cek Harga Visa
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setShowPricingModal(true)}
+                              className="inline-flex items-center justify-center px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-500 text-[10px] hover:bg-yellow-200 hover:text-yellow-900 dark:hover:bg-yellow-900/60 dark:hover:text-yellow-400 transition-colors cursor-pointer font-medium"
+                              title="Lihat Referensi Harga Transportasi"
+                            >
+                              Cek Harga Bus
+                            </button>
+                          </>
+                        )}
+                      </div>
                     </div>
 
                     {/* Registry lookup — O(1) instead of linear if-chain */}
@@ -675,7 +455,20 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
                     <Label>Total Jamaah (PAX)</Label>
                     <div className="relative">
                       <Users className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
-                      <Input type="number" required={needsPax} placeholder="Contoh: 45" className="pl-10 h-10" value={formData.pax} onChange={e => setFormData({ ...formData, pax: e.target.value })} />
+                      <Input
+                        type="number"
+                        min="1"
+                        required={needsPax}
+                        placeholder="Contoh: 45"
+                        className="pl-10 h-10"
+                        value={formData.pax}
+                        onChange={e => setFormData({ ...formData, pax: e.target.value })}
+                        onKeyDown={(e) => {
+                          if (e.key === '-' || e.key === 'e' || e.key === '+' || e.key === '.') {
+                            e.preventDefault();
+                          }
+                        }}
+                      />
                     </div>
                   </div>
 
@@ -776,6 +569,165 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
                 {loading ? "Mengirim..." : "Kirim & Buka WhatsApp Admin"}
               </Button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Pricing */}
+      {showPricingModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200"
+          onClick={() => {
+            if (!isDownloadingPdf) setShowPricingModal(false);
+          }}
+        >
+          <div
+            className="bg-white dark:bg-[#111] rounded-2xl w-[90vw] max-w-5xl overflow-hidden shadow-2xl relative flex flex-col max-h-[95vh]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between p-4 border-b border-slate-100 dark:border-slate-800">
+              <h3 className="font-bold text-lg">Estimasi Harga Transportasi (Harga dalam SAR)</h3>
+              <Button variant="ghost" size="icon" disabled={isDownloadingPdf} onClick={() => setShowPricingModal(false)} className="rounded-full h-8 w-8">
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="p-6 overflow-auto flex-1 bg-slate-50 dark:bg-slate-900/50" id="pricing-table-container">
+              <div className="w-full bg-white dark:bg-[#111] rounded-lg border border-slate-200 dark:border-slate-800 p-6 space-y-8">
+
+                {/* Single Trip Table */}
+                <div>
+                  <h4 className="text-xl font-bold mb-4 text-emerald-700 dark:text-emerald-500">Single Trip</h4>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm text-left border-collapse whitespace-nowrap">
+                      <thead className="text-xs text-white bg-slate-800 uppercase">
+                        <tr>
+                          <th className="px-4 py-3 border border-slate-700">Rute Perjalanan</th>
+                          {TRANSPORT_VEHICLES.map((v: any) => (
+                            <th key={v.id} className="px-4 py-3 border border-slate-700 text-center">
+                              {v.name}<br />
+                              <span className="text-[10px] font-normal">({v.capacity})</span>
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {TRANSPORT_PRICES.map((item, idx) => (
+                          <tr key={idx} className="border-b border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors">
+                            <td className="px-4 py-2 border-r border-slate-200 dark:border-slate-800 font-medium">{item.route}</td>
+                            {TRANSPORT_VEHICLES.map((v: any, vIdx: number) => (
+                              <td key={v.id} className={`px-4 py-2 text-center font-medium text-emerald-600 dark:text-emerald-400 ${vIdx < TRANSPORT_VEHICLES.length - 1 ? 'border-r border-slate-200 dark:border-slate-800' : ''}`}>
+                                {item[v.id as keyof typeof item]}
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* Full Trip Table */}
+                <div>
+                  <h4 className="text-xl font-bold mb-4 text-emerald-700 dark:text-emerald-500">Full Trip ++ (Bus)</h4>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm text-left border-collapse whitespace-nowrap">
+                      <thead className="text-xs text-white bg-slate-800 uppercase">
+                        <tr>
+                          <th className="px-4 py-3 border border-slate-700 w-2/3">Paket Full Trip</th>
+                          <th className="px-4 py-3 border border-slate-700 text-center w-1/3">Harga (SAR)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {FULL_TRIP_PRICES.map((item, idx) => (
+                          <tr key={idx} className="border-b border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors">
+                            <td className="px-4 py-2 border-r border-slate-200 dark:border-slate-800 font-medium">{item.route}</td>
+                            <td className="px-4 py-2 text-center font-bold text-emerald-600 dark:text-emerald-400">{item.price}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <div className="p-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
+              <Button
+                disabled={isDownloadingPdf}
+                onClick={async () => {
+                  setIsDownloadingPdf(true);
+                  // Beri jeda sejenak agar UI bisa update menjadi loading
+                  await new Promise(resolve => setTimeout(resolve, 100));
+
+                  const element = document.getElementById('pricing-table-container');
+                  if (!element) {
+                    setIsDownloadingPdf(false);
+                    return;
+                  }
+                  try {
+                    const canvas = await html2canvas(element, { scale: 2, useCORS: true, logging: false });
+                    const imgData = canvas.toDataURL('image/png');
+                    const pdf = new jsPDF('p', 'mm', 'a4');
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+                    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                    pdf.save('referensi-harga-transportasi.pdf');
+                  } catch (error: any) {
+                    console.error('Failed to generate PDF', error);
+                    alert("Gagal memproses PDF: " + (error?.message || error));
+                  } finally {
+                    setIsDownloadingPdf(false);
+                  }
+                }}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2 min-w-[140px]"
+              >
+                {isDownloadingPdf ? (
+                  <>
+                    <div className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                    <span>Memproses...</span>
+                  </>
+                ) : (
+                  "Download PDF"
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Pricing Visa */}
+      {showVisaPricingModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200"
+          onClick={() => setShowVisaPricingModal(false)}
+        >
+          <div
+            className="bg-white dark:bg-[#111] rounded-2xl w-[90vw] max-w-3xl overflow-hidden shadow-2xl relative flex flex-col max-h-[95vh]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between p-4 border-b border-slate-100 dark:border-slate-800">
+              <h3 className="font-bold text-lg">Estimasi Harga Visa</h3>
+              <Button variant="ghost" size="icon" onClick={() => setShowVisaPricingModal(false)} className="rounded-full h-8 w-8">
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="p-6 overflow-auto flex-1 bg-slate-50 dark:bg-slate-900/50">
+              <div className="w-full bg-white dark:bg-[#111] rounded-lg border border-slate-200 dark:border-slate-800 p-6 space-y-8">
+                <div>
+                  <div className="text-center py-8">
+                    <p className="text-3xl md:text-4xl font-extrabold text-emerald-600 dark:text-emerald-400 mb-4">
+                      {VISA_PRICING.estimate}
+                    </p>
+                    <p className="text-slate-500 dark:text-slate-400 text-base md:text-lg">
+                      {VISA_PRICING.disclaimer}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="p-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
+              <Button onClick={() => setShowVisaPricingModal(false)} className="bg-slate-200 hover:bg-slate-300 text-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-white">Tutup</Button>
+            </div>
           </div>
         </div>
       )}

@@ -1,0 +1,297 @@
+{
+  "transportPrices": [
+    {
+      "route": "City Tour Thoif / Taif",
+      "sedan": 500,
+      "staria": 550,
+      "gmc": 950,
+      "hiace": 700,
+      "coaster": 800,
+      "bus": 950
+    },
+    {
+      "route": "City Tour Makkah / Ziarah Makkah",
+      "sedan": 300,
+      "staria": 350,
+      "gmc": 450,
+      "hiace": 400,
+      "coaster": 550,
+      "bus": 700
+    },
+    {
+      "route": "City Tour Madinah / Ziarah Madinah",
+      "sedan": 300,
+      "staria": 250,
+      "gmc": 450,
+      "hiace": 300,
+      "coaster": 450,
+      "bus": 550
+    },
+    {
+      "route": "Bandara Jeddah - Makkah Hotel",
+      "sedan": 325,
+      "staria": 400,
+      "gmc": 550,
+      "hiace": 500,
+      "coaster": 700,
+      "bus": 800
+    },
+    {
+      "route": "Makkah - Madinah (Antar Kota)",
+      "sedan": 500,
+      "staria": 600,
+      "gmc": 950,
+      "hiace": 700,
+      "coaster": 900,
+      "bus": "1.150"
+    },
+    {
+      "route": "Stasiun Kereta Cepat / Haramain - Hotel",
+      "sedan": 170,
+      "staria": 250,
+      "gmc": 300,
+      "hiace": 300,
+      "coaster": 400,
+      "bus": 450
+    },
+    {
+      "route": "Jabal Khandamah",
+      "sedan": 225,
+      "staria": 250,
+      "gmc": 350,
+      "hiace": 300,
+      "coaster": 350,
+      "bus": 500
+    },
+    {
+      "route": "Gua Hira / Museum Wahyu",
+      "sedan": 250,
+      "staria": 250,
+      "gmc": 350,
+      "hiace": 300,
+      "coaster": 400,
+      "bus": 550
+    },
+    {
+      "route": "Jabal Magnet + Percetakan Al-Qur'an",
+      "sedan": 300,
+      "staria": 350,
+      "gmc": 550,
+      "hiace": 450,
+      "coaster": 550,
+      "bus": 600
+    },
+    {
+      "route": "Bandara Jeddah - Madinah",
+      "sedan": 525,
+      "staria": 650,
+      "gmc": "1.000",
+      "hiace": 700,
+      "coaster": 950,
+      "bus": "1.150"
+    },
+    {
+      "route": "Bandara Madinah - Hotel Madinah",
+      "sedan": 300,
+      "staria": 300,
+      "gmc": 450,
+      "hiace": 400,
+      "coaster": 500,
+      "bus": 600
+    },
+    {
+      "route": "Masjid Aisyah Tan'im",
+      "sedan": 150,
+      "staria": 250,
+      "gmc": 450,
+      "hiace": 350,
+      "coaster": 450,
+      "bus": 550
+    },
+    {
+      "route": "Kakiah Markets",
+      "sedan": "-",
+      "staria": 250,
+      "gmc": 350,
+      "hiace": 300,
+      "coaster": 450,
+      "bus": 550
+    },
+    {
+      "route": "Ziarah Hudaibiyah",
+      "sedan": "-",
+      "staria": 300,
+      "gmc": 450,
+      "hiace": 350,
+      "coaster": 600,
+      "bus": 550
+    },
+    {
+      "route": "City Tour Jeddah",
+      "sedan": "-",
+      "staria": 650,
+      "gmc": "1.050",
+      "hiace": 800,
+      "coaster": 950,
+      "bus": "1.050"
+    },
+    {
+      "route": "Ziarah Badar",
+      "sedan": "-",
+      "staria": 650,
+      "gmc": "1.150",
+      "hiace": 800,
+      "coaster": "1.200",
+      "bus": "1.350"
+    },
+    {
+      "route": "City Tour Al Ula",
+      "sedan": "-",
+      "staria": "1.250",
+      "gmc": "2.350",
+      "hiace": "1.550",
+      "coaster": "2.250",
+      "bus": "2.450"
+    }
+  ],
+  "fullTripPrices": [
+    {
+      "route": "5 Trip",
+      "price": "2.500"
+    },
+    {
+      "route": "5 Trip + Toif",
+      "price": "3.500"
+    },
+    {
+      "route": "5 Trip + Badar",
+      "price": "2.750"
+    },
+    {
+      "route": "5 Trip + Toif + Badar",
+      "price": "3.700"
+    },
+    {
+      "route": "5 Trip + Al Ula",
+      "price": "4.950"
+    },
+    {
+      "route": "5 Trip + Toif + Al Ula",
+      "price": "5.950"
+    },
+    {
+      "route": "5 Trip + Badar + Al Ula",
+      "price": "5.200"
+    },
+    {
+      "route": "5 Trip + Toif + Badar + Al Ula",
+      "price": "6.150"
+    }
+  ],
+  "transportVehicles": [
+    {
+      "id": "sedan",
+      "name": "Sedan",
+      "capacity": "4 Seat"
+    },
+    {
+      "id": "staria",
+      "name": "Staria",
+      "capacity": "7 Seat"
+    },
+    {
+      "id": "gmc",
+      "name": "GMC",
+      "capacity": "7 Seat"
+    },
+    {
+      "id": "hiace",
+      "name": "Hiace",
+      "capacity": "11 Seat"
+    },
+    {
+      "id": "coaster",
+      "name": "Coaster",
+      "capacity": "27 Seat"
+    },
+    {
+      "id": "bus",
+      "name": "Bus",
+      "capacity": "49 Seat"
+    }
+  ],
+  "fullTripRoutes": [
+    {
+      "value": "Jeddah (Airport) - Makkah - City Tour Makkah - Madinah - City Tour Madinah - Madinah (Airport)",
+      "title": "Jeddah - Madinah",
+      "desc": "Jeddah (Airport) - Makkah - City Tour Makkah - Madinah - City Tour Madinah - Madinah (Airport)"
+    },
+    {
+      "value": "Jeddah (Airport) - Madinah - City Tour Madinah - Makkah - City Tour Makkah - Jeddah (Airport)",
+      "title": "Jeddah - Jeddah",
+      "desc": "Jeddah (Airport) - Madinah - City Tour Madinah - Makkah - City Tour Makkah - Jeddah (Airport)"
+    },
+    {
+      "value": "Jeddah (Airport)  - Makkah - City Tour Makkah - Madinah - City Tour Madinah - Jeddah (Airport)",
+      "title": "Jeddah - Jeddah",
+      "desc": "Jeddah (Airport) - Makkah - City Tour Makkah - Madinah - City Tour Madinah - Jeddah (Airport)"
+    },
+    {
+      "value": "Madinah (Airport) - Madinah - City Tour Madinah - Makkah - City Tour Makkah - Jeddah (Airport)",
+      "title": "Madinah - Jeddah",
+      "desc": "Madinah (Airport) - Madinah - City Tour Madinah - Makkah - City Tour Makkah - Jeddah (Airport)"
+    },
+    {
+      "value": "Madinah (Airport) - Madinah - City Tour Madinah - Makkah - City Tour Makkah - Madinah (Airport)",
+      "title": "Madinah - Madinah",
+      "desc": "Madinah (Airport) - Madinah - City Tour Madinah - Makkah - City Tour Makkah - Madinah (Airport)"
+    },
+    {
+      "value": "Riyadh (Airport) - Madinah - City Tour Madinah - Makkah - City Tour Makkah - Riyadh (Airport)",
+      "title": "Riyadh - Riyadh",
+      "desc": "Riyadh (Airport) - Madinah - City Tour Madinah - Makkah - City Tour Makkah - Riyadh (Airport)"
+    },
+    {
+      "value": "Riyadh (Airport)  - Makkah - City Tour Makkah - Madinah - City Tour Madinah - Riyadh (Airport)",
+      "title": "Riyadh - Riyadh",
+      "desc": "Riyadh (Airport) - Makkah - City Tour Makkah - Madinah - City Tour Madinah - Riyadh (Airport)"
+    }
+  ],
+  "fullPlusRoutes": [
+    {
+      "value": "Full Trip + Al Ula",
+      "title": "Full Trip + Al Ula",
+      "desc": "Rute standar ditambah kunjungan ke Al Ula"
+    },
+    {
+      "value": "Full Trip + Badar",
+      "title": "Full Trip + Badar",
+      "desc": "Rute standar ditambah ziarah ke Badar"
+    },
+    {
+      "value": "Full Trip + Thaif",
+      "title": "Full Trip + Thaif",
+      "desc": "Rute standar ditambah city tour Thaif"
+    },
+    {
+      "value": "Full Trip + Al Ula + Badar",
+      "title": "Full Trip + Al Ula + Badar",
+      "desc": "Rute standar ditambah Al Ula dan Badar"
+    },
+    {
+      "value": "Full Trip + Al Ula + Thaif",
+      "title": "Full Trip + Al Ula + Thaif",
+      "desc": "Rute standar ditambah Al Ula dan Thaif"
+    },
+    {
+      "value": "Full Trip + Badar + Thaif",
+      "title": "Full Trip + Badar + Thaif",
+      "desc": "Rute standar ditambah Badar dan Thaif"
+    },
+    {
+      "value": "Full Trip + Badar + Al Ula + Thaif",
+      "title": "Paket Lengkap",
+      "desc": "Rute standar ditambah Badar, Al Ula, dan Thaif"
+    }
+  ]
+}

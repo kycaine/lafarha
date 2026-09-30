@@ -1,0 +1,16 @@
+{
+  "visaTypes": [
+    "Umrah",
+    "Turis",
+    "Ziarah"
+  ],
+  "visaCategories": [
+    "Perorangan",
+    "Grup Kecil",
+    "Grup Besar"
+  ],
+  "visaPricing": {
+    "estimate": "Rp 2.000.000 - Rp 5.000.000",
+    "disclaimer": "*Harga menyesuaikan kondisi, jumlah, durasi menetap dan kelengkapan berkas masing-masing jamaah"
+  }
+}

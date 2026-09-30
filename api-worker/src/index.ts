@@ -233,8 +233,7 @@ app.post('/products/reset', async (c) => {
         ('FLIGHT', 'Tiket Pesawat', 'Plane', 1, '[{"type":"FlightLogicModule"}]'), 
         ('BAGGAGE', 'Bagasi', 'Briefcase', 0, '[{"type":"BaggageModule"}]'), 
         ('VISA', 'Visa', 'Ticket', 1, '[{"type":"VisaModule"}]'), 
-        ('TRANS_AIRPORT', 'Transportasi Bandara', 'Car', 1, '[{"type":"TransAirportModule"}]'), 
-        ('TRANS_TOUR', 'Transportasi Tour', 'Bus', 1, '[{"type":"TransTourModule"}]')`
+        ('TRANSPORTASI', 'Transportasi', 'Bus', 1, '[{"type":"TransportModule"}]')`
       ).run();
     }
 

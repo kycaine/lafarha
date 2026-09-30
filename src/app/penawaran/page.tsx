@@ -25,25 +25,52 @@ export default function PenawaranPage() {
       {/* Navbar */}
       <nav className="w-full bg-white dark:bg-black/80 border-b border-slate-200 dark:border-white/10 sticky top-0 z-50 backdrop-blur-md">
         <div className="container mx-auto px-6 h-20 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-emerald-500 flex items-center justify-center font-bold text-white shadow-lg shadow-emerald-500/20">
-              LA
+          <Link href="/" className="flex items-center gap-2.5">
+            <img
+              src="/farha-logo-only.svg"
+              alt="FARHA Logo"
+              className="w-9 h-9"
+            />
+            <div className="leading-tight">
+              <span
+                className="font-bold tracking-wide block text-[15px] text-slate-900 dark:text-white"
+                style={{ fontFamily: 'var(--font-cinzel), serif' }}
+              >
+                FARHA
+              </span>
+              <span className="font-medium tracking-[0.2em] uppercase block text-[10px] text-[#C9A84C]">
+                Umrah Services
+              </span>
             </div>
-            <span className="text-xl font-bold tracking-tight">Umrah Premium</span>
           </Link>
           <div className="text-sm font-medium">
-            <Link href="/" className="hover:text-emerald-500 transition-colors">Kembali ke Beranda</Link>
+            <Link href="/" className="hover:text-emerald-500 transition-colors group flex items-center">
+              <svg 
+                className="w-4 h-4 mr-2 transition-all duration-500 group-hover:w-8" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                preserveAspectRatio="xMaxYMid meet"
+              >
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+              <span>Beranda</span>
+            </Link>
           </div>
         </div>
       </nav>
 
       <div className="container mx-auto px-6 py-12">
         <header className="mb-12 text-center">
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
-            Rakit Paket LA Umrah Anda
-          </h1>
-          <p className="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
-            Pilih satu atau beberapa layanan sekaligus (Hotel, Tiket, Bus, Visa). Form detail akan muncul secara otomatis di bawah sesuai pilihan Anda.
+          <h3 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-3">
+            Rancang Perjalanan Anda
+          </h3>
+          <p className="text-base text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
+            Bisa pilih beberapa layanan sekaligus
           </p>
         </header>
 

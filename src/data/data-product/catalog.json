@@ -1,0 +1,148 @@
+{
+  "defaultModuleSpecs": {
+    "FLIGHT": {
+      "origin": "CGK",
+      "destination": "JED",
+      "airline": "",
+      "departureDate": "",
+      "returnDate": "",
+      "isRoundTrip": true,
+      "isCheapest": false
+    },
+    "HOTEL": {
+      "needsMekah": true,
+      "mekahHotelName": "",
+      "mekahCheckIn": "",
+      "mekahCheckOut": "",
+      "mekahRooms": {
+        "Double": 1,
+        "Triple": 0,
+        "Quad": 0,
+        "Quint": 0
+      },
+      "needsMadinah": false,
+      "madinahHotelName": "",
+      "madinahCheckIn": "",
+      "madinahCheckOut": "",
+      "madinahRooms": {
+        "Double": 1,
+        "Triple": 0,
+        "Quad": 0,
+        "Quint": 0
+      }
+    },
+    "BAGGAGE": {
+      "weight": "",
+      "description": "",
+      "flightDate": ""
+    },
+    "VISA": {
+      "type": "Umrah",
+      "entryDate": "",
+      "exitDate": "",
+      "groupType": "Perorangan"
+    },
+    "VISA_BUS": {
+      "type": "Umrah",
+      "entryDate": "",
+      "exitDate": "",
+      "groupType": "Perorangan",
+      "vehicle": "",
+      "vehicleCount": "",
+      "route": "",
+      "date": ""
+    },
+    "TRANSPORTASI": {
+      "vehicle": "",
+      "vehicleCount": "",
+      "route": "",
+      "date": ""
+    }
+  },
+  "products": [
+    {
+      "id": "HOTEL",
+      "title": "Hotel",
+      "icon": "Building2",
+      "requires_pax": 1,
+      "form_schema": "[{\"type\":\"HotelSpecsModule\"}]"
+    },
+    {
+      "id": "FLIGHT_INTL",
+      "title": "Tkt Pesawat Intr",
+      "icon": "Plane",
+      "requires_pax": 1,
+      "form_schema": "[{\"type\":\"FlightLogicModule\"}]"
+    },
+    {
+      "id": "FLIGHT_DOM",
+      "title": "Tkt Pesawat Domestik",
+      "icon": "Plane",
+      "requires_pax": 1,
+      "form_schema": "[{\"type\":\"FlightLogicModule\"}]"
+    },
+    {
+      "id": "BAGGAGE",
+      "title": "Bagasi",
+      "icon": "Briefcase",
+      "requires_pax": 0,
+      "form_schema": "[{\"type\":\"BaggageModule\"}]"
+    },
+    {
+      "id": "HANDLING",
+      "title": "Handling",
+      "icon": "Briefcase",
+      "requires_pax": 0,
+      "form_schema": "[]"
+    },
+    {
+      "id": "TRANSPORTASI",
+      "title": "Transportasi",
+      "icon": "Bus",
+      "requires_pax": 1,
+      "form_schema": "[{\"type\":\"TransportModule\"}]"
+    },
+    {
+      "id": "REKBER",
+      "title": "Rekber",
+      "icon": "CheckCircle2",
+      "requires_pax": 0,
+      "form_schema": "[]"
+    },
+    {
+      "id": "VISA",
+      "title": "Visa",
+      "icon": "Ticket",
+      "requires_pax": 1,
+      "form_schema": "[{\"type\":\"VisaModule\"}]"
+    },
+    {
+      "id": "VISA_BUS",
+      "title": "Paket Visa & Transportasi",
+      "icon": "Bus",
+      "requires_pax": 1,
+      "form_schema": "[{\"type\":\"VisaModule\"}, {\"type\":\"TransportModule\"}]"
+    },
+    {
+      "id": "EXIT",
+      "title": "Exit",
+      "icon": "Plane",
+      "requires_pax": 1,
+      "form_schema": "[]"
+    },
+    {
+      "id": "PASPOR",
+      "title": "Surat Pengantar Paspor",
+      "icon": "Ticket",
+      "requires_pax": 1,
+      "form_schema": "[]"
+    },
+    {
+      "id": "SISKOPATUH",
+      "title": "Siskopatuh",
+      "icon": "CheckCircle2",
+      "requires_pax": 1,
+      "form_schema": "[]"
+    }
+  ]
+}
