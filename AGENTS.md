@@ -45,3 +45,4 @@ Do not flood the context window upfront. Dynamically locate and read relevant fi
   3. Setelah user menjawab, agen otomatis mengedit file `catalog.json` dengan menambahkan objek produk baru ke dalam array `products` dan menambahkan state kosong ke `defaultModuleSpecs` sesuai ID tersebut.
   4. Agen juga harus mengecek apabila ada ID duplikat.
   5. **Penting:** Pastikan mengecek direktori `src/modules/catalog/components/modules/` terlebih dahulu untuk melihat apakah ada *form module* yang sudah ada dan bisa dipakai ulang (reusable) sebelum memutuskan untuk membuat file module baru.
+

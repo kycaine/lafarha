@@ -1,18 +1,13 @@
-# Graph Report - LA  (2026-10-01)
+# Graph Report - .  (2026-09-16)
 
 ## Corpus Check
-- 80 files · ~277,977 words
+- 44 files · ~10,267 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 280 nodes · 342 edges · 25 communities (17 shown, 8 thin omitted)
-- Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 19 edges (avg confidence: 0.5)
+- 228 nodes · 328 edges · 17 communities (12 shown, 5 thin omitted)
+- Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
-
-## Graph Freshness
-- Built from commit: `ea847d1b`
-- Run `git rev-parse HEAD` and compare to check if the graph is stale.
-- Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - UI Components & Home Page
@@ -31,44 +26,39 @@
 - ESLint Config Instance
 - Next.js Configuration
 - PostCSS Configuration
-- ProductCatalog.tsx
-- middleware.ts
-- page.tsx
-- page.tsx
-- patch.js
 
 ## God Nodes (most connected - your core abstractions)
 1. `cn()` - 37 edges
 2. `compilerOptions` - 16 edges
 3. `fetchApi()` - 12 edges
 4. `compilerOptions` - 9 edges
-5. `include` - 7 edges
-6. `tailwind` - 6 edges
-7. `aliases` - 6 edges
-8. `scripts` - 5 edges
-9. `Button()` - 5 edges
-10. `Card()` - 5 edges
+5. `Button()` - 8 edges
+6. `include` - 7 edges
+7. `tailwind` - 6 edges
+8. `aliases` - 6 edges
+9. `ProductsCMS()` - 6 edges
+10. `getProducts()` - 6 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Card()` --calls--> `cn()`  [EXTRACTED]
-  src/components/ui/card.tsx → src/lib/utils.ts
-- `CardHeader()` --calls--> `cn()`  [EXTRACTED]
-  src/components/ui/card.tsx → src/lib/utils.ts
-- `CardTitle()` --calls--> `cn()`  [EXTRACTED]
-  src/components/ui/card.tsx → src/lib/utils.ts
-- `CardDescription()` --calls--> `cn()`  [EXTRACTED]
-  src/components/ui/card.tsx → src/lib/utils.ts
 - `CardAction()` --calls--> `cn()`  [EXTRACTED]
   src/components/ui/card.tsx → src/lib/utils.ts
+- `CardFooter()` --calls--> `cn()`  [EXTRACTED]
+  src/components/ui/card.tsx → src/lib/utils.ts
+- `CalculatePageContent()` --calls--> `getOrderById()`  [EXTRACTED]
+  src/app/admin/orders/calculate/page.tsx → src/modules/ordering/actions.ts
+- `PenawaranPage()` --calls--> `getProducts()`  [EXTRACTED]
+  src/app/penawaran/page.tsx → src/modules/catalog/product-actions.ts
+- `QuotePageContent()` --calls--> `getOrderById()`  [EXTRACTED]
+  src/app/quote/page.tsx → src/modules/ordering/actions.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (25 total, 8 thin omitted)
+## Communities (17 total, 5 thin omitted)
 
 ### Community 0 - "UI Components & Home Page"
-Cohesion: 0.10
-Nodes (25): Button(), buttonVariants, CardAction(), CardFooter(), DialogContent(), DialogDescription(), DialogFooter(), DialogHeader() (+17 more)
+Cohesion: 0.09
+Nodes (27): Button(), buttonVariants, DialogContent(), DialogDescription(), DialogFooter(), DialogHeader(), DialogOverlay(), DialogTitle() (+19 more)
 
 ### Community 1 - "ESLint Configuration"
 Cohesion: 0.08
@@ -79,8 +69,8 @@ Cohesion: 0.09
 Nodes (21): aliases, components, hooks, lib, ui, utils, iconLibrary, menuAccent (+13 more)
 
 ### Community 3 - "Admin Dashboard Pages"
-Cohesion: 0.18
-Nodes (18): AdminDashboard(), QuotePageContent(), Card(), CardContent(), CardDescription(), CardHeader(), CardTitle(), fetchApi() (+10 more)
+Cohesion: 0.20
+Nodes (14): AdminDashboard(), CalculatePageContent(), QuotePageContent(), Card(), CardAction(), CardContent(), CardDescription(), CardFooter() (+6 more)
 
 ### Community 4 - "API Worker Dependencies"
 Cohesion: 0.10
@@ -95,8 +85,8 @@ Cohesion: 0.11
 Nodes (19): @base-ui/react, class-variance-authority, clsx, lucide-react, next, dependencies, @base-ui/react, class-variance-authority (+11 more)
 
 ### Community 7 - "Admin Products & Penawaran Pages"
-Cohesion: 0.10
-Nodes (9): ContactSettings, DEFAULT, FooterSection(), IconMail(), IconPin(), IconWhatsApp(), LINKS, PRODUCTS (+1 more)
+Cohesion: 0.38
+Nodes (9): AVAILABLE_MODULES, ProductsCMS(), PenawaranPage(), fetchApi(), createProduct(), deleteProduct(), getProducts(), resetProductsToDefault() (+1 more)
 
 ### Community 8 - "API Worker TypeScript Config"
 Cohesion: 0.17
@@ -110,30 +100,22 @@ Nodes (9): **/*.mts, .next/dev/types/**/*.ts, next-env.d.ts, .next/types/**/*.ts
 Cohesion: 0.40
 Nodes (3): geistMono, geistSans, metadata
 
-### Community 17 - "ProductCatalog.tsx"
-Cohesion: 0.40
-Nodes (3): ICON_MAP, ModuleSpecs, ProductCatalog()
-
-### Community 18 - "middleware.ts"
-Cohesion: 0.50
-Nodes (4): config, middleware(), Role, ROUTE_RULES
-
 ## Knowledge Gaps
-- **111 isolated node(s):** `fs`, `content`, `IconComp`, `NAV_LINKS`, `LINKS` (+106 more)
+- **100 isolated node(s):** `name`, `version`, `description`, `main`, `test` (+95 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **8 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **5 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `cn()` connect `UI Components & Home Page` to `Admin Dashboard Pages`?**
-  _High betweenness centrality (0.028) - this node is a cross-community bridge._
+  _High betweenness centrality (0.055) - this node is a cross-community bridge._
 - **Why does `dependencies` connect `UI Component Dependencies` to `ESLint Configuration`?**
-  _High betweenness centrality (0.016) - this node is a cross-community bridge._
-- **What connects `fs`, `content`, `IconComp` to the rest of the system?**
-  _111 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _High betweenness centrality (0.024) - this node is a cross-community bridge._
+- **What connects `name`, `version`, `description` to the rest of the system?**
+  _100 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `UI Components & Home Page` be split into smaller, more focused modules?**
-  _Cohesion score 0.1006006006006006 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.08773784355179703 - nodes in this community are weakly interconnected._
 - **Should `ESLint Configuration` be split into smaller, more focused modules?**
   _Cohesion score 0.07692307692307693 - nodes in this community are weakly interconnected._
 - **Should `Path Aliases Configuration` be split into smaller, more focused modules?**
