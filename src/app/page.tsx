@@ -15,7 +15,6 @@ export default function Home() {
   return (
     <main className="flex flex-col w-full">
       <BannerSection />
-      <SeparatorLine />
       <ProductSection />
       <MitraSection />
       <FooterSection />

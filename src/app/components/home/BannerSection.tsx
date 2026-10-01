@@ -12,6 +12,7 @@ const IcoHotel = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="non
 const IcoBus = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="3" width="15" height="13" rx="2" /><path d="M16 8h4l3 3v5h-7V8z" /><circle cx="5.5" cy="18.5" r="2.5" /><circle cx="18.5" cy="18.5" r="2.5" /></svg>;
 const IcoFlight = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19.5 2.5S18 2 16.5 3.5L13 7 4.8 5.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z" /></svg>;
 const IcoVisa = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2" /><path d="M2 10h20" /></svg>;
+const IcoHandling = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M6 20h0a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h0"/><path d="M8 18V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v14"/><path d="M10 20h4"/><circle cx="16" cy="20" r="2"/><circle cx="8" cy="20" r="2"/></svg>;
 const IcoStar = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>;
 const IcoGuide = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 00-3-3.87" /><path d="M16 3.13a4 4 0 010 7.75" /></svg>;
 const IcoBuilding = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="1" /><path d="M9 3v18M3 9h18M3 15h18" /></svg>;
@@ -39,14 +40,14 @@ const NAV_LINKS: { label: string; href: string; dropdown: { label: string; desc:
   },
   {
     label: "Produk",
-    href: "/penawaran",
+    href: "/products",
     dropdown: [
-      { label: "Hotel", desc: "Pemesanan Hotel Bintang 3-5", href: "/penawaran", Icon: IcoHotel },
-      { label: "Tkt Pesawat Intr", desc: "Penerbangan Internasional", href: "/penawaran", Icon: IcoFlight },
-      { label: "Tkt Pesawat Domestik", desc: "Penerbangan Domestik", href: "/penawaran", Icon: IcoFlight },
-      { label: "Transportasi", desc: "Transportasi Bus & Mobil", href: "/penawaran", Icon: IcoBus },
-      { label: "Visa", desc: "Pengurusan Visa Umrah", href: "/penawaran", Icon: IcoVisa },
-      { label: "Visa & Transportasi", desc: "Paket bundling lengkap", href: "/penawaran", Icon: IcoBus },
+      { label: "Hotel", desc: "Pemesanan Hotel Bintang 3-5", href: "/products", Icon: IcoHotel },
+      { label: "Tkt Pesawat Intr", desc: "Penerbangan Internasional", href: "/products", Icon: IcoFlight },
+      { label: "Tkt Pesawat Domestik", desc: "Penerbangan Domestik", href: "/products", Icon: IcoFlight },
+      { label: "Transportasi", desc: "Transportasi Bus & Mobil", href: "/products", Icon: IcoBus },
+      { label: "Visa", desc: "Pengurusan Visa Umrah", href: "/products", Icon: IcoVisa },
+      { label: "Visa & Transportasi", desc: "Paket bundling lengkap", href: "/products", Icon: IcoBus },
     ],
   },
   {
@@ -106,7 +107,7 @@ function NavItem({
       {/* Trigger */}
       <a
         href={link.href}
-        className="text-[15px] font-bold transition-colors duration-300 hover:text-[#C9A84C] select-none drop-shadow-sm"
+        className="text-[15px] font-medium transition-colors duration-300 hover:text-[#C9A84C] select-none drop-shadow-sm"
         style={{ color: scrolled ? "rgba(255,255,255,0.85)" : "#ffffff" }}
       >
         {link.label}
@@ -233,6 +234,7 @@ function BannerWidget() {
     { label: "Tkt Pesawat", icon: <IcoFlight /> },
     { label: "Transportasi", icon: <IcoBus /> },
     { label: "Visa", icon: <IcoVisa /> },
+    { label: "Handling", icon: <IcoHandling /> },
   ];
 
 
@@ -245,7 +247,7 @@ function BannerWidget() {
   };
 
   const handleSearch = () => {
-    let url = "/penawaran?";
+    let url = "/products?";
     if (activeTab === 0) {
       url += `product=HOTEL&city=${encodeURIComponent(hotelCity)}&checkin=${encodeURIComponent(hotelDate)}`;
     } else if (activeTab === 1) {
@@ -254,6 +256,8 @@ function BannerWidget() {
       url += `product=TRANSPORTASI&type=${encodeURIComponent(transportType)}`;
     } else if (activeTab === 3) {
       url += `product=VISA&type=${encodeURIComponent(visaType)}&pax=${encodeURIComponent(visaPax)}`;
+    } else if (activeTab === 4) {
+      url += `product=HANDLING`;
     }
     router.push(url);
   };
@@ -409,14 +413,20 @@ function BannerWidget() {
             </label>
           </>
         );
+      case 4: // Handling
+        return (
+          <div className="col-span-1 md:col-span-2 flex items-center justify-center text-slate-400 py-3">
+            <span className="text-sm font-medium">Lanjutkan untuk melihat layanan Handling kami.</span>
+          </div>
+        );
       default:
         return null;
     }
   };
 
   return (
-    <div className="relative z-20 w-full px-4 flex flex-col items-center -mt-24 sm:-mt-24 mb-6 sm:mb-10">
-      <div className="w-full max-w-5xl bg-white rounded-2xl shadow-2xl p-3 sm:p-6 flex flex-col gap-4 sm:gap-6 border border-slate-100 mb-4 sm:mb-6">
+    <div className="relative z-20 w-full px-4 flex flex-col items-center pb-8 sm:pb-12">
+      <div className="w-full max-w-5xl bg-white rounded-2xl shadow-2xl p-3 sm:p-6 flex flex-col gap-4 sm:gap-6 border border-slate-100">
         {/* Products Nav */}
         <div className="flex overflow-x-auto pb-2 scrollbar-hide gap-2 sm:gap-4 justify-start lg:justify-center border-b border-slate-100">
           {TABS.map((p, i) => {
@@ -428,7 +438,7 @@ function BannerWidget() {
                 className={`flex flex-col items-center gap-2 px-4 py-2 min-w-[90px] transition-all border-b-2 ${isActive ? "border-[#C9A84C] text-[#C9A84C]" : "border-transparent text-slate-500 hover:text-slate-800"
                   }`}
               >
-                <div className={`p-2.5 rounded-full ${isActive ? "bg-[#C9A84C]/10" : "bg-slate-50 transition-colors hover:bg-slate-100"}`}>
+                <div className={`p-2.5 rounded-full [&>svg]:w-6 [&>svg]:h-6 ${isActive ? "bg-[#C9A84C]/10" : "bg-slate-50 transition-colors hover:bg-slate-100"}`}>
                   {p.icon}
                 </div>
                 <span className="text-[11px] sm:text-xs font-bold whitespace-nowrap">{p.label}</span>
@@ -437,8 +447,8 @@ function BannerWidget() {
           })}
 
           {/* Lihat 10+ produk lainnya - Tab */}
-          <Link href="/penawaran" className="flex flex-col items-center gap-2 px-4 py-2 min-w-[90px] transition-all border-b-2 border-transparent text-slate-400 hover:text-slate-800 group">
-            <div className="p-2.5 rounded-full bg-slate-50 transition-colors group-hover:bg-slate-100">
+          <Link href="/products" className="flex flex-col items-center gap-2 px-4 py-2 min-w-[90px] transition-all border-b-2 border-transparent text-slate-400 hover:text-slate-800 group">
+            <div className="p-2.5 rounded-full bg-slate-50 transition-colors group-hover:bg-slate-100 [&>svg]:w-6 [&>svg]:h-6">
               <IcoMenu />
             </div>
             <span className="text-[11px] sm:text-xs font-bold whitespace-nowrap">Lihat 10+ produk lainnya</span>
@@ -469,20 +479,6 @@ function BannerWidget() {
           </div>
         </div>
       </div>
-      <Link href="/penawaran" className="mt-4 px-8 py-4 bg-gradient-to-r from-[#C9A84C] to-[#8B6914] text-white rounded-full font-bold text-base shadow-xl shadow-[#C9A84C]/40 hover:opacity-90 hover:shadow-2xl transition-all flex items-center gap-2 group">
-        ke Halaman Produk
-        <div className="flex items-center -space-x-1.5" style={{ animation: 'bounce-x 1s infinite' }}>
-          <ChevronRight className="w-5 h-5 opacity-40" />
-          <ChevronRight className="w-5 h-5 opacity-70" />
-          <ChevronRight className="w-5 h-5" />
-        </div>
-        <style>{`
-          @keyframes bounce-x {
-            0%, 100% { transform: translateX(0); }
-            50% { transform: translateX(4px); }
-          }
-        `}</style>
-      </Link>
     </div>
   );
 }
@@ -539,7 +535,6 @@ export default function BannerSection() {
     WebkitBackdropFilter: scrolled ? "blur(24px) saturate(1.5)" : "none",
     opacity: 1,
     pointerEvents: "auto",
-    fontFamily: '"Times New Roman", Times, serif',
     letterSpacing: "0.02em",
   };
 
@@ -562,12 +557,12 @@ export default function BannerSection() {
                   filter: "drop-shadow(0px 4px 10px rgba(0, 0, 0, 0.95)) drop-shadow(0px 2px 6px rgba(0, 0, 0, 0.9))",
                 }}
               />
-              <div className="leading-tight">
+              <div className="flex flex-col justify-center" style={{ lineHeight: "1.1" }}>
                 <span
                   className="font-bold tracking-wide block"
                   style={{
                     color: scrolled ? "#fff" : "#ffffff",
-                    fontSize: scrolled ? "13px" : "15px",
+                    fontSize: scrolled ? "16px" : "20px",
                     fontFamily: 'var(--font-cinzel), serif',
                     transition: "color 600ms cubic-bezier(0.4,0,0.2,1), font-size 600ms cubic-bezier(0.4,0,0.2,1)",
                     textShadow: "0 4px 14px rgba(0, 0, 0, 0.95), 0 2px 4px rgba(0, 0, 0, 0.9), 0 0 20px rgba(0, 0, 0, 0.85)"
@@ -580,6 +575,7 @@ export default function BannerSection() {
                   style={{
                     color: "#C9A84C",
                     fontSize: scrolled ? "8px" : "10px",
+                    marginTop: "-1px",
                     transition: "font-size 600ms cubic-bezier(0.4,0,0.2,1)",
                     textShadow: "0 3px 10px rgba(0, 0, 0, 0.95), 0 1px 3px rgba(0, 0, 0, 0.9)"
                   }}
@@ -718,8 +714,7 @@ export default function BannerSection() {
             <div className="flex md:hidden justify-end flex-1">
               <button
                 onClick={() => setMobileMenuOpen(true)}
-                className="p-2 transition-colors duration-300"
-                style={{ color: scrolled ? "#fff" : "#1e293b" }}
+                className="p-2 transition-colors duration-300 text-white"
               >
                 <IcoMenu />
               </button>
@@ -781,11 +776,11 @@ export default function BannerSection() {
       </div>
 
       {/* ── Hero ── */}
-      <div className="relative min-h-[100vh] flex flex-col w-full mb-8">
+      <div className="relative flex flex-col w-full mb-8">
         <section
           ref={heroRef}
           id="banner"
-          className="relative h-[50vh] sm:h-[60vh] min-h-[320px] sm:min-h-[450px] flex flex-col bg-slate-900"
+          className="relative min-h-[80vh] flex flex-col bg-slate-900 justify-between pt-24"
         >
           {/* Background Image */}
           <div
@@ -796,23 +791,44 @@ export default function BannerSection() {
             <div className="absolute inset-0 bg-black/50"></div>
           </div>
 
-          {/* Center content */}
-          <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 pt-6 sm:pt-16 mx-auto w-full h-full">
-            <div className="max-w-4xl mx-auto flex flex-col gap-1 sm:gap-2 -translate-y-8 sm:-translate-y-10">
-              <h1 className="text-3xl sm:text-5xl md:text-6xl font-black text-white leading-tight font-heading drop-shadow-xl">
+          {/* Bottom-anchored content & Widget */}
+          <div className="relative z-10 flex flex-col items-center justify-end w-full flex-1 pt-24 pb-0">
+
+            {/* Text */}
+            <div className="text-center px-4 max-w-4xl mx-auto flex flex-col gap-1 sm:gap-2 m-0 p-0">
+              <h1 className="text-6xl sm:text-7xl md:text-8xl font-black text-white font-heading drop-shadow-xl flex flex-col items-center leading-none">
                 <span style={{ fontFamily: 'var(--font-cinzel), serif' }}>FARHA</span>
-                <br />
-                <span className="text-xl sm:text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#C9A84C] to-[#E5C77A]">Land Arrangement Umrah</span>
+                <span className="text-xl sm:text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#C9A84C] to-[#E5C77A] -mt-1 sm:-mt-2">Land Arrangement Umrah</span>
               </h1>
-              <p className="text-xs sm:text-base text-slate-300 max-w-2xl mx-auto font-medium leading-snug sm:leading-relaxed">
-                Platform B2B terpercaya untuk Travel Agent Umrah di Indonesia. Nikmati kemudahan akses instan untuk pemesanan Hotel, Tiket Penerbangan, Visa, dan Transportasi.
+              <p className="text-xs sm:text-base text-slate-300 max-w-2xl mx-auto font-medium leading-snug sm:leading-relaxed mt-2">
+                Platform B2B terpercaya untuk Travel Agent Umrah di Indonesia. Nikmati kemudahan akses instan untuk pemesanan Hotel, Tiket Penerbangan, Visa, dan Produk lainnya.
               </p>
+            </div>
+
+            {/* Floating Product Widget */}
+            <div className="w-full mt-8 p-0">
+              <BannerWidget />
             </div>
           </div>
         </section>
 
-        {/* Floating Product Widget */}
-        <BannerWidget />
+        {/* Call to action outside banner */}
+        <div className="w-full flex justify-center -translate-y-1/2 z-10 relative">
+          <Link href="/products" className="px-8 py-4 bg-gradient-to-r from-[#C9A84C] to-[#8B6914] text-white rounded-full font-bold text-base shadow-xl shadow-[#C9A84C]/40 hover:scale-105 hover:shadow-2xl transition-all flex items-center gap-2 group">
+            ke Halaman Produk
+            <div className="flex items-center -space-x-1.5" style={{ animation: 'bounce-x 1s infinite' }}>
+              <ChevronRight className="w-5 h-5 opacity-40" />
+              <ChevronRight className="w-5 h-5 opacity-70" />
+              <ChevronRight className="w-5 h-5" />
+            </div>
+            <style>{`
+              @keyframes bounce-x {
+                0%, 100% { transform: translateX(0); }
+                50% { transform: translateX(4px); }
+              }
+            `}</style>
+          </Link>
+        </div>
       </div>
 
       {/* Logout Confirmation Modal */}

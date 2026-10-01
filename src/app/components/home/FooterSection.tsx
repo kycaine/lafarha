@@ -5,11 +5,11 @@ import { fetchApi } from "@/lib/api";
 
 const LINKS = {
   Layanan: [
-    { label: "Akomodasi Hotel", href: "/penawaran" },
-    { label: "Transportasi Darat", href: "/penawaran" },
-    { label: "Tiket Penerbangan", href: "/penawaran" },
-    { label: "Visa & Dokumen", href: "/penawaran" },
-    { label: "Muthawif & Guide", href: "/penawaran" },
+    { label: "Akomodasi Hotel", href: "/products" },
+    { label: "Transportasi Darat", href: "/products" },
+    { label: "Tiket Penerbangan", href: "/products" },
+    { label: "Visa & Dokumen", href: "/products" },
+    { label: "Muthawif & Guide", href: "/products" },
   ],
   Perusahaan: [
     { label: "Tentang Kami", href: "/tentang" },
@@ -243,7 +243,7 @@ export default function FooterSection() {
             <p className="text-slate-800 font-bold text-base">Siap memulai kerjasama?</p>
             <p className="text-slate-500 text-sm mt-0.5">Buat permintaan penawaran Anda sekarang, gratis dan tanpa registrasi.</p>
           </div>
-          <a href="/penawaran" className="flex-shrink-0">
+          <a href="/products" className="flex-shrink-0">
             <button className="px-7 py-3 rounded-xl font-bold text-[#0D1117] bg-gradient-to-r from-[#C9A84C] to-[#E8C96C] hover:from-[#E8C96C] hover:to-[#C9A84C] transition-all duration-300 shadow-lg shadow-[#C9A84C]/20 text-sm whitespace-nowrap hover:-translate-y-0.5">
               Mulai Sekarang →
             </button>

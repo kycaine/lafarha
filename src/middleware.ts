@@ -21,7 +21,7 @@ const ROUTE_RULES: { pattern: RegExp; allowedRoles: Role[] }[] = [
     pattern: /^\/counter(\/.*)?$/,
     allowedRoles: ["counter", "master"],
   },
-  // /penawaran/*, /quote/* — public, tidak perlu login
+  // /products/*, /quote/* — public, tidak perlu login
 ];
 
 export async function middleware(req: NextRequest) {

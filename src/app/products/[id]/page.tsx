@@ -96,7 +96,7 @@ function TransactionStatusPage() {
           <XCircle className="w-16 h-16 text-red-500 mx-auto" />
           <h1 className="text-2xl font-bold">Transaksi Tidak Ditemukan</h1>
           <p className="text-slate-500">ID: {id}</p>
-          <Link href="/penawaran" className="inline-flex items-center justify-center gap-2 mt-6 bg-black text-white hover:bg-gray-900 px-6 py-3 rounded-xl transition-all text-base font-black shadow-md uppercase tracking-wide">
+          <Link href="/products" className="inline-flex items-center justify-center gap-2 mt-6 bg-black text-white hover:bg-gray-900 px-6 py-3 rounded-xl transition-all text-base font-black shadow-md uppercase tracking-wide">
             ← Kembali ke Penawaran
           </Link>
         </div>
@@ -134,7 +134,7 @@ function TransactionStatusPage() {
           
           <div className="flex items-center gap-4">
             <div className="text-xs text-slate-400 font-mono font-medium hidden sm:block">ID: {tx.id}</div>
-            <Link href="/penawaran" className="flex items-center gap-2 bg-black text-white hover:bg-gray-900 px-4 py-2 rounded-xl transition-all text-sm font-bold shadow-md uppercase tracking-wide">
+            <Link href="/products" className="flex items-center gap-2 bg-black text-white hover:bg-gray-900 px-4 py-2 rounded-xl transition-all text-sm font-bold shadow-md uppercase tracking-wide">
               Buat Penawaran Baru
             </Link>
           </div>

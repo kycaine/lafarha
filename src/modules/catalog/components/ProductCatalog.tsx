@@ -313,7 +313,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
       if (res.success) {
         const txId = res.transactionId;
 
-        const adminLink = `${typeof window !== 'undefined' ? window.location.origin : ''}/counter/penawaran/${txId}`;
+        const adminLink = `${typeof window !== 'undefined' ? window.location.origin : ''}/counter/products/${txId}`;
 
         // Bangun pesan WA untuk admin (Laporan)
         const waMessage = [
@@ -328,7 +328,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
         ].join("\n");
 
         const waUrl = `https://wa.me/${counterWa}?text=${encodeURIComponent(waMessage)}`;
-        const txUrl = `/penawaran/${txId}`;
+        const txUrl = `/products/${txId}`;
 
         // Arahkan tab baru ke WA, dan tab saat ini ke halaman penawaran
         if (waTab) waTab.location.href = waUrl;

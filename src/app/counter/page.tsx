@@ -58,7 +58,7 @@ export default function CalculatorDashboard() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {orders.map((order: any) => (
-              <Link key={order.id} href={`/counter/penawaran/${order.id}`}>
+              <Link key={order.id} href={`/counter/products/${order.id}`}>
                 <Card className="hover:shadow-lg transition-all cursor-pointer border-t-4 border-t-blue-500 bg-white/60 dark:bg-slate-900/60 backdrop-blur-sm group">
                   <CardHeader className="p-5 pb-3">
                     <CardTitle className="text-lg font-bold flex items-center gap-2">
@@ -96,7 +96,7 @@ export default function CalculatorDashboard() {
             {showQuoted && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
                 {quotedOrders.map((order: any) => (
-                  <Link key={order.id} href={`/counter/penawaran/${order.id}`}>
+                  <Link key={order.id} href={`/counter/products/${order.id}`}>
                     <Card className="hover:shadow-lg transition-all cursor-pointer border-t-4 border-t-amber-500 bg-slate-50 dark:bg-slate-900/40 backdrop-blur-sm group opacity-80 hover:opacity-100">
                       <CardHeader className="p-5 pb-3">
                         <CardTitle className="text-lg font-bold flex items-center gap-2">
@@ -136,7 +136,7 @@ export default function CalculatorDashboard() {
             {showIssued && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
                 {issuedOrders.map((order: any) => (
-                  <Link key={order.id} href={`/counter/penawaran/${order.id}`}>
+                  <Link key={order.id} href={`/counter/products/${order.id}`}>
                     <Card className="hover:shadow-lg transition-all cursor-pointer border-t-4 border-t-emerald-500 bg-slate-50 dark:bg-slate-900/40 backdrop-blur-sm group opacity-80 hover:opacity-100">
                       <CardHeader className="p-5 pb-3">
                         <CardTitle className="text-lg font-bold flex items-center gap-2">

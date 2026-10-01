@@ -164,7 +164,7 @@ function AdminTransactionPage() {
       `⏳ Penawaran berlaku ${validityHours} jam`,
       ``,
       `Cek status pesanan Anda di:`,
-      `${typeof window !== 'undefined' ? window.location.origin : ''}/penawaran/${tx.id}`,
+      `${typeof window !== 'undefined' ? window.location.origin : ''}/products/${tx.id}`,
       ``,
       `Balas pesan ini untuk konfirmasi. Terima kasih! 🙏`,
     ];

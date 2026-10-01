@@ -26,9 +26,7 @@ export default function MitraSection() {
       <div className="relative z-10 max-w-7xl mx-auto px-6">
         {/* Section header */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#C9A84C]/25 bg-[#C9A84C]/8 mb-6">
-            <span className="text-[#8B6914] text-xs font-semibold tracking-widest uppercase">Mitra Resmi</span>
-          </div>
+
           <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight mb-4">
             Didukung Oleh{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C9A84C] to-[#E8C96C]">
