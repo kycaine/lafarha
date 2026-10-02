@@ -1,0 +1,86 @@
+[
+  {
+    "id": "hotel",
+    "icon": "Building2",
+    "title": "Akomodasi Hotel",
+    "tag": "Bintang 3–5",
+    "desc": "Hotel bintang 3 hingga 5 di Makkah & Madinah, dekat Masjidil Haram. Pilihan kamar fleksibel.",
+    "features": [
+      "Lokasi <500m dari Haram",
+      "Zona & jarak walking",
+      "Konfigurasi PAX fleksibel",
+      "Real-time availability"
+    ],
+    "accent": "#C9A84C"
+  },
+  {
+    "id": "transport",
+    "icon": "Bus",
+    "title": "Transportasi Darat",
+    "tag": "Bus & Coaster",
+    "desc": "Armada bus besar dan coaster premium untuk mobilitas jamaah selama ibadah di tanah suci.",
+    "features": [
+      "Bus besar & coaster premium",
+      "Rute Makkah–Madinah–Jeddah",
+      "Pengemudi berpengalaman",
+      "AC terjamin"
+    ],
+    "accent": "#C9A84C"
+  },
+  {
+    "id": "flight",
+    "icon": "Plane",
+    "title": "Tiket Penerbangan",
+    "tag": "Internasional & Domestik",
+    "desc": "Tiket penerbangan PP dari berbagai kota di Indonesia ke Jeddah atau Madinah.",
+    "features": [
+      "Penerbangan dari 15+ kota",
+      "Maskapai pilihan terpercaya",
+      "Penjadwalan grup",
+      "Handling bagasi"
+    ],
+    "accent": "#C9A84C"
+  },
+  {
+    "id": "visa",
+    "icon": "Ticket",
+    "title": "Visa & Dokumen",
+    "tag": "Proses Resmi",
+    "desc": "Pengurusan visa Umrah resmi via agen terakreditasi. Dokumen lengkap, proses cepat.",
+    "features": [
+      "Visa resmi Saudi Arabia",
+      "Proses 3–7 hari kerja",
+      "Tracking real-time",
+      "Dokumen manifest"
+    ],
+    "accent": "#C9A84C"
+  },
+  {
+    "id": "addon",
+    "icon": "Star",
+    "title": "Layanan Tambahan",
+    "tag": "Add-on Premium",
+    "desc": "Layanan pelengkap: ziarah tambahan, handling VIP, tour guide privat, dan souvenir.",
+    "features": [
+      "Ziarah Makkah & Madinah",
+      "Tour guide privat",
+      "Handling VIP airport",
+      "Souvenir & perlengkapan"
+    ],
+    "accent": "#C9A84C"
+  },
+  {
+    "id": "muthawif",
+    "icon": "Map",
+    "title": "Muthawif & Guide",
+    "tag": "Pembimbing Profesional",
+    "desc": "Muthawif berpengalaman membimbing jamaah dalam setiap rukun dan sunnah ibadah Umrah.",
+    "features": [
+      "Bersertifikat KEMENAG",
+      "Rasio 1:45 jamaah",
+      "Bilingual Indonesia–Arab",
+      "Siaga 24/7"
+    ],
+    "accent": "#C9A84C"
+  }
+]

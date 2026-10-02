@@ -24,7 +24,7 @@ const STATUS_COLORS: Record<string, string> = {
 export default function AdminDashboard() {
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  
+
   // Dialog State
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
   const [orderDetails, setOrderDetails] = useState<any | null>(null);
@@ -34,7 +34,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     getTransactions().then(data => {
       // Pastikan disortir berdasarkan tanggal terbaru (descending)
-      const sortedData = data.sort((a: any, b: any) => 
+      const sortedData = data.sort((a: any, b: any) =>
         new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()
       );
       setOrders(sortedData);
@@ -47,7 +47,7 @@ export default function AdminDashboard() {
     setOrderDetails(null);
     setDetailsLoading(true);
     setIsDialogOpen(true);
-    
+
     const details = await getTransactionById(order.id);
     setOrderDetails(details);
     setDetailsLoading(false);
@@ -85,8 +85,8 @@ export default function AdminDashboard() {
                   </tr>
                 ) : (
                   orders.map(order => (
-                    <tr 
-                      key={order.id} 
+                    <tr
+                      key={order.id}
                       onClick={() => handleRowClick(order)}
                       className="hover:bg-slate-50 cursor-pointer transition-colors"
                     >
@@ -161,7 +161,7 @@ export default function AdminDashboard() {
                           <div>
                             <p className="font-bold text-slate-800">{item.title}</p>
                             <p className="text-xs text-slate-500 mt-1">
-                              {specs.pax ? `${specs.pax} Pax` : ''} 
+                              {specs.pax ? `${specs.pax} Pax` : ''}
                             </p>
                           </div>
                           {item.subtotal > 0 && (
@@ -200,7 +200,7 @@ export default function AdminDashboard() {
                 <DialogClose render={<Button variant="outline" />}>
                   Tutup
                 </DialogClose>
-                
+
                 {/* Action button: Jika masih baru, bisa diberi penawaran harga */}
                 {(selectedOrder?.status === 'AWAITING_VERIFICATION' || selectedOrder?.status === 'CALCULATING') && (
                   <Link href={`/admin/orders/calculate?id=${selectedOrder.id}`}>

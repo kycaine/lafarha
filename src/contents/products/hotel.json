@@ -1,0 +1,4753 @@
+{
+    "makkah_hotels": [
+        {
+            "name": "Fairmont Makkah",
+            "stars": 5,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 2,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-10-07",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "26 Rabiel II 1448",
+                    "day_type": "WD",
+                    "rates": {
+                        "double": 1330,
+                        "triple": 1660,
+                        "quad": 1990
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-10-07",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "26 Rabiel II 1448",
+                    "day_type": "WE",
+                    "rates": {
+                        "double": 1500,
+                        "triple": 1830,
+                        "quad": 2160
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-07",
+                    "to": "2026-12-16",
+                    "from_hijri": "26 Rabiel II 1448",
+                    "to_hijri": "7 Ragab 1448",
+                    "day_type": "WD",
+                    "rates": {
+                        "double": 1460,
+                        "triple": 1840,
+                        "quad": 2010
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-07",
+                    "to": "2026-12-16",
+                    "from_hijri": "26 Rabiel II 1448",
+                    "to_hijri": "7 Ragab 1448",
+                    "day_type": "WE",
+                    "rates": {
+                        "double": 1630,
+                        "triple": 2010,
+                        "quad": 2220
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "brand": "Makkah Clock Royal Tower",
+            "city": "Makkah"
+        },
+        {
+            "name": "Marwa Rotana",
+            "stars": 5,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 2,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 1300,
+                        "triple": 1570,
+                        "quad": 1840
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "brand": "Rayhaan",
+            "city": "Makkah"
+        },
+        {
+            "name": "Movenpick Makkah",
+            "stars": 5,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 2,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-10-01",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "20 Rabiel II 1448",
+                    "rates": {
+                        "double": 1100,
+                        "triple": 1325,
+                        "quad": 1550
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-01",
+                    "to": "2026-12-16",
+                    "from_hijri": "20 Rabiel II 1448",
+                    "to_hijri": "7 Ragab 1448",
+                    "rates": {
+                        "double": 1300,
+                        "triple": 1525,
+                        "quad": 1750
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "brand": "Movenpick",
+            "city": "Makkah"
+        },
+        {
+            "name": "Pullman Zamzam",
+            "stars": 5,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 2,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-10-01",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "20 Rabiel II 1448",
+                    "rates": {
+                        "double": 1100,
+                        "triple": 1325,
+                        "quad": 1550
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-01",
+                    "to": "2026-12-16",
+                    "from_hijri": "20 Rabiel II 1448",
+                    "to_hijri": "7 Ragab 1448",
+                    "rates": {
+                        "double": 1300,
+                        "triple": 1525,
+                        "quad": 1750
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "brand": "Pullman",
+            "city": "Makkah"
+        },
+        {
+            "name": "Al Safwa (Tower 1)",
+            "stars": 5,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 3,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 1000,
+                        "triple": 1220,
+                        "quad": 1440
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 1100,
+                        "triple": 1350,
+                        "quad": 1500
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "6 Rajab 1448",
+                    "rates": {
+                        "double": 1200,
+                        "triple": 1450,
+                        "quad": 1600
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "brand": "Alsafwah Hotel",
+            "city": "Makkah"
+        },
+        {
+            "name": "Al Safwa (Tower 3)",
+            "stars": 5,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 3,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 950,
+                        "triple": 1170,
+                        "quad": 1390
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 1000,
+                        "triple": 1200,
+                        "quad": 1400
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 1100,
+                        "triple": 1300,
+                        "quad": 1500
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "brand": "Alsafwah Hotel",
+            "city": "Makkah"
+        },
+        {
+            "name": "Olayan Ajyad",
+            "stars": 4,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 3,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "4 Rabiel II 1448",
+                    "rates": {
+                        "double": 700,
+                        "triple": 800,
+                        "quad": 900
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-31",
+                    "from_hijri": "4 Rabiel II 1448",
+                    "to_hijri": "20 Jumade I 1448",
+                    "rates": {
+                        "double": 800,
+                        "triple": 900,
+                        "quad": 1000
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-31",
+                    "to": "2026-12-15",
+                    "from_hijri": "20 Jumade I 1448",
+                    "to_hijri": "6 Rajab 1448",
+                    "rates": {
+                        "double": 870,
+                        "triple": 970,
+                        "quad": 1070
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Makkah"
+        },
+        {
+            "name": "Elaf Kinda",
+            "stars": 5,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 3,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-10-01",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "20 Rabiel II 1448",
+                    "rates": {
+                        "double": 930,
+                        "triple": 1090,
+                        "quad": 1250
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-01",
+                    "to": "2026-11-01",
+                    "from_hijri": "20 Rabiel II 1448",
+                    "to_hijri": "21 Jumade I 1448",
+                    "rates": {
+                        "double": 1000,
+                        "triple": 1160,
+                        "quad": 1320
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "brand": "Elaf Kinda",
+            "city": "Makkah"
+        },
+        {
+            "name": "Makarem Ajyad (Front Tower)",
+            "stars": 5,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 4,
+            "periods": [
+                {
+                    "from": "2026-08-01",
+                    "to": "2026-08-31",
+                    "from_hijri": "18 Shafar 1448",
+                    "to_hijri": "18 Rabiel I 1448",
+                    "rates": {
+                        "double": 690,
+                        "triple": 810,
+                        "quad": 930
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-08-31",
+                    "to": "2026-10-08",
+                    "from_hijri": "18 Rabiel I 1448",
+                    "to_hijri": "27 Rabiel II 1448",
+                    "rates": {
+                        "double": 760,
+                        "triple": 880,
+                        "quad": 1000
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-09",
+                    "to": "2026-12-16",
+                    "from_hijri": "28 Rabiel II 1448",
+                    "to_hijri": "7 Rajab 1448",
+                    "rates": {
+                        "double": 825,
+                        "triple": 945,
+                        "quad": 1065
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "brand": "Makarem",
+            "city": "Makkah"
+        },
+        {
+            "name": "Makkah Tower",
+            "stars": 5,
+            "allotment": false,
+            "room_category": "diplomatic",
+            "page": 4,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-30",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "19 Rabiel II 1448",
+                    "rates": {
+                        "double": 950,
+                        "triple": 950,
+                        "quad": 950,
+                        "quint": 1080
+                    },
+                    "meals": null
+                },
+                {
+                    "from": "2026-10-01",
+                    "to": "2026-11-01",
+                    "from_hijri": "20 Rabiel II 1448",
+                    "to_hijri": "21 Jumade I 1448",
+                    "rates": {
+                        "double": 1000,
+                        "triple": 1000,
+                        "quad": 1000,
+                        "quint": 1130
+                    },
+                    "meals": null
+                }
+            ],
+            "meal_options": {
+                "economy": {
+                    "price": 85,
+                    "unit": "per_pax"
+                },
+                "al_fayhai": {
+                    "price": 135,
+                    "unit": "per_pax"
+                }
+            },
+            "city": "Makkah"
+        },
+        {
+            "name": "Le Meridien Tower",
+            "stars": 5,
+            "allotment": false,
+            "room_category": "diplomatic",
+            "page": 4,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-08-31",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "18 Rabiel I 1448",
+                    "rates": {
+                        "double": 295,
+                        "triple": 360,
+                        "quad": 425
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-08-31",
+                    "to": "2026-12-20",
+                    "from_hijri": "18 Rabiel I 1448",
+                    "to_hijri": "11 Ragab 1448",
+                    "rates": {
+                        "double": 315,
+                        "triple": 380,
+                        "quad": 445
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-20",
+                    "to": "2027-01-05",
+                    "from_hijri": "11 Ragab 1448",
+                    "to_hijri": "27 Ragab 1448",
+                    "rates": {
+                        "double": 475,
+                        "triple": 540,
+                        "quad": 605
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "brand": "Le Meridien",
+            "city": "Makkah"
+        },
+        {
+            "name": "Anjum",
+            "stars": 5,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 5,
+            "periods": [
+                {
+                    "from": "2026-09-01",
+                    "to": "2026-10-14",
+                    "from_hijri": "19 Rabiel I 1448",
+                    "to_hijri": "3 Jumade I 1448",
+                    "rates": {
+                        "double": 665,
+                        "triple": 785,
+                        "quad": 905
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-12-23",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "14 Ragab 1448",
+                    "rates": {
+                        "double": 735,
+                        "triple": 855,
+                        "quad": 975
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-24",
+                    "to": "2027-01-05",
+                    "from_hijri": "15 Ragab 1448",
+                    "to_hijri": "27 Ragab 1448",
+                    "rates": {
+                        "double": 1180,
+                        "triple": 1300,
+                        "quad": 1420
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2027-01-06",
+                    "to": "2027-02-07",
+                    "from_hijri": "28 Ragab 1448",
+                    "to_hijri": "30 Shaban 1448",
+                    "rates": {
+                        "double": 785,
+                        "triple": 905,
+                        "quad": 1025
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Makkah"
+        },
+        {
+            "name": "Azka Al Maqam",
+            "stars": 4,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 5,
+            "periods": [
+                {
+                    "from": "2026-09-01",
+                    "to": "2026-10-08",
+                    "from_hijri": "19 Rabie I 1448",
+                    "to_hijri": "27 Rabie II 1448",
+                    "rates": {
+                        "double": 620,
+                        "triple": 720,
+                        "quad": 820
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-09",
+                    "to": "2026-12-14",
+                    "from_hijri": "28 Rabie II 1448",
+                    "to_hijri": "5 Rajab 1448",
+                    "rates": {
+                        "double": 690,
+                        "triple": 790,
+                        "quad": 890
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-05",
+                    "from_hijri": "6 Rajab 1448",
+                    "to_hijri": "27 Rajab 1448",
+                    "rates": {
+                        "double": 1100,
+                        "triple": 1200,
+                        "quad": 1300
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Makkah"
+        },
+        {
+            "name": "Al Massa Grand",
+            "stars": 4,
+            "allotment": true,
+            "room_category": "standard",
+            "page": 5,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "2 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 450,
+                        "triple": 500,
+                        "quad": 550,
+                        "quint": 650
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 530,
+                        "triple": 580,
+                        "quad": 630,
+                        "quint": 730
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-02-05",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "28 Shaban 1448",
+                    "rates": {
+                        "double": 650,
+                        "triple": 700,
+                        "quad": 750,
+                        "quint": 850
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "brand": "Al Massa",
+            "city": "Makkah"
+        },
+        {
+            "name": "Prestige Ajyad",
+            "stars": 4,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 6,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "4 Rabiel II 1448",
+                    "rates": {
+                        "double": 600,
+                        "triple": 700,
+                        "quad": 800
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "4 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 650,
+                        "triple": 750,
+                        "quad": 850
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-12-17",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "8 Ragab 1448",
+                    "rates": {
+                        "double": 700,
+                        "triple": 800,
+                        "quad": 900
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-17",
+                    "to": "2027-01-05",
+                    "from_hijri": "8 Ragab 1448",
+                    "to_hijri": "27 Ragab 1448",
+                    "rates": {
+                        "double": 1100,
+                        "triple": 1200,
+                        "quad": 1300
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2027-01-05",
+                    "to": "2027-02-06",
+                    "from_hijri": "27 Ragab 1448",
+                    "to_hijri": "29 Shaban 1448",
+                    "rates": {
+                        "double": 700,
+                        "triple": 800,
+                        "quad": 900
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Makkah"
+        },
+        {
+            "name": "Orinsis Al Haram",
+            "stars": 4,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 6,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "4 Rabiel II 1448",
+                    "rates": {
+                        "double": 600,
+                        "triple": 700,
+                        "quad": 800
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "4 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 650,
+                        "triple": 750,
+                        "quad": 850
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-12-17",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "8 Ragab 1448",
+                    "rates": {
+                        "double": 700,
+                        "triple": 800,
+                        "quad": 900
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-17",
+                    "to": "2027-01-05",
+                    "from_hijri": "8 Ragab 1448",
+                    "to_hijri": "27 Ragab 1448",
+                    "rates": {
+                        "double": 900,
+                        "triple": 1000,
+                        "quad": 1100
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2027-01-05",
+                    "to": "2027-02-06",
+                    "from_hijri": "27 Ragab 1448",
+                    "to_hijri": "29 Shaban 1448",
+                    "rates": {
+                        "double": 650,
+                        "triple": 750,
+                        "quad": 850
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Makkah"
+        },
+        {
+            "name": "Azka Al Safa",
+            "stars": 4,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 6,
+            "periods": [
+                {
+                    "from": "2026-09-01",
+                    "to": "2026-10-08",
+                    "from_hijri": "19 Rabie I 1448",
+                    "to_hijri": "27 Rabie II 1448",
+                    "rates": {
+                        "double": 580,
+                        "triple": 665,
+                        "quad": 750
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-09",
+                    "to": "2026-12-14",
+                    "from_hijri": "28 Rabie II 1448",
+                    "to_hijri": "5 Rajab 1448",
+                    "rates": {
+                        "double": 630,
+                        "triple": 730,
+                        "quad": 830
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-05",
+                    "from_hijri": "6 Rajab 1448",
+                    "to_hijri": "27 Rajab 1448",
+                    "rates": {
+                        "double": 1000,
+                        "triple": 1100,
+                        "quad": 1200
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Makkah"
+        },
+        {
+            "name": "Maysan Al Mashaer",
+            "stars": 4,
+            "allotment": true,
+            "room_category": "standard",
+            "page": 7,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "2 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 550,
+                        "triple": 650,
+                        "quad": 750
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 650,
+                        "triple": 750,
+                        "quad": 850
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-05",
+                    "from_hijri": "6 Rajab 1448",
+                    "to_hijri": "27 Ragab 1448",
+                    "rates": {
+                        "double": 1000,
+                        "triple": 1100,
+                        "quad": 1200
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2027-01-05",
+                    "to": "2027-02-07",
+                    "from_hijri": "27 Ragab 1448",
+                    "to_hijri": "30 Shaban 1448",
+                    "rates": {
+                        "double": 650,
+                        "triple": 750,
+                        "quad": 850
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Makkah"
+        },
+        {
+            "name": "Villa Hilton",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "one_bed_per_person",
+            "page": 7,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-12-10",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "1 Ragab 1448",
+                    "rates": {
+                        "per_bed": 120
+                    },
+                    "rate_unit": "per_pax",
+                    "meals": null
+                }
+            ],
+            "meal_options": {
+                "economy": {
+                    "price": 90,
+                    "unit": "per_pax"
+                },
+                "al_fayhai": {
+                    "price": 130,
+                    "unit": "per_pax"
+                }
+            },
+            "city": "Makkah"
+        },
+        {
+            "name": "Villa Retaj",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "one_bed_per_person",
+            "page": 7,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-12-10",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "1 Ragab 1448",
+                    "rates": {
+                        "per_bed": 250
+                    },
+                    "rate_unit": "per_pax",
+                    "meals": "FB"
+                }
+            ],
+            "city": "Makkah"
+        },
+        {
+            "name": "Snood Ajyad",
+            "stars": 3,
+            "allotment": true,
+            "room_category": "standard",
+            "page": 7,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "2 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 400,
+                        "triple": 445,
+                        "quad": 490
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 460,
+                        "triple": 505,
+                        "quad": 550
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-02-05",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "28 Shaban 1448",
+                    "rates": {
+                        "double": 600,
+                        "triple": 645,
+                        "quad": 690
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Makkah"
+        },
+        {
+            "name": "Al Miqat Hotel",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 8,
+            "periods": [
+                {
+                    "from": "2026-09-01",
+                    "to": "2026-09-30",
+                    "from_hijri": "19 Rabiel I 1448",
+                    "to_hijri": "19 Rabiel II 1448",
+                    "rates": {
+                        "double": 480,
+                        "triple": 525,
+                        "quad": 570
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-30",
+                    "to": "2026-10-30",
+                    "from_hijri": "19 Rabiel II 1448",
+                    "to_hijri": "20 Jumade I 1448",
+                    "rates": {
+                        "double": 490,
+                        "triple": 535,
+                        "quad": 580
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-30",
+                    "to": "2026-11-30",
+                    "from_hijri": "20 Jumade I 1448",
+                    "to_hijri": "20 Jumade II 1448",
+                    "rates": {
+                        "double": 510,
+                        "triple": 555,
+                        "quad": 600
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-30",
+                    "to": "2027-01-15",
+                    "from_hijri": "20 Jumade II 1448",
+                    "to_hijri": "7 Shaban 1448",
+                    "rates": {
+                        "double": 580,
+                        "triple": 625,
+                        "quad": 670
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2027-01-15",
+                    "to": "2027-01-30",
+                    "from_hijri": "7 Shaban 1448",
+                    "to_hijri": "22 Shaban 1448",
+                    "rates": {
+                        "double": 540,
+                        "triple": 585,
+                        "quad": 630
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Makkah"
+        },
+        {
+            "name": "Al Massa Dar Al Fayzeen",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 8,
+            "periods": [
+                {
+                    "from": "2026-08-01",
+                    "to": "2026-09-10",
+                    "from_hijri": "17 Safar 1448",
+                    "to_hijri": "28 Rabiel I 1448",
+                    "rates": {
+                        "double": 420,
+                        "triple": 470,
+                        "quad": 520,
+                        "quint": 620
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-10",
+                    "to": "2026-10-10",
+                    "from_hijri": "28 Rabiel I 1448",
+                    "to_hijri": "29 Rabiel II 1448",
+                    "rates": {
+                        "double": 470,
+                        "triple": 520,
+                        "quad": 570,
+                        "quint": 670
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-10",
+                    "to": "2026-11-10",
+                    "from_hijri": "29 Rabiel II 1448",
+                    "to_hijri": "01 Jumade II 1448",
+                    "rates": {
+                        "double": 500,
+                        "triple": 550,
+                        "quad": 600,
+                        "quint": 700
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-10",
+                    "to": "2026-12-10",
+                    "from_hijri": "01 Jumade II 1448",
+                    "to_hijri": "01 Rajab 1448",
+                    "rates": {
+                        "double": 520,
+                        "triple": 570,
+                        "quad": 620,
+                        "quint": 720
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-10",
+                    "to": "2027-02-06",
+                    "from_hijri": "01 Rajab 1448",
+                    "to_hijri": "29 Shaban 1448",
+                    "rates": {
+                        "double": 620,
+                        "triple": 670,
+                        "quad": 720,
+                        "quint": 820
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "brand": "Ramada",
+            "city": "Makkah"
+        },
+        {
+            "name": "Nada Ajyad",
+            "stars": 3,
+            "allotment": true,
+            "room_category": "standard",
+            "page": 9,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "2 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 400,
+                        "triple": 440,
+                        "quad": 480
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 430,
+                        "triple": 470,
+                        "quad": 510
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-02-05",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "28 Shaban 1448",
+                    "rates": {
+                        "double": 500,
+                        "triple": 540,
+                        "quad": 580
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Makkah"
+        },
+        {
+            "name": "Maysan Al Maqam",
+            "stars": 3,
+            "allotment": true,
+            "room_category": "standard",
+            "page": 9,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "2 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 420,
+                        "triple": 470,
+                        "quad": 520
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 480,
+                        "triple": 530,
+                        "quad": 580
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-02-05",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "28 Shaban 1448",
+                    "rates": {
+                        "double": 630,
+                        "triple": 680,
+                        "quad": 730
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Makkah"
+        },
+        {
+            "name": "Waha Ajyad",
+            "stars": 3,
+            "allotment": true,
+            "room_category": "standard",
+            "page": 9,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "2 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 400,
+                        "triple": 440,
+                        "quad": 480
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 430,
+                        "triple": 470,
+                        "quad": 510
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-02-05",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "28 Shaban 1448",
+                    "rates": {
+                        "double": 500,
+                        "triple": 540,
+                        "quad": 580
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Makkah"
+        },
+        {
+            "name": "Badr Al Massah",
+            "stars": 3,
+            "allotment": true,
+            "room_category": "standard",
+            "page": 10,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "4 Rabiel II 1448",
+                    "rates": {
+                        "double": 300,
+                        "triple": 340,
+                        "quad": 380,
+                        "quint": 470
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "4 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 330,
+                        "triple": 370,
+                        "quad": 410,
+                        "quint": 500
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 350,
+                        "triple": 390,
+                        "quad": 430,
+                        "quint": 520
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-02-06",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Shaban 1448",
+                    "rates": {
+                        "double": 400,
+                        "triple": 440,
+                        "quad": 480,
+                        "quint": 570
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "brand": "Al Massa",
+            "city": "Makkah"
+        },
+        {
+            "name": "Sawaed Al Khair",
+            "stars": 3,
+            "allotment": true,
+            "room_category": "standard",
+            "page": 10,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "2 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 400,
+                        "triple": 445,
+                        "quad": 490
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 470,
+                        "triple": 515,
+                        "quad": 560
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-05",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 590,
+                        "triple": 635,
+                        "quad": 680
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2027-01-05",
+                    "to": "2027-02-05",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "28 Shaban 1448",
+                    "rates": {
+                        "double": 570,
+                        "triple": 615,
+                        "quad": 660
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Makkah"
+        },
+        {
+            "name": "Nada Al Diafa",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 10,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-01",
+                    "from_hijri": "2 Rabiel I 1448",
+                    "to_hijri": "19 Rabiel I 1448",
+                    "rates": {
+                        "double": 480,
+                        "triple": 520,
+                        "quad": 560
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-01",
+                    "to": "2026-11-01",
+                    "from_hijri": "19 Rabiel I 1448",
+                    "to_hijri": "21 Jumade I 1448",
+                    "rates": {
+                        "double": 500,
+                        "triple": 540,
+                        "quad": 580
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Makkah"
+        },
+        {
+            "name": "Al Barakah Mawaddah",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 11,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-10-01",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "20 Rabiel II 1448",
+                    "rates": {
+                        "double": 475,
+                        "triple": 525,
+                        "quad": 575
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Makkah"
+        },
+        {
+            "name": "Hibba Al Muhajreen",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 11,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-08-31",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "18 Rabiel I 1448",
+                    "rates": {
+                        "double": 370,
+                        "triple": 410,
+                        "quad": 450
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-08-31",
+                    "to": "2026-09-30",
+                    "from_hijri": "18 Rabiel I 1448",
+                    "to_hijri": "19 Rabiel II 1448",
+                    "rates": {
+                        "double": 370,
+                        "triple": 410,
+                        "quad": 450
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-30",
+                    "to": "2026-10-31",
+                    "from_hijri": "19 Rabiel II 1448",
+                    "to_hijri": "20 Jumade I 1448",
+                    "rates": {
+                        "double": 390,
+                        "triple": 430,
+                        "quad": 470
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-31",
+                    "to": "2026-12-07",
+                    "from_hijri": "20 Jumade I 1448",
+                    "to_hijri": "27 Jumade II 1448",
+                    "rates": {
+                        "double": 400,
+                        "triple": 440,
+                        "quad": 480
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-07",
+                    "to": "2027-01-20",
+                    "from_hijri": "27 Jumade II 1448",
+                    "to_hijri": "12 Shaban 1448",
+                    "rates": {
+                        "double": 520,
+                        "triple": 560,
+                        "quad": 600
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Makkah"
+        },
+        {
+            "name": "Rawabi Zamzam",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 11,
+            "periods": [
+                {
+                    "from": "2026-08-14",
+                    "to": "2026-11-01",
+                    "from_hijri": "29 Muharram 1448",
+                    "to_hijri": "20 Jumadel 1448",
+                    "rates": {
+                        "double": 380,
+                        "triple": 420,
+                        "quad": 460,
+                        "quint": 530
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Makkah"
+        },
+        {
+            "name": "Jada Ajyad",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 11,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-30",
+                    "from_hijri": "2 Rabiel I 1448",
+                    "to_hijri": "19 Rabiel I 1448",
+                    "rates": {
+                        "double": 320,
+                        "triple": 360,
+                        "quad": 400
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-30",
+                    "to": "2026-11-01",
+                    "from_hijri": "19 Rabiel I 1448",
+                    "to_hijri": "21 Jumade I 1448",
+                    "rates": {
+                        "double": 350,
+                        "triple": 390,
+                        "quad": 430
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Makkah"
+        },
+        {
+            "name": "Zowar Al Bait",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 12,
+            "periods": [
+                {
+                    "from": "2026-09-01",
+                    "to": "2026-09-14",
+                    "from_hijri": "19 Rabiel I 1448",
+                    "to_hijri": "3 Rabiel II 1448",
+                    "rates": {
+                        "double": 330,
+                        "triple": 375,
+                        "quad": 420
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-08",
+                    "from_hijri": "4 Rabiel II 1448",
+                    "to_hijri": "27 Rabiel II 1448",
+                    "rates": {
+                        "double": 400,
+                        "triple": 445,
+                        "quad": 490
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-09",
+                    "to": "2026-12-16",
+                    "from_hijri": "28 Rabiel II 1448",
+                    "to_hijri": "7 Ragab 1448",
+                    "rates": {
+                        "double": 430,
+                        "triple": 475,
+                        "quad": 520
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-16",
+                    "to": "2026-12-24",
+                    "from_hijri": "8 Ragab 1448",
+                    "to_hijri": "15 Ragab 1448",
+                    "rates": {
+                        "double": 490,
+                        "triple": 535,
+                        "quad": 580
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-25",
+                    "to": "2027-01-09",
+                    "from_hijri": "16 Ragab 1448",
+                    "to_hijri": "1 Shaban 1448",
+                    "rates": {
+                        "double": 580,
+                        "triple": 625,
+                        "quad": 670
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2027-01-09",
+                    "to": "2027-01-20",
+                    "from_hijri": "2 Shaban 1448",
+                    "to_hijri": "12 Shaban 1448",
+                    "rates": {
+                        "double": 470,
+                        "triple": 515,
+                        "quad": 560
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Makkah"
+        },
+        {
+            "name": "Tara Al Zahabi",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 12,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-08-31",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "18 Rabiel I 1448",
+                    "rates": {
+                        "double": 270,
+                        "triple": 310,
+                        "quad": 350
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-08-31",
+                    "to": "2026-09-30",
+                    "from_hijri": "18 Rabiel I 1448",
+                    "to_hijri": "19 Rabiel II 1448",
+                    "rates": {
+                        "double": 320,
+                        "triple": 360,
+                        "quad": 400
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-30",
+                    "to": "2026-10-31",
+                    "from_hijri": "19 Rabiel II 1448",
+                    "to_hijri": "20 Jumade I 1448",
+                    "rates": {
+                        "double": 330,
+                        "triple": 370,
+                        "quad": 410
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-31",
+                    "to": "2026-12-07",
+                    "from_hijri": "20 Jumade I 1448",
+                    "to_hijri": "27 Jumade II 1448",
+                    "rates": {
+                        "double": 350,
+                        "triple": 390,
+                        "quad": 430
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-07",
+                    "to": "2027-01-20",
+                    "from_hijri": "27 Jumade II 1448",
+                    "to_hijri": "12 Shaban 1448",
+                    "rates": {
+                        "double": 400,
+                        "triple": 440,
+                        "quad": 480
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Makkah"
+        },
+        {
+            "name": "Al Amin Ajyad",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 13,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-08-31",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "18 Rabiel I 1448",
+                    "rates": {
+                        "double": 270,
+                        "triple": 310,
+                        "quad": 350
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-08-31",
+                    "to": "2026-09-30",
+                    "from_hijri": "18 Rabiel I 1448",
+                    "to_hijri": "19 Rabiel II 1448",
+                    "rates": {
+                        "double": 280,
+                        "triple": 320,
+                        "quad": 360
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-30",
+                    "to": "2026-10-31",
+                    "from_hijri": "19 Rabiel II 1448",
+                    "to_hijri": "20 Jumade I 1448",
+                    "rates": {
+                        "double": 310,
+                        "triple": 350,
+                        "quad": 390
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-31",
+                    "to": "2026-12-07",
+                    "from_hijri": "20 Jumade I 1448",
+                    "to_hijri": "27 Jumade II 1448",
+                    "rates": {
+                        "double": 340,
+                        "triple": 380,
+                        "quad": 420
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-07",
+                    "to": "2027-01-20",
+                    "from_hijri": "27 Jumade II 1448",
+                    "to_hijri": "12 Shaban 1448",
+                    "rates": {
+                        "double": 370,
+                        "triple": 410,
+                        "quad": 450
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Makkah"
+        },
+        {
+            "name": "Nawazi Tower",
+            "stars": 3,
+            "allotment": true,
+            "room_category": "standard",
+            "page": 13,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "4 Rabiel II 1448",
+                    "rates": {
+                        "double": 210,
+                        "triple": 250,
+                        "quad": 290
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "4 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 230,
+                        "triple": 270,
+                        "quad": 310
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 260,
+                        "triple": 300,
+                        "quad": 340
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 280,
+                        "triple": 320,
+                        "quad": 360
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-06",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "28 Ragab 1448",
+                    "rates": {
+                        "double": 380,
+                        "triple": 420,
+                        "quad": 460
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Makkah"
+        },
+        {
+            "name": "Zelal Al Nuzala",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 14,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "2 Rabiel I 1448",
+                    "to_hijri": "4 Rabiel II 1448",
+                    "rates": {
+                        "double": 300,
+                        "triple": 340,
+                        "quad": 380
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "4 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 330,
+                        "triple": 370,
+                        "quad": 410
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Makkah"
+        },
+        {
+            "name": "Address Ajyad",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 14,
+            "periods": [
+                {
+                    "from": "2026-07-01",
+                    "to": "2026-09-01",
+                    "from_hijri": "16 Muharram 1448",
+                    "to_hijri": "19 Rabiel I 1448",
+                    "rates": {
+                        "double": 290,
+                        "triple": 330,
+                        "quad": 370
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Makkah"
+        },
+        {
+            "name": "Kayan Al Raya",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 14,
+            "periods": [
+                {
+                    "from": "2026-08-01",
+                    "to": "2026-10-01",
+                    "from_hijri": "17 Safar 1448",
+                    "to_hijri": "20 Rabiel II 1448",
+                    "rates": {
+                        "double": 320,
+                        "triple": 360,
+                        "quad": 400
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-01",
+                    "to": "2026-11-01",
+                    "from_hijri": "20 Rabiel II 1448",
+                    "to_hijri": "21 Jumade I 1448",
+                    "rates": {
+                        "double": 350,
+                        "triple": 390,
+                        "quad": 430
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Makkah"
+        },
+        {
+            "name": "Makareem Al Hijrah",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 15,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-08-30",
+                    "from_hijri": "2 Rabiel I 1448",
+                    "to_hijri": "6 Rabiel I 1448",
+                    "rates": {
+                        "double": 250,
+                        "triple": 290,
+                        "quad": 330
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Makkah"
+        },
+        {
+            "name": "Elaf Bakkah",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 15,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-10-01",
+                    "from_hijri": "2 Rabiel I 1448",
+                    "to_hijri": "20 Rabiel II 1448",
+                    "rates": {
+                        "double": 140,
+                        "triple": 140,
+                        "quad": 140
+                    },
+                    "meals": "RO"
+                }
+            ],
+            "city": "Makkah"
+        },
+        {
+            "name": "Snood Al Rayyan",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 15,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-01",
+                    "from_hijri": "2 Rabiel I 1448",
+                    "to_hijri": "19 Rabiel I 1448",
+                    "rates": {
+                        "double": 200,
+                        "triple": 240,
+                        "quad": 280
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Makkah"
+        }
+    ],
+    "madinah_hotels": [
+        {
+            "name": "Millennium Al Aqeeq",
+            "stars": 5,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 16,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 770,
+                        "triple": 895,
+                        "quad": 1020
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 800,
+                        "triple": 925,
+                        "quad": 1050
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 950,
+                        "triple": 1075,
+                        "quad": 1200
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 1200,
+                        "triple": 1325,
+                        "quad": 1450
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-07",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Ragab 1448",
+                    "rates": {
+                        "double": 1650,
+                        "triple": 1775,
+                        "quad": 1900
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Dar Al Eiman Al Haram",
+            "stars": 5,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 16,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 800,
+                        "triple": 925,
+                        "quad": 1050
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 900,
+                        "triple": 1025,
+                        "quad": 1150
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 950,
+                        "triple": 1075,
+                        "quad": 1200
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 1150,
+                        "triple": 1275,
+                        "quad": 1400
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-07",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Ragab 1448",
+                    "rates": {
+                        "double": 2050,
+                        "triple": 2250,
+                        "quad": 2450
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Dalla Taibah",
+            "stars": 5,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 17,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 770,
+                        "triple": 905,
+                        "quad": 1040
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 800,
+                        "triple": 935,
+                        "quad": 1150
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 850,
+                        "triple": 985,
+                        "quad": 1120
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 1000,
+                        "triple": 1135,
+                        "quad": 1270
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-07",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Ragab 1448",
+                    "rates": {
+                        "double": 1300,
+                        "triple": 1425,
+                        "quad": 1550
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Ruve",
+            "stars": 5,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 17,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 750,
+                        "triple": 875,
+                        "quad": 1000
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 850,
+                        "triple": 975,
+                        "quad": 1100
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 900,
+                        "triple": 1025,
+                        "quad": 1150
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 900,
+                        "triple": 1025,
+                        "quad": 1150
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-07",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Ragab 1448",
+                    "rates": {
+                        "double": 1300,
+                        "triple": 1435,
+                        "quad": 1570
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Millenium Taibah",
+            "stars": 5,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 18,
+            "periods": [
+                {
+                    "from": "2026-08-01",
+                    "to": "2026-09-20",
+                    "from_hijri": "17 Safar 1448",
+                    "to_hijri": "09 Rabiel I 1448",
+                    "rates": {
+                        "double": 650,
+                        "triple": 750,
+                        "quad": 850
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-20",
+                    "to": "2026-10-20",
+                    "from_hijri": "09 Rabiel II 1448",
+                    "to_hijri": "09 Jumade I 1448",
+                    "rates": {
+                        "double": 750,
+                        "triple": 850,
+                        "quad": 950
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Al Andalus Al Fakher",
+            "stars": 4,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 18,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-10-10",
+                    "from_hijri": "1 Rabie I 1448",
+                    "to_hijri": "29 Rabiel I 1448",
+                    "rates": {
+                        "double": 600,
+                        "triple": 650,
+                        "quad": 700
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-10",
+                    "to": "2026-12-01",
+                    "from_hijri": "29 Rabiel II 1448",
+                    "to_hijri": "21 Jumade II 1448",
+                    "rates": {
+                        "double": 700,
+                        "triple": 750,
+                        "quad": 800
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Al Ansor Golden Tulip",
+            "stars": 4,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 18,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 450,
+                        "triple": 495,
+                        "quad": 540
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 490,
+                        "triple": 535,
+                        "quad": 580
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 620,
+                        "triple": 665,
+                        "quad": 710
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 690,
+                        "triple": 735,
+                        "quad": 780
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-07",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Ragab 1448",
+                    "rates": {
+                        "double": 790,
+                        "triple": 835,
+                        "quad": 880
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Grand Plaza Al Madinah",
+            "stars": 4,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 19,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 500,
+                        "triple": 570,
+                        "quad": 640
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 570,
+                        "triple": 640,
+                        "quad": 710
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 680,
+                        "triple": 750,
+                        "quad": 820
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 800,
+                        "triple": 870,
+                        "quad": 940
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-07",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Ragab 1448",
+                    "rates": {
+                        "double": 1100,
+                        "triple": 1200,
+                        "quad": 1300
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Grand Plaza Al Maqam",
+            "stars": 4,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 19,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 500,
+                        "triple": 580,
+                        "quad": 660
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 600,
+                        "triple": 680,
+                        "quad": 760
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 760,
+                        "triple": 840,
+                        "quad": 920
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 900,
+                        "triple": 990,
+                        "quad": 1080
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-07",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Ragab 1448",
+                    "rates": {
+                        "double": 1250,
+                        "triple": 1330,
+                        "quad": 1410
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Concord Dar Al Khair",
+            "stars": 4,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 19,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "2 Rabiel I 1448",
+                    "to_hijri": "4 Rabiel II 1448",
+                    "rates": {
+                        "double": 550,
+                        "triple": 600,
+                        "quad": 650
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Ritz Al Madinah",
+            "stars": 4,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 20,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 630,
+                        "triple": 675,
+                        "quad": 720
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 650,
+                        "triple": 695,
+                        "quad": 740
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 680,
+                        "triple": 725,
+                        "quad": 770
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 690,
+                        "triple": 735,
+                        "quad": 780
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-07",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Ragab 1448",
+                    "rates": {
+                        "double": 800,
+                        "triple": 845,
+                        "quad": 890
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Waqf Othman Bin Affan",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 20,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 520,
+                        "triple": 550,
+                        "quad": 580
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 550,
+                        "triple": 580,
+                        "quad": 610
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 580,
+                        "triple": 610,
+                        "quad": 640
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 650,
+                        "triple": 680,
+                        "quad": 710
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-07",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Ragab 1448",
+                    "rates": {
+                        "double": 700,
+                        "triple": 730,
+                        "quad": 760
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Jiwar Al Saha",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 21,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-10-20",
+                    "from_hijri": "2 Rabiel I 1448",
+                    "to_hijri": "9 Jumade I 1448",
+                    "rates": {
+                        "double": 520,
+                        "triple": 570,
+                        "quad": 620
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-20",
+                    "to": "2026-12-16",
+                    "from_hijri": "9 Jumade I 1448",
+                    "to_hijri": "7 Ragab 1448",
+                    "rates": {
+                        "double": 600,
+                        "triple": 650,
+                        "quad": 700
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-16",
+                    "to": "2027-02-02",
+                    "from_hijri": "7 Ragab 1448",
+                    "to_hijri": "25 Shaban 1448",
+                    "rates": {
+                        "double": 805,
+                        "triple": 855,
+                        "quad": 905
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Manazil Al Marsa",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 21,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-10-20",
+                    "from_hijri": "2 Rabiel I 1448",
+                    "to_hijri": "9 Jumade I 1448",
+                    "rates": {
+                        "double": 520,
+                        "triple": 570,
+                        "quad": 620
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-20",
+                    "to": "2026-12-16",
+                    "from_hijri": "9 Jumade I 1448",
+                    "to_hijri": "7 Ragab 1448",
+                    "rates": {
+                        "double": 560,
+                        "triple": 610,
+                        "quad": 660
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-16",
+                    "to": "2027-02-02",
+                    "from_hijri": "7 Ragab 1448",
+                    "to_hijri": "25 Shaban 1448",
+                    "rates": {
+                        "double": 710,
+                        "triple": 760,
+                        "quad": 810
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Aston East Taiba",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 21,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 450,
+                        "triple": 495,
+                        "quad": 540
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 500,
+                        "triple": 545,
+                        "quad": 590
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 590,
+                        "triple": 635,
+                        "quad": 680
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 690,
+                        "triple": 735,
+                        "quad": 780
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-07",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Ragab 1448",
+                    "rates": {
+                        "double": 790,
+                        "triple": 835,
+                        "quad": 880
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Dar Al Naem",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 22,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 430,
+                        "triple": 475,
+                        "quad": 520
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 470,
+                        "triple": 515,
+                        "quad": 560
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 540,
+                        "triple": 585,
+                        "quad": 630
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 640,
+                        "triple": 685,
+                        "quad": 730
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-07",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Ragab 1448",
+                    "rates": {
+                        "double": 790,
+                        "triple": 835,
+                        "quad": 880
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Araek Taiba",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 22,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-10-31",
+                    "from_hijri": "02 Rabiel I 1448",
+                    "to_hijri": "20 Jumade II 1448",
+                    "rates": {
+                        "double": 400,
+                        "triple": 445,
+                        "quad": 490
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-31",
+                    "to": "2026-12-15",
+                    "from_hijri": "20 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 450,
+                        "triple": 495,
+                        "quad": 540
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-02-13",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "6 Ramadhan 1448",
+                    "rates": {
+                        "double": 650,
+                        "triple": 695,
+                        "quad": 740
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2027-02-13",
+                    "to": "2027-03-14",
+                    "from_hijri": "6 Ramadhan 1448",
+                    "to_hijri": "6 Syawwal 1448",
+                    "rates": {
+                        "double": 600,
+                        "triple": 645,
+                        "quad": 690
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Zowar International",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 23,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 430,
+                        "triple": 475,
+                        "quad": 520
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 470,
+                        "triple": 515,
+                        "quad": 560
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 540,
+                        "triple": 585,
+                        "quad": 630
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 590,
+                        "triple": 635,
+                        "quad": 680
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-07",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Ragab 1448",
+                    "rates": {
+                        "double": 780,
+                        "triple": 825,
+                        "quad": 870
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Rua International",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 23,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 450,
+                        "triple": 495,
+                        "quad": 540
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 510,
+                        "triple": 555,
+                        "quad": 600
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 540,
+                        "triple": 585,
+                        "quad": 630
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 640,
+                        "triple": 685,
+                        "quad": 730
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-07",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Ragab 1448",
+                    "rates": {
+                        "double": 770,
+                        "triple": 815,
+                        "quad": 860
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Kayan International",
+            "stars": 3,
+            "allotment": true,
+            "room_category": "standard",
+            "page": 24,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 440,
+                        "triple": 485,
+                        "quad": 530
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 490,
+                        "triple": 535,
+                        "quad": 580
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 590,
+                        "triple": 635,
+                        "quad": 680
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 690,
+                        "triple": 735,
+                        "quad": 780
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-07",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Ragab 1448",
+                    "rates": {
+                        "double": 770,
+                        "triple": 815,
+                        "quad": 860
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Nusuk Al Madinah",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 24,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 440,
+                        "triple": 485,
+                        "quad": 530
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 470,
+                        "triple": 515,
+                        "quad": 560
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 500,
+                        "triple": 545,
+                        "quad": 590
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 570,
+                        "triple": 615,
+                        "quad": 660
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-07",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Ragab 1448",
+                    "rates": {
+                        "double": 750,
+                        "triple": 795,
+                        "quad": 840
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Lu'Luah Al Madinah",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 24,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-10-01",
+                    "from_hijri": "02 Rabiel I 1448",
+                    "to_hijri": "20 Rabiel II 1448",
+                    "rates": {
+                        "double": 410,
+                        "triple": 455,
+                        "quad": 500
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Odest",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 25,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 440,
+                        "triple": 485,
+                        "quad": 530
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 520,
+                        "triple": 565,
+                        "quad": 610
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 590,
+                        "triple": 635,
+                        "quad": 680
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 690,
+                        "triple": 735,
+                        "quad": 780
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-07",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Ragab 1448",
+                    "rates": {
+                        "double": 770,
+                        "triple": 815,
+                        "quad": 860
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Triple One",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 25,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 440,
+                        "triple": 485,
+                        "quad": 530
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 500,
+                        "triple": 545,
+                        "quad": 590
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 570,
+                        "triple": 615,
+                        "quad": 660
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 590,
+                        "triple": 635,
+                        "quad": 680
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-07",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Ragab 1448",
+                    "rates": {
+                        "double": 770,
+                        "triple": 815,
+                        "quad": 860
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Qasr Al Ansor Golden Tulip",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 26,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 440,
+                        "triple": 485,
+                        "quad": 530
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 500,
+                        "triple": 545,
+                        "quad": 590
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 550,
+                        "triple": 595,
+                        "quad": 640
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 570,
+                        "triple": 615,
+                        "quad": 660
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-07",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Ragab 1448",
+                    "rates": {
+                        "double": 760,
+                        "triple": 805,
+                        "quad": 850
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Al Muhktara International",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 26,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 440,
+                        "triple": 485,
+                        "quad": 530
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 470,
+                        "triple": 515,
+                        "quad": 560
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 530,
+                        "triple": 575,
+                        "quad": 620
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 550,
+                        "triple": 595,
+                        "quad": 640
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-07",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Ragab 1448",
+                    "rates": {
+                        "double": 760,
+                        "triple": 805,
+                        "quad": 850
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Nusuk Al Hijrah",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 27,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 470,
+                        "triple": 515,
+                        "quad": 560
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 520,
+                        "triple": 565,
+                        "quad": 610
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 550,
+                        "triple": 595,
+                        "quad": 640
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 600,
+                        "triple": 645,
+                        "quad": 690
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-07",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Ragab 1448",
+                    "rates": {
+                        "double": 770,
+                        "triple": 815,
+                        "quad": 860
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "One In",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 27,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 480,
+                        "triple": 525,
+                        "quad": 570
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 510,
+                        "triple": 555,
+                        "quad": 600
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 600,
+                        "triple": 645,
+                        "quad": 690
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 620,
+                        "triple": 665,
+                        "quad": 710
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-07",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Ragab 1448",
+                    "rates": {
+                        "double": 770,
+                        "triple": 815,
+                        "quad": 860
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Nusuk Al Eiman",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 28,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 440,
+                        "triple": 485,
+                        "quad": 530
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 510,
+                        "triple": 555,
+                        "quad": 600
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 550,
+                        "triple": 595,
+                        "quad": 640
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 600,
+                        "triple": 645,
+                        "quad": 690
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-07",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Ragab 1448",
+                    "rates": {
+                        "double": 760,
+                        "triple": 805,
+                        "quad": 850
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Gulnar Taiba",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 28,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 440,
+                        "triple": 485,
+                        "quad": 530
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 500,
+                        "triple": 545,
+                        "quad": 590
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 520,
+                        "triple": 565,
+                        "quad": 610
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 550,
+                        "triple": 595,
+                        "quad": 640
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-07",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Ragab 1448",
+                    "rates": {
+                        "double": 750,
+                        "triple": 795,
+                        "quad": 840
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Jawharat Rashid",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 29,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 390,
+                        "triple": 435,
+                        "quad": 480
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 450,
+                        "triple": 495,
+                        "quad": 540
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 530,
+                        "triple": 575,
+                        "quad": 620
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 600,
+                        "triple": 645,
+                        "quad": 690
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-07",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Ragab 1448",
+                    "rates": {
+                        "double": 750,
+                        "triple": 795,
+                        "quad": 840
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Al Mokhtara Golden",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 29,
+            "periods": [
+                {
+                    "from": "2026-08-01",
+                    "to": "2026-08-30",
+                    "from_hijri": "17 Safar 1448",
+                    "to_hijri": "18 Rabiel I 1448",
+                    "rates": {
+                        "double": 390,
+                        "triple": 435,
+                        "quad": 480
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-08-30",
+                    "to": "2026-09-30",
+                    "from_hijri": "18 Rabiel I 1448",
+                    "to_hijri": "19 Rabiel II 1448",
+                    "rates": {
+                        "double": 450,
+                        "triple": 495,
+                        "quad": 540
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-30",
+                    "to": "2026-10-31",
+                    "from_hijri": "19 Rabiel II 1448",
+                    "to_hijri": "20 Juamde I 1448",
+                    "rates": {
+                        "double": 530,
+                        "triple": 575,
+                        "quad": 620
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-31",
+                    "to": "2026-12-09",
+                    "from_hijri": "20 Juamde I 1448",
+                    "to_hijri": "29 Jumade II 1448",
+                    "rates": {
+                        "double": 600,
+                        "triple": 645,
+                        "quad": 690
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-09",
+                    "to": "2027-01-10",
+                    "from_hijri": "29 Jumade II 1448",
+                    "to_hijri": "2 Shaban 1448",
+                    "rates": {
+                        "double": 750,
+                        "triple": 795,
+                        "quad": 840
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Azhar Salsabil",
+            "stars": 3,
+            "allotment": true,
+            "room_category": "standard",
+            "page": 30,
+            "periods": [
+                {
+                    "from": "2026-09-01",
+                    "to": "2026-09-20",
+                    "from_hijri": "19 Rabiel I 1448",
+                    "to_hijri": "9 Rabiel II 1448",
+                    "rates": {
+                        "double": 380,
+                        "triple": 425,
+                        "quad": 470
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-20",
+                    "to": "2026-10-15",
+                    "from_hijri": "9 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 430,
+                        "triple": 475,
+                        "quad": 520
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 470,
+                        "triple": 515,
+                        "quad": 560
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-10",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "1 Ragab 1448",
+                    "rates": {
+                        "double": 540,
+                        "triple": 585,
+                        "quad": 630
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-10",
+                    "to": "2027-01-10",
+                    "from_hijri": "1 Ragab 1448",
+                    "to_hijri": "2 Shaban 1448",
+                    "rates": {
+                        "double": 690,
+                        "triple": 735,
+                        "quad": 780
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Mirage Al Salam",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 30,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 380,
+                        "triple": 425,
+                        "quad": 470
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 430,
+                        "triple": 475,
+                        "quad": 520
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 490,
+                        "triple": 535,
+                        "quad": 580
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 590,
+                        "triple": 635,
+                        "quad": 680
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-07",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Ragab 1448",
+                    "rates": {
+                        "double": 750,
+                        "triple": 795,
+                        "quad": 840
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Majmu'ah Az Zahra",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 31,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 390,
+                        "triple": 435,
+                        "quad": 480
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 440,
+                        "triple": 485,
+                        "quad": 530
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 490,
+                        "triple": 535,
+                        "quad": 580
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 590,
+                        "triple": 635,
+                        "quad": 680
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-07",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Ragab 1448",
+                    "rates": {
+                        "double": 750,
+                        "triple": 795,
+                        "quad": 840
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Al Mukhtara Gharbi",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 31,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 390,
+                        "triple": 435,
+                        "quad": 480
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 440,
+                        "triple": 485,
+                        "quad": 530
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 490,
+                        "triple": 535,
+                        "quad": 580
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 590,
+                        "triple": 635,
+                        "quad": 680
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-07",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Ragab 1448",
+                    "rates": {
+                        "double": 750,
+                        "triple": 795,
+                        "quad": 840
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Taiba Hills",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 32,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 380,
+                        "triple": 425,
+                        "quad": 470
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 430,
+                        "triple": 475,
+                        "quad": 520
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 480,
+                        "triple": 525,
+                        "quad": 570
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 580,
+                        "triple": 625,
+                        "quad": 670
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-07",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Ragab 1448",
+                    "rates": {
+                        "double": 760,
+                        "triple": 805,
+                        "quad": 850
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Arjuan Saadah",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 32,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 380,
+                        "triple": 425,
+                        "quad": 470
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 430,
+                        "triple": 475,
+                        "quad": 520
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 470,
+                        "triple": 515,
+                        "quad": 560
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 570,
+                        "triple": 615,
+                        "quad": 660
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-07",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Ragab 1448",
+                    "rates": {
+                        "double": 740,
+                        "triple": 785,
+                        "quad": 830
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Arjuan Al Zahaby",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 33,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-09-15",
+                    "from_hijri": "1 Rabiel I 1448",
+                    "to_hijri": "5 Rabiel II 1448",
+                    "rates": {
+                        "double": 380,
+                        "triple": 425,
+                        "quad": 470
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "5 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 430,
+                        "triple": 475,
+                        "quad": 520
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-11-15",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "5 Jumade II 1448",
+                    "rates": {
+                        "double": 470,
+                        "triple": 515,
+                        "quad": 560
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-11-15",
+                    "to": "2026-12-15",
+                    "from_hijri": "5 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 570,
+                        "triple": 615,
+                        "quad": 660
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-01-07",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "29 Ragab 1448",
+                    "rates": {
+                        "double": 740,
+                        "triple": 785,
+                        "quad": 830
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Al Barkah Karem",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 33,
+            "periods": [
+                {
+                    "from": "2026-08-01",
+                    "to": "2026-09-15",
+                    "from_hijri": "17 Safar 1448",
+                    "to_hijri": "4 Rabiel II 1448",
+                    "rates": {
+                        "double": 360,
+                        "triple": 405,
+                        "quad": 450
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-15",
+                    "to": "2026-10-15",
+                    "from_hijri": "4 Rabiel II 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 410,
+                        "triple": 455,
+                        "quad": 500
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-15",
+                    "to": "2026-12-10",
+                    "from_hijri": "4 Jumade I 1448",
+                    "to_hijri": "1 Rajab 1448",
+                    "rates": {
+                        "double": 490,
+                        "triple": 535,
+                        "quad": 580
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-10",
+                    "to": "2027-01-10",
+                    "from_hijri": "1 Rajab 1448",
+                    "to_hijri": "2 Shaban 1448",
+                    "rates": {
+                        "double": 665,
+                        "triple": 710,
+                        "quad": 755
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Rowa Al Baraka Kareem",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 34,
+            "periods": [
+                {
+                    "from": "2026-08-14",
+                    "to": "2026-09-20",
+                    "from_hijri": "01 Rabiel I 1448",
+                    "to_hijri": "9 Rabiel I 1448",
+                    "rates": {
+                        "double": 380,
+                        "triple": 420,
+                        "quad": 460
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-09-20",
+                    "to": "2026-10-15",
+                    "from_hijri": "9 Rabiel I 1448",
+                    "to_hijri": "4 Jumade I 1448",
+                    "rates": {
+                        "double": 430,
+                        "triple": 470,
+                        "quad": 510
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Hayah Al Huda",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 34,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-10-31",
+                    "from_hijri": "02 Rabiel I 1448",
+                    "to_hijri": "20 Jumade II 1448",
+                    "rates": {
+                        "double": 370,
+                        "triple": 415,
+                        "quad": 460
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-31",
+                    "to": "2026-12-15",
+                    "from_hijri": "20 Jumade II 1448",
+                    "to_hijri": "6 Ragab 1448",
+                    "rates": {
+                        "double": 400,
+                        "triple": 445,
+                        "quad": 490
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-15",
+                    "to": "2027-02-13",
+                    "from_hijri": "6 Ragab 1448",
+                    "to_hijri": "6 Ramadhan 1448",
+                    "rates": {
+                        "double": 600,
+                        "triple": 645,
+                        "quad": 690
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2027-02-13",
+                    "to": "2027-03-14",
+                    "from_hijri": "6 Ramadhan 1448",
+                    "to_hijri": "6 Syawwal 1448",
+                    "rates": {
+                        "double": 500,
+                        "triple": 545,
+                        "quad": 590
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Baraa Taibah",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 35,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-10-20",
+                    "from_hijri": "2 Rabiel I 1448",
+                    "to_hijri": "9 Jumade I 1448",
+                    "rates": {
+                        "double": 360,
+                        "triple": 400,
+                        "quad": 440
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-20",
+                    "to": "2026-12-16",
+                    "from_hijri": "9 Jumade I 1448",
+                    "to_hijri": "7 Ragab 1448",
+                    "rates": {
+                        "double": 440,
+                        "triple": 480,
+                        "quad": 520
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-16",
+                    "to": "2027-02-02",
+                    "from_hijri": "7 Ragab 1448",
+                    "to_hijri": "25 Shaban 1448",
+                    "rates": {
+                        "double": 595,
+                        "triple": 635,
+                        "quad": 675
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        },
+        {
+            "name": "Kayan Al Masi",
+            "stars": 3,
+            "allotment": false,
+            "room_category": "standard",
+            "page": 35,
+            "periods": [
+                {
+                    "from": "2026-08-15",
+                    "to": "2026-10-20",
+                    "from_hijri": "2 Rabiel I 1448",
+                    "to_hijri": "9 Jumade I 1448",
+                    "rates": {
+                        "double": 390,
+                        "triple": 430,
+                        "quad": 470
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-10-20",
+                    "to": "2026-12-16",
+                    "from_hijri": "9 Jumade I 1448",
+                    "to_hijri": "7 Ragab 1448",
+                    "rates": {
+                        "double": 470,
+                        "triple": 510,
+                        "quad": 550
+                    },
+                    "meals": "FB"
+                },
+                {
+                    "from": "2026-12-16",
+                    "to": "2027-02-02",
+                    "from_hijri": "7 Ragab 1448",
+                    "to_hijri": "25 Shaban 1448",
+                    "rates": {
+                        "double": 615,
+                        "triple": 655,
+                        "quad": 695
+                    },
+                    "meals": "FB"
+                }
+            ],
+            "city": "Madinah"
+        }
+    ]
+}

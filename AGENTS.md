@@ -40,7 +40,7 @@ Do not flood the context window upfront. Dynamically locate and read relevant fi
 
 - **`/add-product`**:
   Jika user mengirim prompt `/add-product`, agen harus:
-  1. Membaca `src/data/data-product/catalog.json`.
+  1. Membaca `src/contents/products/catalog.json`.
   2. Menanyakan interaktif kepada user mengenai: `ID Produk`, `Judul`, `Nama Icon`, `Membutuhkan jumlah Pax? (y/n)`, dan `Schema form module (jika ada)`.
   3. Setelah user menjawab, agen otomatis mengedit file `catalog.json` dengan menambahkan objek produk baru ke dalam array `products` dan menambahkan state kosong ke `defaultModuleSpecs` sesuai ID tersebut.
   4. Agen juga harus mengecek apabila ada ID duplikat.

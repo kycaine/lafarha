@@ -1,4 +1,4 @@
-import catalogData from "@/data/data-product/catalog.json";
+import catalogData from "@/contents/products/catalog.json";
 
 // Mengambil produk langsung dari file JSON statis lokal (0 API Hit)
 export async function getProducts() {
@@ -13,11 +13,11 @@ export async function createProduct(_data: any) {
 }
 
 export async function updateProduct(_data: any) {
-  return { success: false, error: "Edit produk dikunci. Silakan ubah file src/data/data-product/catalog.json" };
+  return { success: false, error: "Edit produk dikunci. Silakan ubah file src/data/products/catalog.json" };
 }
 
 export async function deleteProduct(_id: string) {
-  return { success: false, error: "Hapus produk dikunci. Silakan ubah file src/data/data-product/catalog.json" };
+  return { success: false, error: "Hapus produk dikunci. Silakan ubah file src/data/products/catalog.json" };
 }
 
 export async function resetProductsToDefault() {

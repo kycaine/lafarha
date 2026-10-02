@@ -10,7 +10,7 @@ import { fetchApi } from "@/lib/api";
 import { useAlert } from "@/shared/AlertContext";
 import { Building2, Bus, Ticket, User, Phone, Plane, CheckCircle2, UploadCloud, Users, Check, Briefcase, Car, CalendarDays, MapPin, HelpCircle, X, MessageCircle, Search, ChevronDown, ChevronUp } from "lucide-react";
 import { jsPDF } from "jspdf";
-import html2canvas from "html2canvas";
+import html2canvas from "html2canvas-pro";
 
 const ICON_MAP: Record<string, any> = {
   Building2,
@@ -22,11 +22,13 @@ const ICON_MAP: Record<string, any> = {
   HelpCircle,
 };
 
-import transportData from "@/data/data-product/transport.json";
-import hotelData from "@/data/data-product/hotel.json";
-import airportData from "@/data/data-product/airport.json";
-import visaData from "@/data/data-product/visa.json";
-import catalogData from "@/data/data-product/catalog.json";
+import transportData from "@/contents/products/transport.json";
+import hotelData from "@/contents/products/hotel.json";
+import airportData from "@/contents/products/airport.json";
+import visaData from "@/contents/products/visa.json";
+import catalogData from "@/contents/products/catalog.json";
+import newHotelData from "@/contents/products/hotel.json";
+
 
 const {
   transportPrices: TRANSPORT_PRICES,
@@ -36,7 +38,10 @@ const {
   fullPlusRoutes: FULL_PLUS_ROUTES
 } = transportData;
 
-const { hotelOptions: HOTEL_OPTIONS } = hotelData;
+const HOTEL_OPTIONS = [
+  ...(hotelData.makkah_hotels || []).map(h => ({ location: "Mekah", name: h.name, star: h.stars })),
+  ...(hotelData.madinah_hotels || []).map(h => ({ location: "Madinah", name: h.name, star: h.stars }))
+];
 const { airportOptions: AIRPORT_OPTIONS } = airportData;
 
 const {
@@ -46,6 +51,8 @@ const {
 } = visaData;
 
 const { defaultModuleSpecs: DEFAULT_MODULE_SPECS } = catalogData;
+const { makkah_hotels: MAKKAH_HOTELS, madinah_hotels: MADINAH_HOTELS } = newHotelData;
+
 
 
 import { SearchableSelect, DatePickerNative, CatalogModuleProps } from "./UtilsCatalog";
@@ -85,6 +92,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
   const [showContactModal, setShowContactModal] = useState(false);
   const [showPricingModal, setShowPricingModal] = useState(false);
   const [showVisaPricingModal, setShowVisaPricingModal] = useState(false);
+  const [showHotelPricingModal, setShowHotelPricingModal] = useState(false);
   const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
   const [contactForm, setContactForm] = useState({ name: "", whatsapp: "" });
 
@@ -355,6 +363,96 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
   const filteredProducts = products.filter(p => p.title.toLowerCase().includes(searchQuery.toLowerCase()));
   const displayedProducts = (searchQuery || showAllProducts) ? filteredProducts : filteredProducts.slice(0, 6);
 
+  const months = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agt", "Sep", "Okt", "Nov", "Des"];
+  const formatDate = (dateStr: string) => {
+    if (!dateStr) return "-";
+    const parts = dateStr.split("-");
+    if (parts.length !== 3) return dateStr;
+    const [y, m, d] = parts;
+    return `${parseInt(d, 10)} ${months[parseInt(m, 10) - 1]} ${y}`;
+  };
+
+  const handleDownloadPdf = async (elementId: string, filename: string) => {
+    setIsDownloadingPdf(true);
+    // Beri jeda sejenak agar UI bisa update menjadi loading
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    const element = document.getElementById(elementId);
+    if (!element) {
+      setIsDownloadingPdf(false);
+      return;
+    }
+
+    // Cari tahu lebar asli tabel untuk menghindari kepotong di HP
+    let targetWidth = element.scrollWidth;
+    const innerTables = element.querySelectorAll('table');
+    innerTables.forEach(t => {
+      if (t.scrollWidth + 100 > targetWidth) {
+        targetWidth = t.scrollWidth + 100;
+      }
+    });
+    // Paksa minimal lebar seperti desktop (1200px) agar layout tidak terhimpit
+    targetWidth = Math.max(targetWidth, 1200);
+
+    try {
+      const canvas = await html2canvas(element, { 
+        scale: 2, 
+        useCORS: true, 
+        logging: false,
+        windowWidth: targetWidth,
+        onclone: (clonedDoc) => {
+          const clonedElement = clonedDoc.getElementById(elementId);
+          if (clonedElement) {
+            clonedElement.style.overflow = 'visible';
+            clonedElement.style.height = 'max-content';
+            clonedElement.style.maxHeight = 'none';
+            clonedElement.style.width = targetWidth + 'px';
+            
+            // Allow horizontal tables to expand fully
+            const scrollables = clonedElement.querySelectorAll('.overflow-x-auto, .overflow-auto');
+            scrollables.forEach(el => {
+              (el as HTMLElement).style.overflow = 'visible';
+              (el as HTMLElement).style.width = '100%';
+            });
+
+            // Show logo on PDF
+            const logoEl = clonedElement.querySelector('.pdf-logo');
+            if (logoEl) {
+              logoEl.classList.remove('hidden');
+              logoEl.classList.add('flex');
+            }
+          }
+        }
+      });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      
+      let heightLeft = pdfHeight;
+      let position = 0;
+      
+      pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+      heightLeft -= pageHeight;
+      
+      while (heightLeft > 0) {
+        position = heightLeft - pdfHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+        heightLeft -= pageHeight;
+      }
+      
+      pdf.save(filename);
+    } catch (error: any) {
+      console.error('Failed to generate PDF', error);
+      alert("Gagal memproses PDF: " + (error?.message || error));
+    } finally {
+      setIsDownloadingPdf(false);
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto space-y-12 pb-24">
       {/* Search Bar */}
@@ -470,7 +568,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
                               if (service.id === 'VISA') {
                                 setShowVisaPricingModal(true);
                               } else if (service.id === 'HOTEL') {
-                                showAlert({ title: "Info", message: "Estimasi harga hotel belum tersedia", type: "info" });
+                                setShowHotelPricingModal(true);
                               } else {
                                 setShowPricingModal(true);
                               }
@@ -669,6 +767,22 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
             </div>
             <div className="p-6 overflow-auto flex-1 bg-slate-50 dark:bg-slate-900/50" id="pricing-table-container">
               <div className="w-full bg-white dark:bg-[#111] rounded-lg border border-slate-200 dark:border-slate-800 p-6 space-y-8">
+                
+                {/* PDF Header - Hidden in UI, visible in PDF */}
+                <div className="pdf-logo hidden flex-col border-b border-slate-300 pb-6 mb-6">
+                  <div className="flex items-start justify-between">
+                    <div className="flex flex-col">
+                      <img src="/farha-logo-full.svg" alt="Farha Logo" className="h-12 w-auto object-contain object-left mb-3" />
+                      <p className="text-emerald-800 font-bold text-[15px] tracking-wide">Platform Land Arrangement Umrah</p>
+                    </div>
+                    <div className="text-right text-xs text-slate-600 space-y-1">
+                      <p className="font-bold text-slate-800 text-sm">PT. Farha Inovasi Mandiri</p>
+                      <p>Gedung Office 8, SCBD, Jakarta Selatan</p>
+                      <p>Telp: +62 811 1234 5678</p>
+                      <p>Email: info@farha.id | Web: www.farha.id</p>
+                    </div>
+                  </div>
+                </div>
 
                 {/* Single Trip Table */}
                 <div>
@@ -730,31 +844,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
             <div className="p-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
               <Button
                 disabled={isDownloadingPdf}
-                onClick={async () => {
-                  setIsDownloadingPdf(true);
-                  // Beri jeda sejenak agar UI bisa update menjadi loading
-                  await new Promise(resolve => setTimeout(resolve, 100));
-
-                  const element = document.getElementById('pricing-table-container');
-                  if (!element) {
-                    setIsDownloadingPdf(false);
-                    return;
-                  }
-                  try {
-                    const canvas = await html2canvas(element, { scale: 2, useCORS: true, logging: false });
-                    const imgData = canvas.toDataURL('image/png');
-                    const pdf = new jsPDF('p', 'mm', 'a4');
-                    const pdfWidth = pdf.internal.pageSize.getWidth();
-                    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-                    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-                    pdf.save('referensi-harga-transportasi.pdf');
-                  } catch (error: any) {
-                    console.error('Failed to generate PDF', error);
-                    alert("Gagal memproses PDF: " + (error?.message || error));
-                  } finally {
-                    setIsDownloadingPdf(false);
-                  }
-                }}
+                onClick={() => handleDownloadPdf('pricing-table-container', 'estimasi-harga-transportasi.pdf')}
                 className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2 min-w-[140px]"
               >
                 {isDownloadingPdf ? (
@@ -803,6 +893,158 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
             </div>
             <div className="p-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
               <Button onClick={() => setShowVisaPricingModal(false)} className="bg-slate-200 hover:bg-slate-300 text-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-white">Tutup</Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Pricing Hotel */}
+      {showHotelPricingModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200"
+          onClick={() => setShowHotelPricingModal(false)}
+        >
+          <div
+            className="bg-white dark:bg-[#111] rounded-2xl w-[90vw] max-w-5xl overflow-hidden shadow-2xl relative flex flex-col max-h-[95vh]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between p-4 border-b border-slate-100 dark:border-slate-800">
+              <h3 className="font-bold text-lg">Estimasi Harga Hotel (Harga dalam SAR)</h3>
+              <Button variant="ghost" size="icon" onClick={() => setShowHotelPricingModal(false)} className="rounded-full h-8 w-8">
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="p-6 overflow-auto flex-1 bg-slate-50 dark:bg-slate-900/50" id="hotel-pricing-table-container">
+              <div className="w-full bg-white dark:bg-[#111] rounded-lg border border-slate-200 dark:border-slate-800 p-6 space-y-8">
+                
+                {/* PDF Header - Hidden in UI, visible in PDF */}
+                <div className="pdf-logo hidden flex-col border-b border-slate-300 pb-6 mb-6">
+                  <div className="flex items-start justify-between">
+                    <div className="flex flex-col">
+                      <img src="/farha-logo-full.svg" alt="Farha Logo" className="h-12 w-auto object-contain object-left mb-3" />
+                      <p className="text-emerald-800 font-bold text-[15px] tracking-wide">Platform Land Arrangement Umrah</p>
+                    </div>
+                    <div className="text-right text-xs text-slate-600 space-y-1">
+                      <p className="font-bold text-slate-800 text-sm">PT. Farha Inovasi Mandiri</p>
+                      <p>Gedung Office 8, SCBD, Jakarta Selatan</p>
+                      <p>Telp: +62 811 1234 5678</p>
+                      <p>Email: info@farha.id | Web: www.farha.id</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Makkah Hotels Table */}
+                <div>
+                  <h4 className="text-xl font-bold mb-4 text-emerald-700 dark:text-emerald-500">Makkah Hotels</h4>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm text-left border-collapse whitespace-nowrap">
+                      <thead className="text-xs text-white bg-slate-800 uppercase">
+                        <tr>
+                          <th className="px-4 py-3 border border-slate-700 text-center">No</th>
+                          <th className="px-4 py-3 border border-slate-700 text-center">Periode</th>
+                          <th className="px-4 py-3 border border-slate-700">Hotel</th>
+                          <th className="px-4 py-3 border border-slate-700 text-center">Meals</th>
+                          <th className="px-4 py-3 border border-slate-700 text-center">Double</th>
+                          <th className="px-4 py-3 border border-slate-700 text-center">Triple</th>
+                          <th className="px-4 py-3 border border-slate-700 text-center">Quad</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {MAKKAH_HOTELS.map((hotel: any, idx: number) => (
+                          hotel.periods?.map((period: any, pIdx: number) => (
+                            <tr key={`${idx}-${pIdx}`} className="border-b border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors">
+                              {pIdx === 0 && (
+                                <td rowSpan={hotel.periods.length} className="px-4 py-2 border-r border-slate-200 dark:border-slate-800 font-medium text-center align-top">
+                                  {idx + 1}
+                                </td>
+                              )}
+                              <td className="px-4 py-2 text-center border-r border-slate-200 dark:border-slate-800">
+                                <div className="flex flex-col text-xs whitespace-nowrap">
+                                  <span className="font-medium text-slate-800 dark:text-slate-200">{formatDate(period.from)} - {formatDate(period.to)}</span>
+                                </div>
+                              </td>
+                              {pIdx === 0 && (
+                                <td rowSpan={hotel.periods.length} className="px-4 py-2 border-r border-slate-200 dark:border-slate-800 font-medium align-top">
+                                  {hotel.name} <span className="text-xs text-slate-500">({hotel.stars}★)</span>
+                                </td>
+                              )}
+                              <td className="px-4 py-2 text-center border-r border-slate-200 dark:border-slate-800">{period.meals || "-"}</td>
+                              <td className="px-4 py-2 text-center font-bold text-emerald-600 dark:text-emerald-400 border-r border-slate-200 dark:border-slate-800">{period.rates?.double || "-"}</td>
+                              <td className="px-4 py-2 text-center font-bold text-emerald-600 dark:text-emerald-400 border-r border-slate-200 dark:border-slate-800">{period.rates?.triple || "-"}</td>
+                              <td className="px-4 py-2 text-center font-bold text-emerald-600 dark:text-emerald-400">{period.rates?.quad || "-"}</td>
+                            </tr>
+                          ))
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* Madinah Hotels Table */}
+                <div>
+                  <h4 className="text-xl font-bold mb-4 text-emerald-700 dark:text-emerald-500">Madinah Hotels</h4>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm text-left border-collapse whitespace-nowrap">
+                      <thead className="text-xs text-white bg-slate-800 uppercase">
+                        <tr>
+                          <th className="px-4 py-3 border border-slate-700 text-center">No</th>
+                          <th className="px-4 py-3 border border-slate-700 text-center">Periode</th>
+                          <th className="px-4 py-3 border border-slate-700">Hotel</th>
+                          <th className="px-4 py-3 border border-slate-700 text-center">Meals</th>
+                          <th className="px-4 py-3 border border-slate-700 text-center">Double</th>
+                          <th className="px-4 py-3 border border-slate-700 text-center">Triple</th>
+                          <th className="px-4 py-3 border border-slate-700 text-center">Quad</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {MADINAH_HOTELS.map((hotel: any, idx: number) => (
+                          hotel.periods?.map((period: any, pIdx: number) => (
+                            <tr key={`${idx}-${pIdx}`} className="border-b border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors">
+                              {pIdx === 0 && (
+                                <td rowSpan={hotel.periods.length} className="px-4 py-2 border-r border-slate-200 dark:border-slate-800 font-medium text-center align-top">
+                                  {idx + 1}
+                                </td>
+                              )}
+                              <td className="px-4 py-2 text-center border-r border-slate-200 dark:border-slate-800">
+                                <div className="flex flex-col text-xs whitespace-nowrap">
+                                  <span className="font-medium text-slate-800 dark:text-slate-200">{formatDate(period.from)} - {formatDate(period.to)}</span>
+                                </div>
+                              </td>
+                              {pIdx === 0 && (
+                                <td rowSpan={hotel.periods.length} className="px-4 py-2 border-r border-slate-200 dark:border-slate-800 font-medium align-top">
+                                  {hotel.name} <span className="text-xs text-slate-500">({hotel.stars}★)</span>
+                                </td>
+                              )}
+                              <td className="px-4 py-2 text-center border-r border-slate-200 dark:border-slate-800">{period.meals || "-"}</td>
+                              <td className="px-4 py-2 text-center font-bold text-emerald-600 dark:text-emerald-400 border-r border-slate-200 dark:border-slate-800">{period.rates?.double || "-"}</td>
+                              <td className="px-4 py-2 text-center font-bold text-emerald-600 dark:text-emerald-400 border-r border-slate-200 dark:border-slate-800">{period.rates?.triple || "-"}</td>
+                              <td className="px-4 py-2 text-center font-bold text-emerald-600 dark:text-emerald-400">{period.rates?.quad || "-"}</td>
+                            </tr>
+                          ))
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <div className="p-4 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-3">
+              <Button onClick={() => setShowHotelPricingModal(false)} className="bg-slate-200 hover:bg-slate-300 text-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-white">Tutup</Button>
+              <Button
+                disabled={isDownloadingPdf}
+                onClick={() => handleDownloadPdf('hotel-pricing-table-container', 'estimasi-harga-hotel.pdf')}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2 min-w-[140px]"
+              >
+                {isDownloadingPdf ? (
+                  <>
+                    <div className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                    <span>Memproses...</span>
+                  </>
+                ) : (
+                  "Download PDF"
+                )}
+              </Button>
             </div>
           </div>
         </div>

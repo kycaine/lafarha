@@ -29,10 +29,10 @@ const caveat = Caveat({
 });
 
 export const metadata: Metadata = {
-  title: "FARHA — Platform Land Arrangement Umrah",
+  title: "FARHA | Platform LA Umrah",
   description: "Platform B2B Land Arrangement Umrah terpercaya untuk travel agent di Indonesia.",
   openGraph: {
-    title: "FARHA — Platform Land Arrangement Umrah",
+    title: "FARHA | Platform LA Umrah",
     description: "Platform B2B Land Arrangement Umrah terpercaya untuk travel agent di Indonesia.",
     images: [
       {
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "FARHA — Platform Land Arrangement Umrah",
+    title: "FARHA | Platform LA Umrah",
     description: "Platform B2B Land Arrangement Umrah terpercaya untuk travel agent di Indonesia.",
     images: ["/farha-logo-full.jpeg", "/farha-logo-only.jpeg"],
   },

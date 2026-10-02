@@ -1,28 +1,14 @@
 "use client";
 
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight, Building2, Bus, Plane, Ticket, Briefcase, Star, Map, Phone, Mail, MapPin, Menu, X, User, FileText } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/shared/AuthContext";
 import { signOut } from "@/lib/auth";
 import { useRouter } from "next/navigation";
+import articles from "@/contents/blog/articles.json";
 
-// ── Monochrome SVG icons ──────────────────────────────────────────────────────
-const IcoHotel = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>;
-const IcoBus = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="3" width="15" height="13" rx="2" /><path d="M16 8h4l3 3v5h-7V8z" /><circle cx="5.5" cy="18.5" r="2.5" /><circle cx="18.5" cy="18.5" r="2.5" /></svg>;
-const IcoFlight = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19.5 2.5S18 2 16.5 3.5L13 7 4.8 5.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z" /></svg>;
-const IcoVisa = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2" /><path d="M2 10h20" /></svg>;
-const IcoHandling = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M6 20h0a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h0"/><path d="M8 18V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v14"/><path d="M10 20h4"/><circle cx="16" cy="20" r="2"/><circle cx="8" cy="20" r="2"/></svg>;
-const IcoStar = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>;
-const IcoGuide = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 00-3-3.87" /><path d="M16 3.13a4 4 0 010 7.75" /></svg>;
-const IcoBuilding = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="1" /><path d="M9 3v18M3 9h18M3 15h18" /></svg>;
-const IcoPhone = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z" /></svg>;
-const IcoMail = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="M2 7l10 7 10-7" /></svg>;
-const IcoPin = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" /></svg>;
-const IcoMenu = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>;
-const IcoClose = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>;
-
-type IconComp = () => React.JSX.Element;
+type IconComp = React.FC<any>;
 
 // ── Dropdown definitions ──────────────────────────────────────────────────────
 const NAV_LINKS: { label: string; href: string; dropdown: { label: string; desc: string; href: string; Icon: IconComp }[] }[] = [
@@ -30,48 +16,58 @@ const NAV_LINKS: { label: string; href: string; dropdown: { label: string; desc:
     label: "Layanan",
     href: "#layanan",
     dropdown: [
-      { label: "Akomodasi Hotel", desc: "Bintang 3–5 Makkah & Madinah", href: "#product", Icon: IcoHotel },
-      { label: "Transportasi Darat", desc: "Bus & coaster premium", href: "#product", Icon: IcoBus },
-      { label: "Tiket Penerbangan", desc: "Garuda & Arab airlines", href: "#product", Icon: IcoFlight },
-      { label: "Visa & Dokumen", desc: "Pengurusan resmi & cepat", href: "#product", Icon: IcoVisa },
-      { label: "Layanan Tambahan", desc: "Ziarah, VIP handling, guide", href: "#product", Icon: IcoStar },
-      { label: "Muthawif & Guide", desc: "Pembimbing bersertifikat KEMENAG", href: "#product", Icon: IcoGuide },
+      { label: "Akomodasi Hotel", desc: "Bintang 3–5 Makkah & Madinah", href: "#product", Icon: Building2 },
+      { label: "Transportasi Darat", desc: "Bus & coaster premium", href: "#product", Icon: Bus },
+      { label: "Tiket Penerbangan", desc: "Garuda & Arab airlines", href: "#product", Icon: Plane },
+      { label: "Visa & Dokumen", desc: "Pengurusan resmi & cepat", href: "#product", Icon: Ticket },
+      { label: "Layanan Tambahan", desc: "Ziarah, VIP handling, guide", href: "#product", Icon: Star },
+      { label: "Muthawif & Guide", desc: "Pembimbing bersertifikat KEMENAG", href: "#product", Icon: Map },
     ],
   },
   {
     label: "Produk",
     href: "/products",
     dropdown: [
-      { label: "Hotel", desc: "Pemesanan Hotel Bintang 3-5", href: "/products", Icon: IcoHotel },
-      { label: "Tkt Pesawat Intr", desc: "Penerbangan Internasional", href: "/products", Icon: IcoFlight },
-      { label: "Tkt Pesawat Domestik", desc: "Penerbangan Domestik", href: "/products", Icon: IcoFlight },
-      { label: "Transportasi", desc: "Transportasi Bus & Mobil", href: "/products", Icon: IcoBus },
-      { label: "Visa", desc: "Pengurusan Visa Umrah", href: "/products", Icon: IcoVisa },
-      { label: "Visa & Transportasi", desc: "Paket bundling lengkap", href: "/products", Icon: IcoBus },
+      { label: "Hotel", desc: "Pemesanan Hotel Bintang 3-5", href: "/products", Icon: Building2 },
+      { label: "Tkt Pesawat Intr", desc: "Penerbangan Internasional", href: "/products", Icon: Plane },
+      { label: "Tkt Pesawat Domestik", desc: "Penerbangan Domestik", href: "/products", Icon: Plane },
+      { label: "Transportasi", desc: "Transportasi Bus & Mobil", href: "/products", Icon: Bus },
+      { label: "Visa", desc: "Pengurusan Visa Umrah", href: "/products", Icon: Ticket },
+      { label: "Visa & Transportasi", desc: "Paket bundling lengkap", href: "/products", Icon: Bus },
     ],
   },
   {
     label: "Blog",
     href: "/blog",
+    dropdown: articles.slice(0, 5).map(article => ({
+      label: article.title.length > 25 ? article.title.substring(0, 25) + "..." : article.title,
+      desc: article.category,
+      href: `/blog/${article.id}`,
+      Icon: FileText
+    })),
+  },
+  {
+    label: "Galeri",
+    href: "/galeri",
     dropdown: [],
   },
   {
     label: "Kontak",
     href: "#footer",
     dropdown: [
-      { label: "WhatsApp", desc: "+62 812 3456 7890", href: "#footer", Icon: IcoPhone },
-      { label: "Email", desc: "info@farha.id", href: "#footer", Icon: IcoMail },
-      { label: "Kantor Jakarta", desc: "Jakarta Selatan, Indonesia", href: "#footer", Icon: IcoPin },
+      { label: "WhatsApp", desc: "+62 812 3456 7890", href: "#footer", Icon: Phone },
+      { label: "Email", desc: "info@farha.id", href: "#footer", Icon: Mail },
+      { label: "Kantor Jakarta", desc: "Jakarta Selatan, Indonesia", href: "#footer", Icon: MapPin },
     ],
   },
   {
     label: "Mitra",
     href: "#mitra",
     dropdown: [
-      { label: "Mitra Maskapai", desc: "Garuda, Saudi Airlines & lainnya", href: "#mitra", Icon: IcoFlight },
-      { label: "Mitra Hotel", desc: "Pullman, Movenpick & premium lainnya", href: "#mitra", Icon: IcoHotel },
-      { label: "Mitra Transportasi", desc: "Naqaba & armada terpercaya", href: "#mitra", Icon: IcoBus },
-      { label: "Institusi Resmi", desc: "KEMENAG RI & Al Rajhi Bank", href: "#mitra", Icon: IcoBuilding },
+      { label: "Mitra Maskapai", desc: "Garuda, Saudi Airlines & lainnya", href: "#mitra", Icon: Plane },
+      { label: "Mitra Hotel", desc: "Pullman, Movenpick & premium lainnya", href: "#mitra", Icon: Building2 },
+      { label: "Mitra Transportasi", desc: "Naqaba & armada terpercaya", href: "#mitra", Icon: Bus },
+      { label: "Institusi Resmi", desc: "KEMENAG RI & Al Rajhi Bank", href: "#mitra", Icon: Building2 },
     ],
   },
 ];
@@ -230,11 +226,11 @@ function BannerWidget() {
   const [visaType, setVisaType] = useState("Umrah");
 
   const TABS = [
-    { label: "Hotel", icon: <IcoHotel /> },
-    { label: "Tkt Pesawat", icon: <IcoFlight /> },
-    { label: "Transportasi", icon: <IcoBus /> },
-    { label: "Visa", icon: <IcoVisa /> },
-    { label: "Handling", icon: <IcoHandling /> },
+    { label: "Hotel", icon: <Building2 /> },
+    { label: "Tkt Pesawat", icon: <Plane /> },
+    { label: "Transportasi", icon: <Bus /> },
+    { label: "Visa", icon: <Ticket /> },
+    { label: "Handling", icon: <Briefcase /> },
   ];
 
 
@@ -270,7 +266,7 @@ function BannerWidget() {
             <div className="relative col-span-1 md:col-span-1 border border-slate-200 rounded-xl px-4 py-3 hover:border-[#C9A84C] focus-within:border-[#C9A84C] transition-colors cursor-pointer group flex flex-col justify-center">
               <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Kota & Area</p>
               <div className="flex items-center gap-2 text-slate-800">
-                <IcoPin />
+                <MapPin className="w-4 h-4" />
                 <span className="text-sm font-semibold truncate group-hover:text-[#8B6914] transition-colors">{hotelCity}</span>
                 <ChevronDown className="w-4 h-4 text-slate-400 ml-auto" />
               </div>
@@ -312,7 +308,7 @@ function BannerWidget() {
             <div className="relative col-span-1 md:col-span-1 border border-slate-200 rounded-xl px-4 py-3 hover:border-[#C9A84C] focus-within:border-[#C9A84C] transition-colors cursor-pointer group flex flex-col justify-center">
               <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Rute Penerbangan</p>
               <div className="flex items-center gap-2 text-slate-800">
-                <IcoFlight />
+                <Plane className="w-4 h-4" />
                 <span className="text-sm font-semibold truncate group-hover:text-[#8B6914] transition-colors">{flightRoute}</span>
                 <ChevronDown className="w-4 h-4 text-slate-400 ml-auto" />
               </div>
@@ -377,7 +373,7 @@ function BannerWidget() {
             <div className="relative col-span-1 md:col-span-1 border border-slate-200 rounded-xl px-4 py-3 hover:border-[#C9A84C] focus-within:border-[#C9A84C] transition-colors cursor-pointer group flex flex-col justify-center">
               <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Jenis Visa</p>
               <div className="flex items-center gap-2 text-slate-800">
-                <IcoVisa />
+                <Ticket className="w-4 h-4" />
                 <span className="text-sm font-semibold truncate group-hover:text-[#8B6914] transition-colors">{visaType}</span>
                 <ChevronDown className="w-4 h-4 text-slate-400 ml-auto" />
               </div>
@@ -395,7 +391,7 @@ function BannerWidget() {
             <label className="col-span-1 md:col-span-1 border border-slate-200 rounded-xl px-4 py-3 hover:border-[#C9A84C] focus-within:border-[#C9A84C] transition-colors cursor-text group flex flex-col justify-center">
               <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Jumlah Pax</p>
               <div className="flex items-center gap-2 text-slate-800">
-                <IconUser />
+                <User className="w-4 h-4" />
                 <input
                   type="number"
                   min="1"
@@ -446,12 +442,15 @@ function BannerWidget() {
             );
           })}
 
+          {/* Separator / Sekat */}
+          <div className="w-px h-12 bg-slate-200 self-center mx-1 sm:mx-2 shrink-0 rounded-full" />
+
           {/* Lihat 10+ produk lainnya - Tab */}
           <Link href="/products" className="flex flex-col items-center gap-2 px-4 py-2 min-w-[90px] transition-all border-b-2 border-transparent text-slate-400 hover:text-slate-800 group">
             <div className="p-2.5 rounded-full bg-slate-50 transition-colors group-hover:bg-slate-100 [&>svg]:w-6 [&>svg]:h-6">
-              <IcoMenu />
+              <Menu />
             </div>
-            <span className="text-[11px] sm:text-xs font-bold whitespace-nowrap">Lihat 10+ produk lainnya</span>
+            <span className="text-[11px] sm:text-xs font-bold whitespace-nowrap text-center">Lihat 10++ <br></br> produk lainnya</span>
           </Link>
         </div>
 
@@ -470,13 +469,14 @@ function BannerWidget() {
           </div>
         </div>
 
-        {/* Trusted by bottom text */}
-        <div className="flex items-center justify-center gap-4 pt-2">
-          <span className="text-xs text-slate-400 font-medium italic">Partner Resmi:</span>
-          <div className="flex gap-4 opacity-50 grayscale">
-            <span className="text-xs font-bold text-slate-700">KEMENAG RI</span>
-            <span className="text-xs font-bold text-slate-700">SAUDIA AIRLINES</span>
+        {/* Info/Warning text */}
+        <div className="flex items-center justify-center gap-1.5 pt-2 pb-0">
+          <div className="bg-amber-100/80 p-1 rounded text-amber-700 shrink-0">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
           </div>
+          <span className="text-[11px] sm:text-xs text-slate-400/90 font-medium whitespace-nowrap">
+            Pastikan data pencarian diisi dengan benar.
+          </span>
         </div>
       </div>
     </div>
@@ -529,7 +529,7 @@ export default function BannerSection() {
     paddingRight: scrolled ? "20px" : "32px",
     backgroundColor: scrolled ? "rgba(28,28,30,0.96)" : "transparent",
     boxShadow: scrolled
-      ? "0 20px 60px rgba(0,0,0,0.25), 0 0 0 1px rgba(255,255,255,0.06)"
+      ? "0 20px 60px rgba(0,0,0,0.25), 0 0 0 1px rgba(201, 168, 76, 0.6)"
       : "none",
     backdropFilter: scrolled ? "blur(24px) saturate(1.5)" : "none",
     WebkitBackdropFilter: scrolled ? "blur(24px) saturate(1.5)" : "none",
@@ -557,7 +557,7 @@ export default function BannerSection() {
                   filter: "drop-shadow(0px 4px 10px rgba(0, 0, 0, 0.95)) drop-shadow(0px 2px 6px rgba(0, 0, 0, 0.9))",
                 }}
               />
-              <div className="flex flex-col justify-center" style={{ lineHeight: "1.1" }}>
+              <div className="hidden sm:flex flex-col justify-center" style={{ lineHeight: "1.1" }}>
                 <span
                   className="font-bold tracking-wide block"
                   style={{
@@ -620,7 +620,7 @@ export default function BannerSection() {
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <IconUser />
+                        <User className="w-5 h-5" />
                       )}
                     </div>
 
@@ -704,7 +704,7 @@ export default function BannerSection() {
                     }}
                     title="Login"
                   >
-                    <IconUser />
+                    <User className="w-6 h-6" />
                   </button>
                 </Link>
               )}
@@ -716,7 +716,7 @@ export default function BannerSection() {
                 onClick={() => setMobileMenuOpen(true)}
                 className="p-2 transition-colors duration-300 text-white"
               >
-                <IcoMenu />
+                <Menu className="w-6 h-6" />
               </button>
             </div>
           </div>
@@ -768,7 +768,7 @@ export default function BannerSection() {
           ) : (
             <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3">
               <button className="w-full py-3 bg-gradient-to-r from-[#C9A84C] to-[#8B6914] text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow-md shadow-[#C9A84C]/20 hover:-translate-y-0.5 transition-all">
-                <IconUser /> Sign In
+                <User className="w-5 h-5" /> Sign In
               </button>
             </Link>
           )}
@@ -780,7 +780,7 @@ export default function BannerSection() {
         <section
           ref={heroRef}
           id="banner"
-          className="relative min-h-[80vh] flex flex-col bg-slate-900 justify-between pt-24"
+          className="relative min-h-[60vh] sm:min-h-[80vh] flex flex-col bg-slate-900 justify-between pt-12 sm:pt-24"
         >
           {/* Background Image */}
           <div
@@ -792,7 +792,7 @@ export default function BannerSection() {
           </div>
 
           {/* Bottom-anchored content & Widget */}
-          <div className="relative z-10 flex flex-col items-center justify-end w-full flex-1 pt-24 pb-0">
+          <div className="relative z-10 flex flex-col items-center justify-end w-full flex-1 pt-4 sm:pt-24 pb-0">
 
             {/* Text */}
             <div className="text-center px-4 max-w-4xl mx-auto flex flex-col gap-1 sm:gap-2 m-0 p-0">

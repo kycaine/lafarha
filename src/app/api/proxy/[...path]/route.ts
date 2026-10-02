@@ -11,7 +11,12 @@ export const DELETE = handleProxy;
 export const OPTIONS = handleProxy;
 
 async function handleProxy(req: NextRequest) {
-  const API_WORKER_URL = process.env.NEXT_PUBLIC_API_URL || "https://la-dev-api.rizkyap90s.workers.dev";
+  // Default to local wrangler dev server in development, otherwise point to the deployed worker
+  const defaultApiUrl = process.env.NODE_ENV === "development" 
+    ? "http://127.0.0.1:8787" 
+    : "https://dev-farha-worker.farhala.workers.dev";
+    
+  const API_WORKER_URL = process.env.NEXT_PUBLIC_API_URL || defaultApiUrl;
   const API_SECRET_KEY = process.env.API_SECRET_KEY || "super_secret_api_key_for_backend_worker";
 
   if (!API_WORKER_URL || !API_SECRET_KEY) {

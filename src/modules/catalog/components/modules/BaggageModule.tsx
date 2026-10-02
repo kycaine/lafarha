@@ -4,12 +4,15 @@ import { Input } from "@/components/ui/input";
 import { SearchableSelect, DatePickerNative, CatalogModuleProps } from "../UtilsCatalog";
 
 // Data imports
-import hotelData from "@/data/data-product/hotel.json";
-import transportData from "@/data/data-product/transport.json";
-import airportData from "@/data/data-product/airport.json";
-import visaData from "@/data/data-product/visa.json";
+import hotelData from "@/contents/products/hotel.json";
+import transportData from "@/contents/products/transport.json";
+import airportData from "@/contents/products/airport.json";
+import visaData from "@/contents/products/visa.json";
 
-const { hotelOptions: HOTEL_OPTIONS } = hotelData;
+const HOTEL_OPTIONS = [
+  ...(hotelData.makkah_hotels || []).map(h => ({ location: "Mekah", name: h.name, star: h.stars })),
+  ...(hotelData.madinah_hotels || []).map(h => ({ location: "Madinah", name: h.name, star: h.stars }))
+];
 const { airportOptions: AIRPORT_OPTIONS } = airportData;
 const {
   transportPrices: TRANSPORT_PRICES,

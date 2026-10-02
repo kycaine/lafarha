@@ -1,75 +1,25 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Building2, Bus, Plane, Ticket, Star, Map } from "lucide-react";
+import servicesData from "../../../contents/service/service.json";
 
-// ── Monochrome SVG icons ──────────────────────────────────────────────────────
-const IconHotel = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>;
-const IconBus = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="3" width="15" height="13" rx="2" /><path d="M16 8h4l3 3v5h-7V8z" /><circle cx="5.5" cy="18.5" r="2.5" /><circle cx="18.5" cy="18.5" r="2.5" /></svg>;
-const IconFlight = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19.5 2.5S18 2 16.5 3.5L13 7 4.8 5.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z" /></svg>;
-const IconVisa = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2" /><path d="M2 10h20" /></svg>;
-const IconStar = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>;
-const IconGuide = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 00-3-3.87" /><path d="M16 3.13a4 4 0 010 7.75" /></svg>;
+const iconMap: Record<string, React.FC<any>> = {
+  Building2,
+  Bus,
+  Plane,
+  Ticket,
+  Star,
+  Map,
+};
 
-const PRODUCTS = [
-  {
-    id: "hotel",
-    Icon: IconHotel,
-    title: "Akomodasi Hotel",
-    tag: "Bintang 3–5",
-    desc: "Hotel bintang 3 hingga 5 di Makkah & Madinah, dekat Masjidil Haram. Pilihan kamar fleksibel.",
-    features: ["Lokasi <500m dari Haram", "Zona & jarak walking", "Konfigurasi PAX fleksibel", "Real-time availability"],
-    accent: "#C9A84C",
-  },
-  {
-    id: "transport",
-    Icon: IconBus,
-    title: "Transportasi Darat",
-    tag: "Bus & Coaster",
-    desc: "Armada bus besar dan coaster premium untuk mobilitas jamaah selama ibadah di tanah suci.",
-    features: ["Bus besar & coaster premium", "Rute Makkah–Madinah–Jeddah", "Pengemudi berpengalaman", "AC terjamin"],
-    accent: "#C9A84C",
-  },
-  {
-    id: "flight",
-    Icon: IconFlight,
-    title: "Tiket Penerbangan",
-    tag: "Internasional & Domestik",
-    desc: "Tiket penerbangan PP dari berbagai kota di Indonesia ke Jeddah atau Madinah.",
-    features: ["Penerbangan dari 15+ kota", "Maskapai pilihan terpercaya", "Penjadwalan grup", "Handling bagasi"],
-    accent: "#C9A84C",
-  },
-  {
-    id: "visa",
-    Icon: IconVisa,
-    title: "Visa & Dokumen",
-    tag: "Proses Resmi",
-    desc: "Pengurusan visa Umrah resmi via agen terakreditasi. Dokumen lengkap, proses cepat.",
-    features: ["Visa resmi Saudi Arabia", "Proses 3–7 hari kerja", "Tracking real-time", "Dokumen manifest"],
-    accent: "#C9A84C",
-  },
-  {
-    id: "addon",
-    Icon: IconStar,
-    title: "Layanan Tambahan",
-    tag: "Add-on Premium",
-    desc: "Layanan pelengkap: ziarah tambahan, handling VIP, tour guide privat, dan souvenir.",
-    features: ["Ziarah Makkah & Madinah", "Tour guide privat", "Handling VIP airport", "Souvenir & perlengkapan"],
-    accent: "#C9A84C",
-  },
-  {
-    id: "muthawif",
-    Icon: IconGuide,
-    title: "Muthawif & Guide",
-    tag: "Pembimbing Profesional",
-    desc: "Muthawif berpengalaman membimbing jamaah dalam setiap rukun dan sunnah ibadah Umrah.",
-    features: ["Bersertifikat KEMENAG", "Rasio 1:45 jamaah", "Bilingual Indonesia–Arab", "Siaga 24/7"],
-    accent: "#C9A84C",
-  },
-];
+const SERVICES = servicesData.map((service) => ({
+  ...service,
+  Icon: iconMap[service.icon] || Star,
+}));
 
-export default function ProductSection() {
-  const [currentIndex, setCurrentIndex] = useState(PRODUCTS.length);
+export default function ServiceSection() {
+  const [currentIndex, setCurrentIndex] = useState(SERVICES.length);
   const [isTransitioning, setIsTransitioning] = useState(true);
 
   useEffect(() => {
@@ -93,10 +43,10 @@ export default function ProductSection() {
   const handleTransitionEnd = () => {
     if (currentIndex <= 0) {
       setIsTransitioning(false);
-      setCurrentIndex(PRODUCTS.length);
-    } else if (currentIndex >= PRODUCTS.length * 2) {
+      setCurrentIndex(SERVICES.length);
+    } else if (currentIndex >= SERVICES.length * 2) {
       setIsTransitioning(false);
-      setCurrentIndex(PRODUCTS.length);
+      setCurrentIndex(SERVICES.length);
     }
   };
 
@@ -109,7 +59,7 @@ export default function ProductSection() {
     }
   }, [isTransitioning]);
 
-  const displayProducts = [...PRODUCTS, ...PRODUCTS, ...PRODUCTS];
+  const displayServices = [...SERVICES, ...SERVICES, ...SERVICES];
 
   return (
     <section id="product" className="relative bg-white pt-10 pb-32 overflow-hidden">
@@ -124,7 +74,7 @@ export default function ProductSection() {
         <div className="text-center mb-10">
 
           <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight mb-5">
-            Semua Kebutuhan Umrah{" "}
+            Kebutuhan Umrah{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C9A84C] to-[#E8C96C]">
               Dalam Satu Platform
             </span>
@@ -186,7 +136,7 @@ export default function ProductSection() {
             '--transition': isTransitioning ? 'transform 0.5s ease-in-out' : 'none'
           } as any}>
             <div className="slider-track" onTransitionEnd={handleTransitionEnd}>
-              {displayProducts.map((p, i) => (
+              {displayServices.map((p, i) => (
                 <div key={p.id + '-' + i} className="slider-item">
                   <div className="group relative rounded-2xl border-2 border-[#C9A84C] bg-white overflow-hidden cursor-default h-full transition-colors">
                     {/* Inner content — this scales up on hover, clipped by card overflow-hidden */}

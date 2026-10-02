@@ -16,8 +16,15 @@ export default function MitraSection() {
     load();
   }, []);
 
+  // Ensure the array is large enough so that one group spans wider than any screen.
+  // If there's only 1 item, it needs to be duplicated many times.
+  let groupMitras = [...mitras];
+  while (groupMitras.length > 0 && groupMitras.length < 24) {
+    groupMitras = [...groupMitras, ...mitras];
+  }
+
   return (
-    <section id="mitra" className="relative bg-slate-50 py-32 overflow-hidden">
+    <section id="mitra" className="relative bg-slate-50 py-16 md:py-20 overflow-hidden">
       {/* BG glow */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-amber-100/60 blur-3xl rounded-full" />
@@ -25,7 +32,7 @@ export default function MitraSection() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-6">
         {/* Section header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-8">
 
           <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight mb-4">
             Didukung Oleh{" "}
@@ -39,23 +46,121 @@ export default function MitraSection() {
         </div>
       </div>
 
+      <style>{`
+        .mitra-slider-container {
+          display: flex;
+          width: max-content;
+          animation: loop-slide 100s linear infinite;
+        }
+
+        .mitra-slider-container.reverse {
+          animation-direction: reverse;
+        }
+        
+        .mitra-slider-container:hover {
+          animation-play-state: paused;
+        }
+
+        @keyframes loop-slide {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+      `}</style>
+
       {/* Mitra logo container */}
-      <div className="relative z-10 w-[90vw] mx-auto mt-8">
-        <div className="flex items-center justify-center flex-wrap gap-8 md:gap-16 py-8">
-          {mitras.map((m, idx) => (
-            <div
-              key={`${m.id}-${idx}`}
-              className="flex-none flex items-center justify-center opacity-50 hover:opacity-100 transition-all duration-500 grayscale hover:grayscale-0 cursor-pointer"
-            >
-              {m.foto ? (
-                <img src={m.foto} alt={m.nama} className="h-32 md:h-48 w-auto object-contain drop-shadow-sm" />
-              ) : (
-                <div className="text-3xl md:text-5xl font-bold text-slate-400 whitespace-nowrap">
-                  {m.nama}
-                </div>
-              )}
-            </div>
-          ))}
+      <div className="relative z-10 w-full overflow-hidden mt-2 pb-4 flex flex-col gap-0 md:gap-1">
+        {/* Row 1: Moves Left */}
+        <div className="mitra-slider-container">
+          {/* Group 1 */}
+          <div className="flex items-center gap-4 md:gap-8 pr-4 md:pr-8 w-max flex-shrink-0">
+            {groupMitras.map((m, idx) => (
+              <div
+                key={`g1-r1-${m.id}-${idx}`}
+                className="flex-none flex items-center justify-center opacity-50 hover:opacity-100 transition-all duration-500 grayscale hover:grayscale-0 cursor-pointer"
+              >
+                {m.foto ? (
+                  <div className="w-32 md:w-48 h-20 md:h-28 flex items-center justify-center">
+                    <img src={m.foto} alt={m.nama} className="max-w-full max-h-full object-contain drop-shadow-sm" />
+                  </div>
+                ) : (
+                  <div className="w-32 md:w-48 h-20 md:h-28 flex items-center justify-center">
+                    <div className="text-3xl md:text-5xl font-bold text-slate-400 whitespace-nowrap">
+                      {m.nama}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Group 2 */}
+          <div className="flex items-center gap-4 md:gap-8 pr-4 md:pr-8 w-max flex-shrink-0">
+            {groupMitras.map((m, idx) => (
+              <div
+                key={`g2-r1-${m.id}-${idx}`}
+                className="flex-none flex items-center justify-center opacity-50 hover:opacity-100 transition-all duration-500 grayscale hover:grayscale-0 cursor-pointer"
+              >
+                {m.foto ? (
+                  <div className="w-32 md:w-48 h-20 md:h-28 flex items-center justify-center">
+                    <img src={m.foto} alt={m.nama} className="max-w-full max-h-full object-contain drop-shadow-sm" />
+                  </div>
+                ) : (
+                  <div className="w-32 md:w-48 h-20 md:h-28 flex items-center justify-center">
+                    <div className="text-3xl md:text-5xl font-bold text-slate-400 whitespace-nowrap">
+                      {m.nama}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Row 2: Moves Right */}
+        <div className="mitra-slider-container reverse">
+          {/* Group 1 */}
+          <div className="flex items-center gap-4 md:gap-8 pr-4 md:pr-8 w-max flex-shrink-0">
+            {groupMitras.map((m, idx) => (
+              <div
+                key={`g1-r2-${m.id}-${idx}`}
+                className="flex-none flex items-center justify-center opacity-50 hover:opacity-100 transition-all duration-500 grayscale hover:grayscale-0 cursor-pointer"
+              >
+                {m.foto ? (
+                  <div className="w-32 md:w-48 h-20 md:h-28 flex items-center justify-center">
+                    <img src={m.foto} alt={m.nama} className="max-w-full max-h-full object-contain drop-shadow-sm" />
+                  </div>
+                ) : (
+                  <div className="w-32 md:w-48 h-20 md:h-28 flex items-center justify-center">
+                    <div className="text-3xl md:text-5xl font-bold text-slate-400 whitespace-nowrap">
+                      {m.nama}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Group 2 */}
+          <div className="flex items-center gap-4 md:gap-8 pr-4 md:pr-8 w-max flex-shrink-0">
+            {groupMitras.map((m, idx) => (
+              <div
+                key={`g2-r2-${m.id}-${idx}`}
+                className="flex-none flex items-center justify-center opacity-50 hover:opacity-100 transition-all duration-500 grayscale hover:grayscale-0 cursor-pointer"
+              >
+                {m.foto ? (
+                  <div className="w-32 md:w-48 h-20 md:h-28 flex items-center justify-center">
+                    <img src={m.foto} alt={m.nama} className="max-w-full max-h-full object-contain drop-shadow-sm" />
+                  </div>
+                ) : (
+                  <div className="w-32 md:w-48 h-20 md:h-28 flex items-center justify-center">
+                    <div className="text-3xl md:text-5xl font-bold text-slate-400 whitespace-nowrap">
+                      {m.nama}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
