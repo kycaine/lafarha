@@ -1,5 +1,6 @@
 {
   "defaultModuleSpecs": {
+    "PAKET_RAMADHAN": {},
     "FLIGHT": {
       "origin": "CGK",
       "destination": "JED",
@@ -60,6 +61,13 @@
     }
   },
   "products": [
+    {
+      "id": "PAKET_RAMADHAN",
+      "title": "Paket Ramadhan",
+      "icon": "MoonStar",
+      "requires_pax": 1,
+      "form_schema": "[]"
+    },
     {
       "id": "HOTEL",
       "title": "Hotel",

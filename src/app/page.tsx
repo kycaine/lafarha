@@ -19,7 +19,6 @@ export default function Home() {
       <BannerSection />
       <ServiceSection />
       <MitraSection />
-      <GallerySection />
       <BlogSection />
       <FooterSection />
       <RoleNavButtons />

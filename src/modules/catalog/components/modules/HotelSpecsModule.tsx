@@ -32,7 +32,7 @@ export function HotelSpecsModuleComponent({ srvId, mod, i, moduleSpecs, updateMo
       const renderLocationFields = (loc: "Mekah" | "Madinah") => {
         const isMekah = loc === "Mekah";
         const prefix = isMekah ? "mekah" : "madinah";
-        const isChecked = specs[isMekah ? "needsMekah" : "needsMadinah"];
+        const isChecked = mod?.locationOnly === loc ? true : specs[isMekah ? "needsMekah" : "needsMadinah"];
 
         if (!isChecked) return null;
 
@@ -112,39 +112,43 @@ export function HotelSpecsModuleComponent({ srvId, mod, i, moduleSpecs, updateMo
         );
       };
 
+      
       return (
         <div key={i} className="space-y-4">
-          <div className="flex flex-wrap gap-6 p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950">
-            <label className="flex items-center gap-3 cursor-pointer group">
-              <div className="relative flex items-center justify-center w-6 h-6">
-                <input
-                  type="checkbox"
-                  className="peer appearance-none w-6 h-6 rounded border-2 border-slate-300 dark:border-slate-600 checked:bg-emerald-500 checked:border-emerald-500 transition-all cursor-pointer"
-                  checked={specs.needsMekah}
-                  onChange={e => updateModuleSpec(srvId, 'needsMekah', e.target.checked)}
-                />
-                <Check className="absolute w-4 h-4 text-white opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity" />
-              </div>
-              <span className="font-semibold text-slate-700 dark:text-slate-300 group-hover:text-emerald-600 transition-colors">Hotel Mekah</span>
-            </label>
-            <label className="flex items-center gap-3 cursor-pointer group">
-              <div className="relative flex items-center justify-center w-6 h-6">
-                <input
-                  type="checkbox"
-                  className="peer appearance-none w-6 h-6 rounded border-2 border-slate-300 dark:border-slate-600 checked:bg-blue-500 checked:border-blue-500 transition-all cursor-pointer"
-                  checked={specs.needsMadinah}
-                  onChange={e => updateModuleSpec(srvId, 'needsMadinah', e.target.checked)}
-                />
-                <Check className="absolute w-4 h-4 text-white opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity" />
-              </div>
-              <span className="font-semibold text-slate-700 dark:text-slate-300 group-hover:text-blue-600 transition-colors">Hotel Madinah</span>
-            </label>
-          </div>
+          {!mod?.locationOnly && (
+            <div className="flex flex-wrap gap-6 p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950">
+              <label className="flex items-center gap-3 cursor-pointer group">
+                <div className="relative flex items-center justify-center w-6 h-6">
+                  <input
+                    type="checkbox"
+                    className="peer appearance-none w-6 h-6 rounded border-2 border-slate-300 dark:border-slate-600 checked:bg-emerald-500 checked:border-emerald-500 transition-all cursor-pointer"
+                    checked={specs.needsMekah}
+                    onChange={e => updateModuleSpec(srvId, 'needsMekah', e.target.checked)}
+                  />
+                  <Check className="absolute w-4 h-4 text-white opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity" />
+                </div>
+                <span className="font-semibold text-slate-700 dark:text-slate-300 group-hover:text-emerald-600 transition-colors">Hotel Mekah</span>
+              </label>
+              <label className="flex items-center gap-3 cursor-pointer group">
+                <div className="relative flex items-center justify-center w-6 h-6">
+                  <input
+                    type="checkbox"
+                    className="peer appearance-none w-6 h-6 rounded border-2 border-slate-300 dark:border-slate-600 checked:bg-blue-500 checked:border-blue-500 transition-all cursor-pointer"
+                    checked={specs.needsMadinah}
+                    onChange={e => updateModuleSpec(srvId, 'needsMadinah', e.target.checked)}
+                  />
+                  <Check className="absolute w-4 h-4 text-white opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity" />
+                </div>
+                <span className="font-semibold text-slate-700 dark:text-slate-300 group-hover:text-blue-600 transition-colors">Hotel Madinah</span>
+              </label>
+            </div>
+          )}
 
-          {renderLocationFields("Mekah")}
-          {renderLocationFields("Madinah")}
+          {(!mod?.locationOnly || mod.locationOnly === "Mekah") && renderLocationFields("Mekah")}
+          {(!mod?.locationOnly || mod.locationOnly === "Madinah") && renderLocationFields("Madinah")}
 
-          {!specs.needsMekah && !specs.needsMadinah && (
+          {!mod?.locationOnly && !specs.needsMekah && !specs.needsMadinah && (
+
             <div className="p-4 text-center text-sm text-amber-600 bg-amber-50 dark:bg-amber-900/10 dark:text-amber-400 rounded-xl border border-amber-200 dark:border-amber-800/30">
               Silakan pilih setidaknya satu lokasi hotel (Mekah atau Madinah).
             </div>

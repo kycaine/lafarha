@@ -56,10 +56,6 @@ export default function MitraSection() {
         .mitra-slider-container.reverse {
           animation-direction: reverse;
         }
-        
-        .mitra-slider-container:hover {
-          animation-play-state: paused;
-        }
 
         @keyframes loop-slide {
           0% { transform: translateX(0); }
@@ -68,7 +64,7 @@ export default function MitraSection() {
       `}</style>
 
       {/* Mitra logo container */}
-      <div className="relative z-10 w-full overflow-hidden mt-2 pb-4 flex flex-col gap-0 md:gap-1">
+      <div className="relative z-10 w-full overflow-hidden mt-2 pb-4 flex flex-col gap-1 md:gap-2">
         {/* Row 1: Moves Left */}
         <div className="mitra-slider-container">
           {/* Group 1 */}

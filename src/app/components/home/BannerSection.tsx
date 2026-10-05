@@ -28,12 +28,23 @@ const NAV_LINKS: { label: string; href: string; dropdown: { label: string; desc:
     label: "Produk",
     href: "/products",
     dropdown: [
+      { label: "Rancang Paket Umrah", desc: "Buat paket umrah Anda", href: "/packages", Icon: Building2 },
       { label: "Hotel", desc: "Pemesanan Hotel Bintang 3-5", href: "/products", Icon: Building2 },
       { label: "Tkt Pesawat Intr", desc: "Penerbangan Internasional", href: "/products", Icon: Plane },
       { label: "Tkt Pesawat Domestik", desc: "Penerbangan Domestik", href: "/products", Icon: Plane },
       { label: "Transportasi", desc: "Transportasi Bus & Mobil", href: "/products", Icon: Bus },
       { label: "Visa", desc: "Pengurusan Visa Umrah", href: "/products", Icon: Ticket },
       { label: "Visa & Transportasi", desc: "Paket bundling lengkap", href: "/products", Icon: Bus },
+    ],
+  },
+  {
+    label: "Paket",
+    href: "/packages",
+    dropdown: [
+      { label: "Paket Ekonomis", desc: "Mulai Rp 20 Jt", href: "/packages", Icon: Briefcase },
+      { label: "Paket Standard", desc: "Mulai Rp 26 Jt", href: "/packages", Icon: Star },
+      { label: "Standard + Turkey", desc: "Umrah plus Turkey", href: "/packages", Icon: Map },
+      { label: "Standard + China", desc: "Umrah plus China", href: "/packages", Icon: Map },
     ],
   },
   {
@@ -48,7 +59,7 @@ const NAV_LINKS: { label: string; href: string; dropdown: { label: string; desc:
   },
   {
     label: "Galeri",
-    href: "/galeri",
+    href: "/gallery",
     dropdown: [],
   },
   {

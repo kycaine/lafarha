@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { createTransaction } from "@/modules/ordering/actions";
 import { fetchApi } from "@/lib/api";
 import { useAlert } from "@/shared/AlertContext";
-import { Building2, Bus, Ticket, User, Phone, Plane, CheckCircle2, UploadCloud, Users, Check, Briefcase, Car, CalendarDays, MapPin, HelpCircle, X, MessageCircle, Search, ChevronDown, ChevronUp } from "lucide-react";
+import { Building2, Bus, Ticket, User, Phone, Plane, CheckCircle2, UploadCloud, Users, Check, Briefcase, Car, CalendarDays, MapPin, HelpCircle, X, MessageCircle, Search, ChevronDown, ChevronUp, MoonStar } from "lucide-react";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas-pro";
 
@@ -20,6 +20,7 @@ const ICON_MAP: Record<string, any> = {
   Car,
   Bus,
   HelpCircle,
+  MoonStar,
 };
 
 import transportData from "@/contents/products/transport.json";

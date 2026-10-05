@@ -147,10 +147,7 @@ export default function FooterSection() {
           {/* Bottom Bar: Copyright */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-6 mt-4 border-t border-white/5 w-full text-white/40 text-[10px] sm:text-[11px] font-medium tracking-wide">
             <span>&copy; 2026, All rights reserved.</span>
-            <div className="flex items-center gap-2">
-              <span>Designed by</span>
-              <img src="/reternia-nobg.png" alt="Reternia Logo" className="h-4 w-auto opacity-80 hover:opacity-100 transition-opacity" />
-            </div>
+            <span>Designed by Reternia</span>
           </div>
 
         </div>
