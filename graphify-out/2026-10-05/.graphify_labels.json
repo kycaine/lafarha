@@ -38,13 +38,5 @@
   "36": "OPTIONS",
   "37": "PATCH",
   "38": "POST",
-  "39": "PUT",
-  "40": "ServiceSection.tsx",
-  "41": "BaggageModule.tsx",
-  "42": "FlightLogicModule.tsx",
-  "43": "TransportModule.tsx",
-  "44": "VisaModule.tsx",
-  "45": "BlogSection.tsx",
-  "46": "GallerySection.tsx",
-  "47": "page.tsx"
+  "39": "PUT"
 }

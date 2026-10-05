@@ -1,16 +1,16 @@
-# Graph Report - LA  (2026-10-05)
+# Graph Report - LA  (2026-10-02)
 
 ## Corpus Check
-- 91 files · ~297,798 words
+- 87 files · ~294,600 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 341 nodes · 367 edges · 48 communities (28 shown, 20 thin omitted)
+- 332 nodes · 370 edges · 40 communities (25 shown, 15 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `62d008fc`
+- Built from commit: `f4f5c4f1`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -45,11 +45,6 @@
 - PATCH
 - POST
 - PUT
-- ServiceSection.tsx
-- BaggageModule.tsx
-- FlightLogicModule.tsx
-- TransportModule.tsx
-- VisaModule.tsx
 
 ## God Nodes (most connected - your core abstractions)
 1. `cn()` - 37 edges
@@ -64,25 +59,25 @@
 10. `Button()` - 5 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `ProductCatalog()` --references--> `jspdf`  [EXTRACTED]
+  src/modules/catalog/components/ProductCatalog.tsx → package.json
 - `CardAction()` --calls--> `cn()`  [EXTRACTED]
   src/components/ui/card.tsx → src/lib/utils.ts
 - `CardFooter()` --calls--> `cn()`  [EXTRACTED]
   src/components/ui/card.tsx → src/lib/utils.ts
-- `DialogOverlay()` --calls--> `cn()`  [EXTRACTED]
-  src/components/ui/dialog.tsx → src/lib/utils.ts
-- `DialogContent()` --calls--> `cn()`  [EXTRACTED]
-  src/components/ui/dialog.tsx → src/lib/utils.ts
-- `DialogHeader()` --calls--> `cn()`  [EXTRACTED]
-  src/components/ui/dialog.tsx → src/lib/utils.ts
+- `Card()` --calls--> `cn()`  [EXTRACTED]
+  src/components/ui/card.tsx → src/lib/utils.ts
+- `CardHeader()` --calls--> `cn()`  [EXTRACTED]
+  src/components/ui/card.tsx → src/lib/utils.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (48 total, 20 thin omitted)
+## Communities (40 total, 15 thin omitted)
 
 ### Community 0 - "UI Components & Home Page"
-Cohesion: 0.10
-Nodes (30): Button(), buttonVariants, Card(), CardAction(), CardContent(), CardDescription(), CardFooter(), CardHeader() (+22 more)
+Cohesion: 0.11
+Nodes (23): Button(), buttonVariants, DialogContent(), DialogDescription(), DialogFooter(), DialogHeader(), DialogOverlay(), DialogTitle() (+15 more)
 
 ### Community 1 - "ESLint Configuration"
 Cohesion: 0.09
@@ -93,8 +88,8 @@ Cohesion: 0.09
 Nodes (21): aliases, components, hooks, lib, ui, utils, iconLibrary, menuAccent (+13 more)
 
 ### Community 3 - "Admin Dashboard Pages"
-Cohesion: 0.36
-Nodes (7): QuotePageContent(), fetchApi(), createOrder(), getOrderById(), getOrders(), updateOrderQuote(), CalculateForm()
+Cohesion: 0.21
+Nodes (14): QuotePageContent(), Card(), CardAction(), CardContent(), CardDescription(), CardFooter(), CardHeader(), CardTitle() (+6 more)
 
 ### Community 4 - "API Worker Dependencies"
 Cohesion: 0.10
@@ -105,12 +100,12 @@ Cohesion: 0.10
 Nodes (21): dom, dom.iterable, ./src/*, compilerOptions, allowJs, esModuleInterop, incremental, isolatedModules (+13 more)
 
 ### Community 6 - "UI Component Dependencies"
-Cohesion: 0.06
-Nodes (31): @base-ui/react, class-variance-authority, clsx, firebase, html2canvas-pro, iron-session, jspdf, lucide-react (+23 more)
+Cohesion: 0.07
+Nodes (29): @base-ui/react, class-variance-authority, clsx, firebase, html2canvas-pro, iron-session, lucide-react, next (+21 more)
 
 ### Community 7 - "Admin Products & Penawaran Pages"
-Cohesion: 0.14
-Nodes (3): IconComp, NAV_LINKS, metadata
+Cohesion: 0.10
+Nodes (6): IconComp, NAV_LINKS, GallerySection(), iconMap, SERVICES, metadata
 
 ### Community 8 - "API Worker TypeScript Config"
 Cohesion: 0.17
@@ -129,8 +124,8 @@ Cohesion: 0.11
 Nodes (17): name, private, scripts, build, build:dev, build:prod, db:init-dev, db:init-local (+9 more)
 
 ### Community 17 - "ProductCatalog.tsx"
-Cohesion: 0.15
-Nodes (9): HOTEL_OPTIONS, HotelSpecsModuleComponent(), DEFAULT_MODULE_SPECS, ICON_MAP, PackageBuilder(), HOTEL_OPTIONS, ICON_MAP, ModuleSpecs (+1 more)
+Cohesion: 0.11
+Nodes (16): jspdf, jspdf, BaggageModuleComponent(), HOTEL_OPTIONS, FlightLogicModuleComponent(), HOTEL_OPTIONS, HOTEL_OPTIONS, HotelSpecsModuleComponent() (+8 more)
 
 ### Community 18 - "middleware.ts"
 Cohesion: 0.50
@@ -141,24 +136,24 @@ Cohesion: 0.29
 Nodes (6): 1. Global Registry Reference, 2. Dynamic Tech Stack & Rule Resolution, 3. Just-In-Time (JIT) Skill & Agent Discovery, 4. Execution Workflow, 5. Custom Workspace Commands, Universal Project Bootstrap & Agent Orchestration Guide
 
 ## Knowledge Gaps
-- **151 isolated node(s):** `IconComp`, `NAV_LINKS`, `metadata`, `ICON_MAP`, `DEFAULT_MODULE_SPECS` (+146 more)
+- **149 isolated node(s):** `1. Global Registry Reference`, `2. Dynamic Tech Stack & Rule Resolution`, `3. Just-In-Time (JIT) Skill & Agent Discovery`, `4. Execution Workflow`, `5. Custom Workspace Commands` (+144 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **20 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **15 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `dependencies` connect `UI Component Dependencies` to `Next.js Configuration`?**
-  _High betweenness centrality (0.029) - this node is a cross-community bridge._
+- **Why does `dependencies` connect `UI Component Dependencies` to `ProductCatalog.tsx`, `Next.js Configuration`?**
+  _High betweenness centrality (0.058) - this node is a cross-community bridge._
 - **Why does `devDependencies` connect `ESLint Configuration` to `Next.js Configuration`?**
-  _High betweenness centrality (0.023) - this node is a cross-community bridge._
-- **What connects `IconComp`, `NAV_LINKS`, `metadata` to the rest of the system?**
-  _151 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _High betweenness centrality (0.033) - this node is a cross-community bridge._
+- **Why does `jspdf` connect `ProductCatalog.tsx` to `UI Component Dependencies`?**
+  _High betweenness centrality (0.030) - this node is a cross-community bridge._
+- **What connects `1. Global Registry Reference`, `2. Dynamic Tech Stack & Rule Resolution`, `3. Just-In-Time (JIT) Skill & Agent Discovery` to the rest of the system?**
+  _149 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `UI Components & Home Page` be split into smaller, more focused modules?**
-  _Cohesion score 0.0966183574879227 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.1092436974789916 - nodes in this community are weakly interconnected._
 - **Should `ESLint Configuration` be split into smaller, more focused modules?**
   _Cohesion score 0.08695652173913043 - nodes in this community are weakly interconnected._
 - **Should `Path Aliases Configuration` be split into smaller, more focused modules?**
   _Cohesion score 0.09090909090909091 - nodes in this community are weakly interconnected._
-- **Should `API Worker Dependencies` be split into smaller, more focused modules?**
-  _Cohesion score 0.09523809523809523 - nodes in this community are weakly interconnected._
