@@ -1,0 +1,44 @@
+name: Deploy API Worker
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+    paths:
+      - 'api-worker/**'
+      - '.github/workflows/deploy-worker.yml'
+
+jobs:
+  deploy-worker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Worker Dependencies
+        run: cd api-worker && npm install
+
+      - name: Determine Environment & Config
+        id: env-setup
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "CONFIG_FILE=wrangler.prod.toml" >> $GITHUB_ENV
+            echo "ENV_NAME=Production (farha-worker)" >> $GITHUB_ENV
+          else
+            echo "CONFIG_FILE=wrangler.toml" >> $GITHUB_ENV
+            echo "ENV_NAME=Development (dev-farha-worker)" >> $GITHUB_ENV
+          fi
+
+      - name: Deploy Worker to ${{ env.ENV_NAME }}
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: 'api-worker'
+          command: deploy --config ${{ env.CONFIG_FILE }}
