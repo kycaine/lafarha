@@ -61,15 +61,15 @@ echo -n "<KEY>" | npx wrangler secret put API_SECRET_KEY --config wrangler.toml
 cd ..
 
 # Pages dev (berlaku untuk deployment BERIKUTNYA → deploy ulang setelahnya)
-echo -n "<KEY>"            | CLOUDFLARE_ACCOUNT_ID=ef964688891b9260ac3e9a712c69cd74 npx wrangler pages secret put API_SECRET_KEY --project-name dev-farha
-echo -n "<SESSION_SECRET>" | CLOUDFLARE_ACCOUNT_ID=ef964688891b9260ac3e9a712c69cd74 npx wrangler pages secret put SESSION_SECRET --project-name dev-farha
+echo -n "<KEY>"            | npx wrangler pages secret put API_SECRET_KEY --project-name dev-farha
+echo -n "<SESSION_SECRET>" | npx wrangler pages secret put SESSION_SECRET --project-name dev-farha
 ```
 
 Cek nama secret yang terpasang (nilai tidak ditampilkan):
 
 ```bash
 cd api-worker && npx wrangler secret list --config wrangler.toml
-CLOUDFLARE_ACCOUNT_ID=ef964688891b9260ac3e9a712c69cd74 npx wrangler pages secret list --project-name dev-farha
+npx wrangler pages secret list --project-name dev-farha
 ```
 
 Untuk Prod, ulangi dengan `wrangler.prod.toml` dan `--project-name farha` memakai nilai **berbeda** dari Dev.
