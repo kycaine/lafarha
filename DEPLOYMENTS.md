@@ -88,6 +88,14 @@ Skema bersumber dari `schema.sql`. **JANGAN** reset/edit DB Dev/Prod saat menguj
 
 > Jalankan `db:sync-local` setiap kali data konten di Dev berubah dan ingin dites di lokal. Perintah ini menimpa tabel konten lokal.
 
+### 🔄 Cara Clone/Sync Data dari Dev ke Local
+Jika Anda melihat perbedaan data (seperti list mitra, paket produk, atau pengaturan web) antara tampilan di lokal dengan di website *dev*, Anda cukup menjalankan perintah ini di terminal:
+
+```bash
+npm run db:sync-local
+```
+Perintah ini akan menyedot (*dump*) data terkini dari D1 Cloudflare dan memasukkannya ke database lokal Anda, sehingga dijamin 100% sama!
+
 ---
 
 ## Local Development
