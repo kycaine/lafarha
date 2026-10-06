@@ -1,16 +1,16 @@
 # Graph Report - LA  (2026-10-06)
 
 ## Corpus Check
-- 92 files · ~298,975 words
+- 92 files · ~298,913 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 384 nodes · 403 edges · 50 communities (32 shown, 18 thin omitted)
+- 383 nodes · 402 edges · 50 communities (32 shown, 18 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `104aeeaf`
+- Built from commit: `ac31047c`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -143,8 +143,8 @@ Cohesion: 0.50
 Nodes (4): config, middleware(), Role, ROUTE_RULES
 
 ### Community 21 - "patch.js"
-Cohesion: 0.17
-Nodes (11): Arsitektur 3 Environment, 🔄 Cara Clone/Sync Data dari Dev ke Local, Cloudflare Deployment & Environment Guide, Deploy Dev, Deploy Prod, Local Development, Manajemen Database, Prinsip "Tanpa Gap" (+3 more)
+Cohesion: 0.18
+Nodes (10): Arsitektur 3 Environment, Cloudflare Deployment & Environment Guide, Deploy Dev, Deploy Prod, Local Development, Manajemen Database, Prinsip "Tanpa Gap", Setup Secret (sekali, atau saat rotasi) (+2 more)
 
 ### Community 25 - "Universal Project Bootstrap & Agent Orchestration Guide"
 Cohesion: 0.29
@@ -159,7 +159,7 @@ Cohesion: 0.48
 Nodes (5): handleProxy(), RETRYABLE_STATUS, getSession(), getSessionOptions(), SessionData
 
 ## Knowledge Gaps
-- **168 isolated node(s):** `Arsitektur 3 Environment`, `Template file env`, `Setup Secret (sekali, atau saat rotasi)`, `🔄 Cara Clone/Sync Data dari Dev ke Local`, `Local Development` (+163 more)
+- **168 isolated node(s):** `Arsitektur 3 Environment`, `Template file env`, `Setup Secret (sekali, atau saat rotasi)`, `Manajemen Database`, `Local Development` (+163 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **18 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 

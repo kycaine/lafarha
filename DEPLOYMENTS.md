@@ -13,8 +13,9 @@ Dokumen ini berisi panduan *deployment* aplikasi FARHA ke ekosistem Cloudflare d
 | **Database D1** | Simulasi lokal (`api-worker/.wrangler/state`) | `dev-farha-db` | `farha-db` |
 | **Config Worker** | `api-worker/wrangler.toml` + `api-worker/.dev.vars` | `api-worker/wrangler.toml` | `api-worker/wrangler.prod.toml` |
 | **Config Pages** | – | `wrangler.toml` (root) | `wrangler.toml` (root) |
+| **Git Branch** | `dev` atau fitur branch | branch `dev` | branch `main` |
 
-> Pages project `dev-farha` memakai **production branch `main`**. `deploy:dev` selalu memakai `--branch=main` agar hasil deploy tidak bergantung pada branch git yang sedang aktif.
+> Pages project `dev-farha` memakai branch `dev`. `deploy:dev` selalu memakai `--branch=dev`, sedangkan `deploy:prod` memakai `--branch=main`.
 
 > Local dan Dev **tidak berbagi DB**. Agar data konten sama, jalankan `npm run db:sync-local` (lihat bawah).
 
@@ -121,7 +122,7 @@ npm run deploy:dev
 Yang dijalankan:
 1. `wrangler deploy --config wrangler.toml` (di `api-worker`) → worker `dev-farha-worker`
 2. `npm run build:dev` → `scripts/build-pages.sh dev` (build Next.js dengan `.env.production` + patch `node:async_hooks`)
-3. `wrangler pages deploy .vercel/output/static --project-name dev-farha --branch=main`
+3. `wrangler pages deploy .vercel/output/static --project-name dev-farha --branch=dev`
 
 Checklist verifikasi setelah deploy:
 
