@@ -403,17 +403,63 @@ app.patch('/transactions/:id/status', async (c) => {
 
 
 // -- Mitra API --
+// Foto disimpan sebagai data URL di kolom `foto`. Agar list ringan, GET /mitra
+// hanya mengembalikan path `/mitra/:id/foto?v=<panjang>` dan binary-nya
+// disajikan oleh GET /mitra/:id/foto dengan cache panjang.
+
+const MITRA_WRITE_ROLES = ['master', 'admin'];
 
 app.get('/mitra', async (c) => {
   try {
-    const { results } = await c.env.DB.prepare("SELECT * FROM mitra ORDER BY created_at ASC").all();
-    return c.json({ success: true, data: results });
+    const { results } = await c.env.DB.prepare(
+      `SELECT id, nama, kategori, created_at,
+              length(foto) AS foto_len,
+              substr(foto, 1, 5) AS foto_prefix,
+              CASE WHEN substr(foto, 1, 5) = 'data:' THEN NULL ELSE foto END AS foto_raw
+       FROM mitra ORDER BY created_at ASC`
+    ).all<any>();
+
+    const data = results.map((r) => {
+      let foto = '';
+      if (r.foto_len) {
+        foto = r.foto_prefix === 'data:' ? `/mitra/${r.id}/foto?v=${r.foto_len}` : (r.foto_raw ?? '');
+      }
+      return { id: r.id, nama: r.nama, kategori: r.kategori, foto, created_at: r.created_at };
+    });
+    return c.json({ success: true, data });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
+app.get('/mitra/:id/foto', async (c) => {
+  try {
+    const row = await c.env.DB.prepare("SELECT foto FROM mitra WHERE id = ?")
+      .bind(c.req.param('id')).first<{ foto: string | null }>();
+    const match = row?.foto?.match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/s);
+    if (!match) return c.json({ success: false, error: 'Not found' }, 404);
+
+    const binary = atob(match[2]);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+
+    return new Response(bytes, {
+      headers: {
+        'Content-Type': match[1],
+        // URL berversi (?v=panjang) -> aman di-cache lama.
+        'Cache-Control': 'public, max-age=31536000, immutable',
+        'X-Content-Type-Options': 'nosniff',
+        // Cegah eksekusi script bila file SVG dibuka langsung.
+        'Content-Security-Policy': "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+      },
+    });
   } catch (error: any) {
     return c.json({ success: false, error: error.message }, 500);
   }
 });
 
 app.post('/mitra', async (c) => {
+  if (!requireRole(c, MITRA_WRITE_ROLES)) return c.json({ success: false, error: 'Forbidden' }, 403);
   try {
     const data = await c.req.json();
     const id = `MITRA-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
@@ -429,14 +475,26 @@ app.post('/mitra', async (c) => {
 });
 
 app.put('/mitra/:id', async (c) => {
+  if (!requireRole(c, MITRA_WRITE_ROLES)) return c.json({ success: false, error: 'Forbidden' }, 403);
   try {
     const id = c.req.param('id');
     const data = await c.req.json();
-    await c.env.DB.prepare(
-      "UPDATE mitra SET nama = ?, kategori = ?, foto = ? WHERE id = ?"
-    ).bind(
-      data.nama, data.kategori, data.foto || null, id
-    ).run();
+
+    // foto: data URL baru -> ganti; string kosong -> hapus; selain itu (mis. path
+    // /mitra/:id/foto yang dikirim balik oleh form edit) -> biarkan foto lama.
+    if (typeof data.foto === 'string' && data.foto.startsWith('data:')) {
+      await c.env.DB.prepare(
+        "UPDATE mitra SET nama = ?, kategori = ?, foto = ? WHERE id = ?"
+      ).bind(data.nama, data.kategori, data.foto, id).run();
+    } else if (data.foto === '' || data.foto === null) {
+      await c.env.DB.prepare(
+        "UPDATE mitra SET nama = ?, kategori = ?, foto = NULL WHERE id = ?"
+      ).bind(data.nama, data.kategori, id).run();
+    } else {
+      await c.env.DB.prepare(
+        "UPDATE mitra SET nama = ?, kategori = ? WHERE id = ?"
+      ).bind(data.nama, data.kategori, id).run();
+    }
     return c.json({ success: true });
   } catch (error: any) {
     return c.json({ success: false, error: error.message }, 500);
@@ -444,6 +502,7 @@ app.put('/mitra/:id', async (c) => {
 });
 
 app.delete('/mitra/:id', async (c) => {
+  if (!requireRole(c, MITRA_WRITE_ROLES)) return c.json({ success: false, error: 'Forbidden' }, 403);
   try {
     const id = c.req.param('id');
     await c.env.DB.prepare("DELETE FROM mitra WHERE id = ?").bind(id).run();

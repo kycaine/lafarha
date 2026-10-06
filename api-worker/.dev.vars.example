@@ -1,0 +1,4 @@
+# Template untuk `wrangler dev` (lokal). Salin ke `.dev.vars` (di-gitignore).
+# API_SECRET_KEY HARUS sama dengan API_SECRET_KEY di ../.env.development.
+API_SECRET_KEY="ganti_dengan_string_acak_panjang"
+MASTER_EMAIL="email-master@example.com"

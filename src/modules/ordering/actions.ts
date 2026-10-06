@@ -65,3 +65,15 @@ export async function updateTransactionStatus(id: string, status: 'PENDING' | 'Q
     return { success: false, error: error.message };
   }
 }
+
+export async function updateOrderQuote(id: string, quoteData: any) {
+  return await updateTransactionQuote(id, quoteData);
+}
+
+export async function updateOrderContact(id: string, whatsapp: string) {
+  return await updateTransactionContact(id, whatsapp);
+}
+
+export async function issueOrder(id: string) {
+  return await updateTransactionStatus(id, 'CLOSED');
+}

@@ -9,8 +9,14 @@ export interface SessionData {
 }
 
 export function getSessionOptions(): SessionOptions {
+  const password = process.env.SESSION_SECRET;
+  if (!password || password.length < 32) {
+    throw new Error(
+      "SESSION_SECRET belum di-set atau kurang dari 32 karakter. Lihat DEPLOYMENTS.md."
+    );
+  }
   return {
-    password: process.env.SESSION_SECRET || "complex_password_at_least_32_characters_long_for_iron_session",
+    password,
     cookieName: "farha_auth_session",
     cookieOptions: {
       secure: process.env.NODE_ENV === "production",

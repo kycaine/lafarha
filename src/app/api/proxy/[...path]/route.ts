@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/session";
 
 export const runtime = 'edge';
+// Proxy ini selalu dinamis: jangan pernah di-cache oleh Next/Cloudflare.
+export const dynamic = 'force-dynamic';
 
 export const GET = handleProxy;
 export const POST = handleProxy;
@@ -10,26 +12,38 @@ export const PATCH = handleProxy;
 export const DELETE = handleProxy;
 export const OPTIONS = handleProxy;
 
+const RETRYABLE_STATUS = new Set([502, 503, 504]);
+
 async function handleProxy(req: NextRequest) {
-  // Default to local wrangler dev server in development, otherwise point to the deployed worker
-  const defaultApiUrl = process.env.NODE_ENV === "development" 
-    ? "http://127.0.0.1:8787" 
-    : "https://dev-farha-worker.farhala.workers.dev";
-    
-  const API_WORKER_URL = process.env.NEXT_PUBLIC_API_URL || defaultApiUrl;
-  const API_SECRET_KEY = process.env.API_SECRET_KEY || "super_secret_api_key_for_backend_worker";
+  // NEXT_PUBLIC_API_URL  -> di-inline saat build dari .env.development / .env.production.
+  // API_SECRET_KEY       -> dibaca saat runtime (.env.development lokal, Pages secret di dev/prod).
+  // Tidak ada fallback hardcoded agar lokal & deployment berperilaku sama.
+  const API_WORKER_URL = process.env.NEXT_PUBLIC_API_URL;
+  const API_SECRET_KEY = process.env.API_SECRET_KEY;
 
   if (!API_WORKER_URL || !API_SECRET_KEY) {
-    return NextResponse.json({ error: "API configuration missing" }, { status: 500 });
+    const missing = [
+      !API_WORKER_URL && "NEXT_PUBLIC_API_URL",
+      !API_SECRET_KEY && "API_SECRET_KEY",
+    ].filter(Boolean).join(", ");
+    console.error(`[Proxy] Konfigurasi hilang: ${missing}. Lihat DEPLOYMENTS.md.`);
+    return NextResponse.json({ error: `API configuration missing: ${missing}` }, { status: 500 });
   }
 
   // Check session
-  const session = await getSession();
-  
+  // Public endpoints (e.g. /mitra) must still work if the session cookie is
+  // missing/invalid or the session lib throws on the edge runtime.
+  let session: { isLoggedIn?: boolean; uid?: string; role?: string } = { isLoggedIn: false };
+  try {
+    session = await getSession();
+  } catch (e) {
+    console.error("[Proxy] getSession failed:", e);
+  }
+
   // Extract path to proxy
   const url = new URL(req.url);
   const path = url.pathname.replace(/^\/api\/proxy/, "");
-  
+
   // Build the target URL
   const targetUrl = `${API_WORKER_URL}${path}${url.search}`;
 
@@ -38,7 +52,7 @@ async function handleProxy(req: NextRequest) {
   // Forward headers, but overwrite/strip sensitive ones
   const headers = new Headers(req.headers);
   headers.set("X-API-Key", API_SECRET_KEY);
-  
+
   if (session.isLoggedIn && session.uid && session.role) {
     headers.set("X-User-ID", session.uid);
     headers.set("X-User-Role", session.role);
@@ -50,12 +64,13 @@ async function handleProxy(req: NextRequest) {
 
   // Don't forward host header to avoid conflicts
   headers.delete("host");
-  
+
   try {
     const fetchOptions: RequestInit = {
       method: req.method,
       headers,
       redirect: "manual",
+      cache: "no-store",
     };
 
     // Forward body if not GET/HEAD
@@ -66,7 +81,21 @@ async function handleProxy(req: NextRequest) {
       }
     }
 
-    const response = await fetch(targetUrl, fetchOptions);
+    // Hanya request idempoten (GET/HEAD) yang boleh di-retry sekali jika
+    // upstream gagal sementara (cold start worker / error jaringan edge).
+    const canRetry = req.method === "GET" || req.method === "HEAD";
+    let response: Response;
+    try {
+      response = await fetch(targetUrl, fetchOptions);
+      if (canRetry && RETRYABLE_STATUS.has(response.status)) {
+        console.warn(`[Proxy] Upstream ${response.status} dari ${targetUrl}, retry sekali`);
+        response = await fetch(targetUrl, fetchOptions);
+      }
+    } catch (firstError) {
+      if (!canRetry) throw firstError;
+      console.warn("[Proxy] Fetch gagal, retry sekali:", firstError);
+      response = await fetch(targetUrl, fetchOptions);
+    }
 
     console.log(`[Proxy] Response: ${response.status} from ${targetUrl}`);
 
@@ -76,7 +105,7 @@ async function handleProxy(req: NextRequest) {
       statusText: response.statusText,
     });
 
-    // Copy over headers, but exclude encoding and length headers 
+    // Copy over headers, but exclude encoding and length headers
     // because fetch automatically decompresses the response body.
     response.headers.forEach((value, key) => {
       if (key.toLowerCase() !== "content-encoding" && key.toLowerCase() !== "content-length") {

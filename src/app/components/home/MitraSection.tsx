@@ -74,15 +74,9 @@ export default function MitraSection() {
                 key={`g1-r1-${m.id}-${idx}`}
                 className="flex-none flex items-center justify-center opacity-50 hover:opacity-100 transition-all duration-500 grayscale hover:grayscale-0 cursor-pointer"
               >
-                {m.foto ? (
+                {m.foto && (
                   <div className="w-32 md:w-48 h-20 md:h-28 flex items-center justify-center">
-                    <img src={m.foto} alt={m.nama} className="max-w-full max-h-full object-contain drop-shadow-sm" />
-                  </div>
-                ) : (
-                  <div className="w-32 md:w-48 h-20 md:h-28 flex items-center justify-center">
-                    <div className="text-3xl md:text-5xl font-bold text-slate-400 whitespace-nowrap">
-                      {m.nama}
-                    </div>
+                    <img src={m.foto} alt={m.nama} loading="lazy" decoding="async" className="max-w-full max-h-full object-contain drop-shadow-sm" />
                   </div>
                 )}
               </div>
@@ -96,15 +90,9 @@ export default function MitraSection() {
                 key={`g2-r1-${m.id}-${idx}`}
                 className="flex-none flex items-center justify-center opacity-50 hover:opacity-100 transition-all duration-500 grayscale hover:grayscale-0 cursor-pointer"
               >
-                {m.foto ? (
+                {m.foto && (
                   <div className="w-32 md:w-48 h-20 md:h-28 flex items-center justify-center">
-                    <img src={m.foto} alt={m.nama} className="max-w-full max-h-full object-contain drop-shadow-sm" />
-                  </div>
-                ) : (
-                  <div className="w-32 md:w-48 h-20 md:h-28 flex items-center justify-center">
-                    <div className="text-3xl md:text-5xl font-bold text-slate-400 whitespace-nowrap">
-                      {m.nama}
-                    </div>
+                    <img src={m.foto} alt={m.nama} loading="lazy" decoding="async" className="max-w-full max-h-full object-contain drop-shadow-sm" />
                   </div>
                 )}
               </div>
@@ -121,15 +109,9 @@ export default function MitraSection() {
                 key={`g1-r2-${m.id}-${idx}`}
                 className="flex-none flex items-center justify-center opacity-50 hover:opacity-100 transition-all duration-500 grayscale hover:grayscale-0 cursor-pointer"
               >
-                {m.foto ? (
+                {m.foto && (
                   <div className="w-32 md:w-48 h-20 md:h-28 flex items-center justify-center">
-                    <img src={m.foto} alt={m.nama} className="max-w-full max-h-full object-contain drop-shadow-sm" />
-                  </div>
-                ) : (
-                  <div className="w-32 md:w-48 h-20 md:h-28 flex items-center justify-center">
-                    <div className="text-3xl md:text-5xl font-bold text-slate-400 whitespace-nowrap">
-                      {m.nama}
-                    </div>
+                    <img src={m.foto} alt={m.nama} loading="lazy" decoding="async" className="max-w-full max-h-full object-contain drop-shadow-sm" />
                   </div>
                 )}
               </div>
@@ -143,15 +125,9 @@ export default function MitraSection() {
                 key={`g2-r2-${m.id}-${idx}`}
                 className="flex-none flex items-center justify-center opacity-50 hover:opacity-100 transition-all duration-500 grayscale hover:grayscale-0 cursor-pointer"
               >
-                {m.foto ? (
+                {m.foto && (
                   <div className="w-32 md:w-48 h-20 md:h-28 flex items-center justify-center">
-                    <img src={m.foto} alt={m.nama} className="max-w-full max-h-full object-contain drop-shadow-sm" />
-                  </div>
-                ) : (
-                  <div className="w-32 md:w-48 h-20 md:h-28 flex items-center justify-center">
-                    <div className="text-3xl md:text-5xl font-bold text-slate-400 whitespace-nowrap">
-                      {m.nama}
-                    </div>
+                    <img src={m.foto} alt={m.nama} loading="lazy" decoding="async" className="max-w-full max-h-full object-contain drop-shadow-sm" />
                   </div>
                 )}
               </div>

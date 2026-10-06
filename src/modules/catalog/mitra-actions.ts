@@ -1,9 +1,17 @@
-import { fetchApi } from "@/lib/api";
+import { fetchApi, API_URL } from "@/lib/api";
 
 export async function getMitra() {
   try {
     const res = await fetchApi('/mitra');
-    return res.success ? res.data : [];
+    if (!res.success) {
+      console.error("[getMitra] API mitra gagal:", res.error);
+      return [];
+    }
+    // Worker mengembalikan foto sebagai path (/mitra/:id/foto?v=..); arahkan lewat proxy.
+    return (res.data as any[]).map((m) => ({
+      ...m,
+      foto: typeof m.foto === "string" && m.foto.startsWith("/mitra/") ? `${API_URL}${m.foto}` : m.foto,
+    }));
   } catch (error: any) {
     console.error("Failed to fetch mitra:", error);
     return [];

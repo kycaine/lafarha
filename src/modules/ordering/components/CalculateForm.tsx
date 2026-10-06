@@ -34,8 +34,8 @@ export function CalculateForm({ order, items }: { order: any, items: any[] }) {
   const [waEditing, setWaEditing] = useState(false);
   const [waSaving, setWaSaving] = useState(false);
 
-  const isOriginallyPublished = order.status === 'QUOTATION_READY' || order.status === 'ISSUED';
-  const isIssued = order.status === 'ISSUED';
+  const isOriginallyPublished = order.status === 'QUOTED' || order.status === 'CLOSED';
+  const isIssued = order.status === 'CLOSED';
   
   const [isEditing, setIsEditing] = useState(false);
   const isReadOnly = isOriginallyPublished && !isEditing;

@@ -202,7 +202,7 @@ export default function AdminDashboard() {
                 </DialogClose>
 
                 {/* Action button: Jika masih baru, bisa diberi penawaran harga */}
-                {(selectedOrder?.status === 'AWAITING_VERIFICATION' || selectedOrder?.status === 'CALCULATING') && (
+                {selectedOrder?.status === 'PENDING' && (
                   <Link href={`/admin/orders/calculate?id=${selectedOrder.id}`}>
                     <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">Buat Penawaran Harga</Button>
                   </Link>

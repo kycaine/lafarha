@@ -41,6 +41,10 @@ api-worker/dist/
 # ENVIRONMENT & SECRETS
 # ============================================================
 .env*
+!.env*.example
+.dev.vars
+api-worker/.dev.vars
+!api-worker/.dev.vars.example
 *.pem
 
 # ============================================================

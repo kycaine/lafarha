@@ -12,7 +12,6 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  serverExternalPackages: ['async_hooks'],
   webpack: (config, { isServer, nextRuntime }) => {
     if (isServer && nextRuntime === 'edge') {
       config.resolve.alias = {

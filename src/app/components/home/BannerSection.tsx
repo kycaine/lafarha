@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, ChevronRight, Building2, Bus, Plane, Ticket, Briefcase, Star, Map, Phone, Mail, MapPin, Menu, X, User, FileText } from "lucide-react";
+import { ChevronDown, ChevronRight, Building2, Bus, Plane, Ticket, Briefcase, Star, Map, Phone, Mail, MapPin, Menu, X, User, FileText, Wallet, Sparkles, MoonStar } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/shared/AuthContext";
@@ -9,6 +9,32 @@ import { useRouter } from "next/navigation";
 import articles from "@/contents/blog/articles.json";
 
 type IconComp = React.FC<any>;
+
+import packagesData from "@/contents/packages/packages.json";
+
+const PagodaIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className || "w-full h-full"}>
+    <path d="M12 2L12 4" />
+    <path d="M10 4L14 4" />
+    <path d="M11 4L11 8" />
+    <path d="M13 4L13 8" />
+    <path d="M7 8L17 8" />
+    <path d="M9 8L9 13" />
+    <path d="M15 8L15 13" />
+    <path d="M4 13L20 13" />
+    <path d="M7 13L7 21" />
+    <path d="M17 13L17 21" />
+    <path d="M3 21L21 21" />
+  </svg>
+);
+
+const getPackageIcon = (iconName: string) => {
+  if (iconName === 'Wallet') return Wallet;
+  if (iconName === 'Sparkles') return Sparkles;
+  if (iconName === 'MoonStar') return MoonStar;
+  if (iconName === 'Pagoda') return PagodaIcon;
+  return Briefcase;
+};
 
 // ── Dropdown definitions ──────────────────────────────────────────────────────
 const NAV_LINKS: { label: string; href: string; dropdown: { label: string; desc: string; href: string; Icon: IconComp }[] }[] = [
@@ -40,12 +66,12 @@ const NAV_LINKS: { label: string; href: string; dropdown: { label: string; desc:
   {
     label: "Paket",
     href: "/packages",
-    dropdown: [
-      { label: "Paket Ekonomis", desc: "Mulai Rp 20 Jt", href: "/packages", Icon: Briefcase },
-      { label: "Paket Standard", desc: "Mulai Rp 26 Jt", href: "/packages", Icon: Star },
-      { label: "Standard + Turkey", desc: "Umrah plus Turkey", href: "/packages", Icon: Map },
-      { label: "Standard + China", desc: "Umrah plus China", href: "/packages", Icon: Map },
-    ],
+    dropdown: packagesData.readyPackages.map(pkg => ({
+      label: pkg.name,
+      desc: pkg.priceString,
+      href: "/packages",
+      Icon: getPackageIcon(pkg.icon)
+    })),
   },
   {
     label: "Blog",
@@ -98,23 +124,12 @@ function NavItem({
   link: (typeof NAV_LINKS)[0];
   scrolled: boolean;
 }) {
-  const [open, setOpen] = useState(false);
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const show = () => {
-    if (timer.current) clearTimeout(timer.current);
-    setOpen(true);
-  };
-  const hide = () => {
-    timer.current = setTimeout(() => setOpen(false), 120);
-  };
-
   return (
-    <div className="relative" onMouseEnter={show} onMouseLeave={hide}>
+    <div className="relative group">
       {/* Trigger */}
       <a
         href={link.href}
-        className="text-[15px] font-medium transition-colors duration-300 hover:text-[#C9A84C] select-none drop-shadow-sm"
+        className="text-[15px] font-medium transition-colors duration-300 hover:text-[#C9A84C] select-none drop-shadow-sm py-2"
         style={{ color: scrolled ? "rgba(255,255,255,0.85)" : "#ffffff" }}
       >
         {link.label}
@@ -123,18 +138,11 @@ function NavItem({
       {/* Dropdown panel */}
       {link.dropdown.length > 0 && (
         <div
-          style={{
-            opacity: open ? 1 : 0,
-            transform: open ? "translateY(0px) scale(1)" : "translateY(-6px) scale(0.98)",
-            pointerEvents: open ? "auto" : "none",
-            transition: "opacity 200ms ease, transform 200ms ease",
-            transformOrigin: "top center",
-          }}
-          className="absolute top-full left-1/2 -translate-x-1/2 mt-3 z-50"
+          className="absolute top-full left-1/2 -translate-x-1/2 pt-3 z-50 opacity-0 -translate-y-2 scale-95 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100 group-hover:pointer-events-auto transition-all duration-200 origin-top"
         >
           {/* Arrow */}
           <div
-            className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 rotate-45 border-l border-t"
+            className="absolute top-[6px] left-1/2 -translate-x-1/2 w-3 h-3 rotate-45 border-l border-t"
             style={{
               background: scrolled ? "#242424" : "#fff",
               borderColor: scrolled ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.07)",

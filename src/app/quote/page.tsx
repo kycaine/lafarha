@@ -93,7 +93,7 @@ function QuotePageContent() {
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-8 text-center space-y-6">
-          {order.status === 'AWAITING_VERIFICATION' || order.status === 'CALCULATING' ? (
+          {order.status === 'PENDING' ? (
             <div className="space-y-4">
               <h3 className="text-2xl font-semibold">Sedang Dihitung Admin</h3>
               <p className="text-slate-400">
