@@ -53,6 +53,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const menuItems = [
     { label: "Pipeline Orders", href: "/admin/dashboard", icon: ListOrdered },
     { label: "Manajemen Mitra", href: "/admin/mitra", icon: Users },
+    { label: "Manajemen Muthawif", href: "/admin/muthawif", icon: Users },
     { label: "Kontak & Sosmed", href: "/admin/kontak", icon: PhoneCall },
   ];
 

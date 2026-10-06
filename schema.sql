@@ -80,3 +80,21 @@ CREATE TABLE IF NOT EXISTS users (
 -- Indexes
 CREATE INDEX IF NOT EXISTS idx_transactions_status    ON transactions(status);
 CREATE INDEX IF NOT EXISTS idx_transaction_items_tid  ON transaction_items(transaction_id);
+
+-- Muthawif applications
+CREATE TABLE IF NOT EXISTS muthawifs (
+  id         TEXT PRIMARY KEY,
+  nama       TEXT NOT NULL,
+  email      TEXT NOT NULL UNIQUE,
+  cv_file    TEXT,
+  status     TEXT NOT NULL DEFAULT 'PENDING',
+  panggilan  TEXT,
+  foto       TEXT,
+  umur       INTEGER,
+  languages  TEXT,
+  experience TEXT,
+  location   TEXT,
+  rating     REAL,
+  created_at INTEGER,
+  updated_at INTEGER
+);

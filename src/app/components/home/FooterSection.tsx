@@ -128,6 +128,7 @@ export default function FooterSection() {
               <div className="text-white/70 text-xs sm:text-[13px] flex flex-col gap-3 font-medium">
                 <a href="#" className="hover:text-[#C9A84C] transition-colors">Tentang Kami</a>
                 <a href="#" className="hover:text-[#C9A84C] transition-colors">Karir</a>
+                <a href="/muthawif" className="hover:text-[#C9A84C] transition-colors">Muthawif</a>
                 <a href="#" className="hover:text-[#C9A84C] transition-colors">Blog & Artikel</a>
                 <a href="#" className="hover:text-[#C9A84C] transition-colors">Hubungi Kami</a>
               </div>

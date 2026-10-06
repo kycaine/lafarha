@@ -3,7 +3,7 @@
 
 import { fetchApi } from "./api";
 
-export type UserRole = "master" | "admin" | "counter" | "user";
+export type UserRole = "master" | "admin" | "counter" | "user" | "muthawif";
 
 export interface UserProfile {
   id: string;          // Firebase UID
@@ -76,6 +76,16 @@ export async function setUserRole(uid: string, role: UserRole): Promise<void> {
     method: "PATCH",
     body: JSON.stringify({ role }),
   });
+}
+
+/**
+ * Hard delete user. Hanya bisa dipanggil oleh master.
+ */
+export async function deleteUserManual(uid: string): Promise<void> {
+  const res = await fetchApi(`/users/${uid}`, {
+    method: "DELETE",
+  });
+  if (!res.success) throw new Error(res.error);
 }
 
 /**

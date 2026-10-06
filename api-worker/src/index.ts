@@ -138,7 +138,7 @@ app.patch('/users/:id/role', async (c) => {
     const id = c.req.param('id');
     const { role } = await c.req.json();
 
-    const validRoles = ['master', 'admin', 'counter', 'user'];
+    const validRoles = ['master', 'admin', 'counter', 'user', 'muthawif'];
     if (!validRoles.includes(role)) {
       return c.json({ success: false, error: 'Invalid role' }, 400);
     }
@@ -147,6 +147,26 @@ app.patch('/users/:id/role', async (c) => {
       "UPDATE users SET role = ?, updated_at = ? WHERE id = ?"
     ).bind(role, Date.now(), id).run();
 
+    return c.json({ success: true });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
+// Hard delete user
+app.delete('/users/:id', async (c) => {
+  if (!requireRole(c, ['master'])) return c.json({ success: false, error: 'Forbidden' }, 403);
+  try {
+    const id = c.req.param('id');
+    const existing = await c.env.DB.prepare("SELECT * FROM users WHERE id = ?").bind(id).first();
+    if (!existing) return c.json({ success: false, error: 'Not found' }, 404);
+    
+    const MASTER_EMAIL = c.env.MASTER_EMAIL || 'talkto.rezki@gmail.com';
+    if (existing.email === MASTER_EMAIL) {
+      return c.json({ success: false, error: 'Cannot delete master account' }, 400);
+    }
+
+    await c.env.DB.prepare("DELETE FROM users WHERE id = ?").bind(id).run();
     return c.json({ success: true });
   } catch (error: any) {
     return c.json({ success: false, error: error.message }, 500);
@@ -514,6 +534,118 @@ app.delete('/mitra/:id', async (c) => {
 
 
 // -- Settings: Contact & Social Media --
+
+// -- Muthawif API --
+app.get('/muthawifs', async (c) => {
+  try {
+    const { results } = await c.env.DB.prepare(
+      "SELECT id, nama, email, cv_file, status, created_at, panggilan, foto, umur, languages, experience, location, rating FROM muthawifs ORDER BY created_at DESC"
+    ).all();
+    return c.json({ success: true, data: results });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
+// GET /muthawifs/:id
+app.get('/muthawifs/:id', async (c) => {
+  try {
+    const id = c.req.param('id');
+    const { results } = await c.env.DB.prepare(
+      "SELECT id, nama, email, status, cv_file, created_at, panggilan, foto, umur, languages, experience, location, rating FROM muthawifs WHERE id = ?"
+    ).bind(id).all();
+    if (results.length === 0) return c.json({ success: false, error: 'Not found' }, 404);
+    return c.json({ success: true, data: results[0] });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
+app.post('/muthawifs', async (c) => {
+  try {
+    const data = await c.req.json();
+    const id = `MUTHAWIF-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+    await c.env.DB.prepare(
+      "INSERT INTO muthawifs (id, nama, email, cv_file, created_at) VALUES (?, ?, ?, ?, ?)"
+    ).bind(
+      id, data.nama, data.email, data.cv_file || null, Date.now()
+    ).run();
+    return c.json({ success: true, id });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
+// Ambil profil muthawif by email (untuk halaman profil)
+app.get('/muthawifs/by-email/:email', async (c) => {
+  try {
+    const email = c.req.param('email');
+    const muthawif = await c.env.DB.prepare("SELECT * FROM muthawifs WHERE email = ?").bind(email).first();
+    if (!muthawif) return c.json({ success: false, error: 'Not found' }, 404);
+    return c.json({ success: true, data: muthawif });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
+// Update profil muthawif (oleh diri mereka sendiri)
+app.put('/muthawifs/by-email/:email', async (c) => {
+  try {
+    const email = c.req.param('email');
+    const data = await c.req.json();
+    
+    await c.env.DB.prepare(
+      `UPDATE muthawifs SET 
+        nama = ?, panggilan = ?, foto = ?, umur = ?, 
+        languages = ?, experience = ?, location = ?, updated_at = ?
+       WHERE email = ?`
+    ).bind(
+      data.nama, 
+      data.panggilan || null, 
+      data.foto || null, 
+      data.umur || null,
+      data.languages || null, 
+      data.experience || null, 
+      data.location || null, 
+      Date.now(), 
+      email
+    ).run();
+
+    return c.json({ success: true });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
+app.patch('/muthawifs/:id/approve', async (c) => {
+  // if (!requireRole(c, ['master', 'admin'])) return c.json({ success: false, error: 'Forbidden' }, 403);
+  try {
+    const id = c.req.param('id');
+    const muthawif: any = await c.env.DB.prepare("SELECT * FROM muthawifs WHERE id = ?").bind(id).first();
+    if (!muthawif) return c.json({ success: false, error: 'Not found' }, 404);
+
+    await c.env.DB.prepare(
+      "UPDATE muthawifs SET status = 'APPROVED' WHERE id = ?"
+    ).bind(id).run();
+
+    // Upsert to users table
+    const existingUser = await c.env.DB.prepare("SELECT * FROM users WHERE email = ?").bind(muthawif.email).first();
+    if (!existingUser) {
+      const dummyId = `muthawif_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+      const now = Date.now();
+      await c.env.DB.prepare(
+        `INSERT INTO users (id, email, display_name, photo_url, role, created_at, updated_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`
+      ).bind(dummyId, muthawif.email, muthawif.nama, '', 'muthawif', now, now).run();
+    } else {
+      await c.env.DB.prepare("UPDATE users SET role = 'muthawif' WHERE email = ?").bind(muthawif.email).run();
+    }
+
+    return c.json({ success: true });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
 
 // GET /settings/contact — ambil settings (create default row jika belum ada)
 app.get('/settings/contact', async (c) => {

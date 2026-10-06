@@ -18,8 +18,8 @@
       "title": "Hotel Mekah",
       "icon": "Building2",
       "requires_pax": 1,
-      "estimatedPriceMin": 4000000,
-      "estimatedPriceMax": 7000000,
+      "estimatedPriceMin": 1000000,
+      "estimatedPriceMax": 10000000,
       "form_schema": [
         {
           "type": "HotelSpecsModule",
@@ -32,8 +32,8 @@
       "title": "Hotel Madinah",
       "icon": "Building2",
       "requires_pax": 1,
-      "estimatedPriceMin": 4000000,
-      "estimatedPriceMax": 7000000,
+      "estimatedPriceMin": 1000000,
+      "estimatedPriceMax": 10000000,
       "form_schema": [
         {
           "type": "HotelSpecsModule",
@@ -59,7 +59,7 @@
       "title": "Siskopatuh",
       "icon": "CheckCircle2",
       "requires_pax": 1,
-      "estimatedPriceMin": 200000,
+      "estimatedPriceMin": 100000,
       "estimatedPriceMax": 300000,
       "form_schema": []
     },
@@ -68,8 +68,8 @@
       "title": "Transportasi Full Trip",
       "icon": "Bus",
       "requires_pax": 1,
-      "estimatedPriceMin": 1800000,
-      "estimatedPriceMax": 2500000,
+      "estimatedPriceMin": 250000,
+      "estimatedPriceMax": 1250000,
       "form_schema": [
         {
           "type": "TransportModule"
@@ -81,7 +81,7 @@
       "title": "Transportasi Thaif",
       "icon": "Car",
       "requires_pax": 0,
-      "estimatedPriceMin": 350000,
+      "estimatedPriceMin": 100000,
       "estimatedPriceMax": 500000,
       "form_schema": []
     },
@@ -90,8 +90,8 @@
       "title": "Muthawif / Muthawifah",
       "icon": "Users",
       "requires_pax": 0,
-      "estimatedPriceMin": 200000,
-      "estimatedPriceMax": 400000,
+      "estimatedPriceMin": 9000000,
+      "estimatedPriceMax": 9000000,
       "form_schema": []
     },
     {

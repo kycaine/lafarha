@@ -12,6 +12,7 @@ const ROLE_LABELS: Record<string, { label: string; color: string; bg: string }> 
   admin:  { label: "Admin",  color: "text-emerald-700", bg: "bg-emerald-50 border-emerald-200" },
   counter:{ label: "Counter",color: "text-blue-700",    bg: "bg-blue-50 border-blue-200" },
   user:   { label: "User",   color: "text-slate-600",   bg: "bg-slate-50 border-slate-200" },
+  muthawif: { label: "Muthawif", color: "text-amber-700", bg: "bg-amber-50 border-amber-200" },
 };
 
 export default function SettingsPage() {
@@ -128,6 +129,31 @@ export default function SettingsPage() {
         <p className="text-xs text-slate-400 mt-4 text-center">
           Akun ini terhubung melalui Google. Ubah nama atau foto di akun Google Anda.
         </p>
+
+        {/* Muthawif Actions */}
+        {role === "muthawif" && (
+          <div className="mt-8">
+            <h2 className="text-sm font-bold text-slate-700 mb-3 px-1">Menu Muthawif</h2>
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden divide-y divide-slate-50">
+              <Link href="/muthawif/profile" className="flex items-center justify-between px-6 py-4 hover:bg-slate-50 transition-colors">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center">
+                    <User className="w-4 h-4 text-amber-700" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-slate-800">Ubah Data Publik</p>
+                    <p className="text-xs text-slate-500 mt-0.5">Edit foto profil, domisili, dan portofolio Anda</p>
+                  </div>
+                </div>
+                <div className="text-slate-400">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </Link>
+            </div>
+          </div>
+        )}
 
         {/* Logout */}
         <div className="mt-8">
