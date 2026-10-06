@@ -94,6 +94,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
   const [showPricingModal, setShowPricingModal] = useState(false);
   const [showVisaPricingModal, setShowVisaPricingModal] = useState(false);
   const [showHotelPricingModal, setShowHotelPricingModal] = useState(false);
+  const [showFlightIntlPricingModal, setShowFlightIntlPricingModal] = useState(false);
   const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
   const [contactForm, setContactForm] = useState({ name: "", whatsapp: "" });
 
@@ -562,7 +563,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
                     <div className="flex items-center gap-3 text-lg font-bold border-b border-slate-100 dark:border-slate-800 pb-3">
                       <div className="flex items-center gap-2">
                         <IconComp className="text-emerald-500 h-5 w-5" /> Spesifikasi {service.title}
-                        {(service.id === 'TRANSPORTASI' || service.id === 'VISA' || service.id === 'HOTEL') && (
+                        {(service.id === 'TRANSPORTASI' || service.id === 'VISA' || service.id === 'HOTEL' || service.id === 'FLIGHT_INTL') && (
                           <button
                             type="button"
                             onClick={() => {
@@ -570,6 +571,8 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
                                 setShowVisaPricingModal(true);
                               } else if (service.id === 'HOTEL') {
                                 setShowHotelPricingModal(true);
+                              } else if (service.id === 'FLIGHT_INTL') {
+                                setShowFlightIntlPricingModal(true);
                               } else {
                                 setShowPricingModal(true);
                               }
@@ -894,6 +897,57 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
             </div>
             <div className="p-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
               <Button onClick={() => setShowVisaPricingModal(false)} className="bg-slate-200 hover:bg-slate-300 text-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-white">Tutup</Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showFlightIntlPricingModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200"
+          onClick={() => setShowFlightIntlPricingModal(false)}
+        >
+          <div
+            className="bg-white dark:bg-[#111] rounded-2xl w-[90vw] max-w-3xl overflow-hidden shadow-2xl relative flex flex-col max-h-[95vh]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between p-4 border-b border-slate-100 dark:border-slate-800">
+              <h3 className="font-bold text-lg">Estimasi Harga Tiket Pesawat (PP)</h3>
+              <Button variant="ghost" size="icon" onClick={() => setShowFlightIntlPricingModal(false)} className="rounded-full h-8 w-8">
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="p-6 overflow-auto flex-1 bg-slate-50 dark:bg-slate-900/50">
+              <div className="grid md:grid-cols-2 gap-6 w-full">
+                {/* Transit Option */}
+                <div className="bg-white dark:bg-[#111] rounded-lg border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+                  <div className="text-center">
+                    <h4 className="text-xl font-bold mb-4">Penerbangan Transit</h4>
+                    <p className="text-3xl md:text-4xl font-extrabold text-blue-600 dark:text-blue-400 mb-4">
+                      Rp 10jt - 15jt
+                    </p>
+                    <p className="text-slate-500 dark:text-slate-400 text-sm">
+                      *Estimasi harga per orang untuk rute transit. Harga dapat berubah sewaktu-waktu tergantung musim dan ketersediaan maskapai.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Direct Option */}
+                <div className="bg-white dark:bg-[#111] rounded-lg border border-emerald-200 dark:border-emerald-800 p-6 shadow-sm ring-1 ring-emerald-500/20">
+                  <div className="text-center">
+                    <h4 className="text-xl font-bold mb-4">Penerbangan Direct (Langsung)</h4>
+                    <p className="text-3xl md:text-4xl font-extrabold text-emerald-600 dark:text-emerald-400 mb-4">
+                      Rp 14jt - 17jt
+                    </p>
+                    <p className="text-slate-500 dark:text-slate-400 text-sm">
+                      *Estimasi harga per orang untuk penerbangan langsung (direct). Lebih hemat waktu dan tenaga, sangat disarankan.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="p-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
+              <Button onClick={() => setShowFlightIntlPricingModal(false)} className="bg-slate-200 hover:bg-slate-300 text-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-white">Tutup</Button>
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import FooterSection from "../components/home/FooterSection";
+import Footer from "@/components/layout/Footer";
 
 export const metadata = {
   title: "Tentang Kami — FARHA",
@@ -119,7 +119,7 @@ export default function TentangPage() {
         </div>
       </div>
 
-      <FooterSection />
+      <Footer />
     </main>
   );
 }

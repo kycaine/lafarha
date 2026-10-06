@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { fetchApi } from "@/lib/api";
 import { ArrowRight } from "lucide-react";
 
-export default function FooterSection() {
+export default function Footer() {
   const [contact, setContact] = useState<any>({
     whatsapp_number: "+62 812 3456 7890",
     office_city: "Gedung Perkantoran Jakarta Selatan",
