@@ -67,7 +67,7 @@ export default function TentangPage() {
         </div>
       </div>
 
-      <div className="flex-grow flex flex-col items-center pt-16 pb-24 px-6 relative z-0">
+      <div className="flex-grow flex flex-col items-center pt-16 pb-24 px-6 relative z-0 min-h-screen">
 
         {/* Description Section */}
         <div className="max-w-3xl w-full mb-24">

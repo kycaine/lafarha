@@ -62,7 +62,7 @@ export default function ServiceSection() {
   const displayServices = [...SERVICES, ...SERVICES, ...SERVICES];
 
   return (
-    <section id="product" className="relative bg-white pt-10 pb-32 overflow-hidden">
+    <section id="layanan" className="relative bg-white pt-10 pb-32 overflow-hidden">
       {/* Subtle bg glow */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-amber-100/30 rounded-full blur-3xl" />

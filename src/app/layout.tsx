@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Playfair_Display, Cinzel, Caveat } from "next/font/google";
 import { AuthProvider } from "@/shared/AuthContext";
 import { AlertProvider } from "@/shared/AlertContext";
-import "./globals.css";
+import PageWrapper from "@/components/layout/PageWrapper";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -57,6 +57,9 @@ export const metadata: Metadata = {
     description: "Platform B2B Land Arrangement Umrah terpercaya untuk travel agent di Indonesia.",
     images: ["/farha-logo-full.jpeg", "/farha-logo-only.jpeg"],
   },
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -66,8 +69,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${inter.variable} ${playfair.variable} ${cinzel.variable} ${caveat.variable} h-full antialiased scroll-smooth`}
     >
       <body className="min-h-full flex flex-col bg-white">
+        <link rel="stylesheet" href="/styles.css" precedence="default" />
         <AlertProvider>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            <PageWrapper>{children}</PageWrapper>
+          </AuthProvider>
         </AlertProvider>
       </body>
     </html>

@@ -23,11 +23,11 @@ export default function PenawaranPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white">
+    <main className="min-h-screen flex flex-col bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white">
       <Header />
 
-      <div className="container mx-auto px-6 py-12">
-        <header className="mb-12 text-center">
+      <div className="flex-1 w-full max-w-[1600px] mx-auto px-4 md:px-6 xl:px-8 pt-6 pb-12 min-h-screen">
+        <header className="mb-10 text-center">
           <h3 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-3">
             Rancang Perjalanan Anda
           </h3>

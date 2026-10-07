@@ -31,10 +31,10 @@ export default function PackagesPage() {
   const selectedPackage = packagesData.readyPackages.find((p: any) => p.id === detailModal);
 
   return (
-    <main className="min-h-screen bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white">
+    <main className="min-h-screen flex flex-col bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white">
       <Header />
 
-      <div className="w-full max-w-[1600px] mx-auto px-4 md:px-6 xl:px-8 pt-6 pb-12">
+      <div className="flex-1 w-full max-w-[1600px] mx-auto px-4 md:px-6 xl:px-8 pt-6 pb-12 min-h-screen">
         {/* Pre-made Packages Section */}
         <div className="mb-12">
           <header className="mb-10 text-center">

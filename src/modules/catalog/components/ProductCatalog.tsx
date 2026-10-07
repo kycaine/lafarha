@@ -363,7 +363,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
   };
 
   const filteredProducts = products.filter(p => p.title.toLowerCase().includes(searchQuery.toLowerCase()));
-  const displayedProducts = (searchQuery || showAllProducts) ? filteredProducts : filteredProducts.slice(0, 6);
+  const displayedProducts = (searchQuery || showAllProducts) ? filteredProducts : filteredProducts.slice(0, 10);
 
   const months = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agt", "Sep", "Okt", "Nov", "Des"];
   const formatDate = (dateStr: string) => {
@@ -456,7 +456,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-12 pb-24">
+    <div className="w-full space-y-12 pb-24">
       {/* Search Bar */}
       <div className="relative w-full">
         <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
@@ -488,7 +488,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
           <span className="flex h-8 w-8 rounded-full bg-emerald-100 text-emerald-600 items-center justify-center text-sm">1</span>
           Pilih Layanan
         </h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {displayedProducts.map((srv) => {
             const isSelected = selectedServices.includes(srv.id);
             const IconComp = ICON_MAP[srv.icon] || HelpCircle;
@@ -518,7 +518,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
             </div>
           )}
         </div>
-        {!searchQuery && products.length > 6 && (
+        {!searchQuery && products.length > 10 && (
           <div className="flex justify-center mt-6">
             <Button
               type="button"

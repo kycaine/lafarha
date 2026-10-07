@@ -21,8 +21,13 @@ export async function POST(req: NextRequest) {
 }
 
 // DELETE /api/auth/session — clear cookies on sign out
-export async function DELETE() {
-  const session = await getSession();
-  session.destroy();
-  return NextResponse.json({ ok: true });
+export async function DELETE(request: NextRequest) {
+  try {
+    const session = await getSession();
+    session.destroy();
+    return NextResponse.json({ ok: true });
+  } catch (error: any) {
+    console.error("DELETE /api/auth/session error:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }

@@ -6,4 +6,4 @@ pages_build_output_dir = ".vercel/output/static"
 [[d1_databases]]
 binding = "DB"
 database_name = "dev-farha-db"
-database_id = "97ed7090-8f89-4b10-afc1-f47d43eae87d"
+database_id = "ce9fb6ee-7f6e-45d3-836a-fda15e01da9b"

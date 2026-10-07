@@ -36,8 +36,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const unsubscribe = onAuthChange(async (firebaseUser) => {
-      setUser(firebaseUser);
-
       if (firebaseUser) {
         try {
           // STEP 1: Upsert user ke D1 via proxy.
@@ -48,7 +46,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             firebaseUser.displayName ?? "",
             firebaseUser.photoURL ?? ""
           );
-          setUserProfile(profile);
 
           // STEP 2: Setelah dapat role dari D1, baru set session cookie.
           // Ini penting agar middleware punya role yang benar.
@@ -62,6 +59,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (!sessionRes.ok) {
             console.error("[AuthContext] Gagal menyimpan session cookie:", await sessionRes.text());
           }
+
+          // STEP 3: Update local state SETELAH cookie tersimpan agar komponen yg
+          // mendengarkan perubahan state (seperti halaman login) tidak redirect
+          // sebelum cookie benar-benar tersimpan di browser.
+          setUserProfile(profile);
+          setUser(firebaseUser);
+
         } catch (err: any) {
           console.error("[AuthContext] Gagal sync profil user ke D1:", err);
 
@@ -83,9 +87,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           return;
         }
       } else {
-        setUserProfile(null);
         // Hapus session cookie saat logout
         await fetch("/api/auth/session", { method: "DELETE" }).catch(() => {});
+        setUserProfile(null);
+        setUser(null);
       }
 
       setLoading(false);

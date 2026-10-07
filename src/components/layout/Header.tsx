@@ -31,18 +31,29 @@ export default function Header() {
             </span>
           </div>
         </Link>
-        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600 dark:text-slate-300">
-          <Link href="/products" className={getLinkClass('/products')}>Katalog Modul</Link>
-          <Link href="/packages" className={getLinkClass('/packages')}>Paket Umrah</Link>
-          <Link href="/muthawif" className={getLinkClass('/muthawif')}>Direktori Muthawif</Link>
-          <Link href="/blog" className={getLinkClass('/blog')}>Blog</Link>
-          <Link href="/tentang" className={getLinkClass('/tentang')}>Tentang Kami</Link>
-        </div>
-        <div>
-          <Button variant="outline" className="rounded-full border-emerald-600 text-emerald-700 hover:bg-emerald-50 dark:border-emerald-500 dark:text-emerald-400 dark:hover:bg-emerald-950/30">
-            Masuk
-          </Button>
-        </div>
+        {pathname === '/' ? (
+          <>
+            <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600 dark:text-slate-300">
+              <Link href="/products" className={getLinkClass('/products')}>Katalog Modul</Link>
+              <Link href="/packages" className={getLinkClass('/packages')}>Paket Umrah</Link>
+              <Link href="/muthawif" className={getLinkClass('/muthawif')}>Direktori Muthawif</Link>
+              <Link href="/blog" className={getLinkClass('/blog')}>Blog</Link>
+              <Link href="/tentang" className={getLinkClass('/tentang')}>Tentang Kami</Link>
+            </div>
+            <div>
+              <Button variant="outline" className="rounded-full border-emerald-600 text-emerald-700 hover:bg-emerald-50 dark:border-emerald-500 dark:text-emerald-400 dark:hover:bg-emerald-950/30">
+                Masuk
+              </Button>
+            </div>
+          </>
+        ) : (
+          <div>
+            <Link href="/" className="flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-[#C9A84C] dark:hover:text-[#C9A84C] transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+              Beranda
+            </Link>
+          </div>
+        )}
       </div>
     </nav>
   );

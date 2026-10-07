@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "concurrently -n \"FE,BE\" -c \"cyan.bold,green.bold\" --kill-others-on-fail \"npm run dev:fe\" \"npm run dev:be\"",
-    "dev:fe": "next dev -p 3000",
+    "dev:fe": "concurrently \"npx @tailwindcss/cli -i src/app/globals.css -o public/styles.css --minify --watch\" \"next dev -p 3000\"",
     "dev:be": "cd api-worker && npx wrangler dev",
-    "build": "next build",
+    "build": "npm run build:css && next build",
+    "build:css": "npx @tailwindcss/cli -i src/app/globals.css -o public/styles.css --minify",
     "build:dev": "bash scripts/build-pages.sh dev",
     "build:prod": "bash scripts/build-pages.sh prod",
     "deploy:dev": "cd api-worker && npx wrangler deploy --config wrangler.toml && cd .. && npm run build:dev && npx wrangler pages deploy .vercel/output/static --project-name dev-farha --branch=dev",
@@ -37,7 +38,8 @@
   },
   "devDependencies": {
     "@cloudflare/next-on-pages": "^1.13.16",
-    "@tailwindcss/postcss": "^4",
+    "@tailwindcss/cli": "^4.3.3",
+    "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -45,7 +47,7 @@
     "eslint": "^9",
     "eslint-config-next": "^14.2.13",
     "potrace": "^2.1.8",
-    "tailwindcss": "^4",
+    "tailwindcss": "^4.3.3",
     "typescript": "^5"
   }
 }

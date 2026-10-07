@@ -222,7 +222,7 @@ export function PackageBuilder() {
           <span className="flex h-8 w-8 rounded-full bg-emerald-100 text-emerald-600 items-center justify-center text-sm">1</span>
           Pilih Kriteria Paket
         </h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {PACKAGE_ITEMS.map((srv) => {
             const isSelected = selectedServices.includes(srv.id);
             const IconComp = ICON_MAP[srv.icon] || HelpCircle;

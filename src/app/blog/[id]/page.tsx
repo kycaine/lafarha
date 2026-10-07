@@ -6,6 +6,8 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ChevronLeft, Calendar, User, ArrowLeft } from "lucide-react";
 import articles from "@/contents/blog/articles.json";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 
 export const runtime = 'edge';
 
@@ -27,31 +29,11 @@ export default function BlogDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans pb-20">
-      {/* Header */}
-      <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link
-            href="/blog"
-            className="flex items-center gap-2 text-slate-500 hover:text-slate-800 transition-colors"
-          >
-            <ChevronLeft className="w-5 h-5" />
-            <span className="font-semibold text-sm">Kembali</span>
-          </Link>
-          <div className="flex-1 flex justify-center">
-            <span
-              className="font-bold tracking-widest text-slate-800"
-              style={{ fontFamily: 'var(--font-cinzel), serif' }}
-            >
-              FARHA
-            </span>
-          </div>
-          <div className="w-16"></div> {/* Spacer for centering */}
-        </div>
-      </div>
+    <div className="min-h-screen flex flex-col bg-slate-50 font-sans pb-20">
+      <Header />
 
       {/* Article Content */}
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 pt-10 sm:pt-16">
+      <main className="flex-1 max-w-3xl mx-auto px-4 sm:px-6 pt-10 sm:pt-16 w-full min-h-screen">
         <div className="mb-8">
           <span className="inline-block px-3 py-1 bg-[#C9A84C]/10 text-[#8B6914] text-xs font-bold rounded-full mb-4">
             {article.category}
@@ -103,6 +85,7 @@ export default function BlogDetailPage() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

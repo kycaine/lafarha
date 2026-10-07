@@ -5,36 +5,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, Calendar, User, ArrowRight } from "lucide-react";
 import articles from "@/contents/blog/articles.json";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 
 export default function BlogPage() {
   const [hoveredId, setHoveredId] = useState<number | null>(null);
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans">
-      {/* Header */}
-      <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link
-            href="/"
-            className="flex items-center gap-2 text-slate-500 hover:text-slate-800 transition-colors"
-          >
-            <ChevronLeft className="w-5 h-5" />
-            <span className="font-semibold text-sm">Kembali</span>
-          </Link>
-          <div className="flex-1 flex justify-center">
-            <span
-              className="font-bold tracking-widest text-slate-800"
-              style={{ fontFamily: 'var(--font-cinzel), serif' }}
-            >
-              FARHA
-            </span>
-          </div>
-          <div className="w-16"></div> {/* Spacer for centering */}
-        </div>
-      </div>
+    <div className="min-h-screen flex flex-col bg-slate-50 font-sans">
+      <Header />
 
       {/* Main Content */}
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-12">
+      <main className="flex-1 max-w-5xl mx-auto px-4 sm:px-6 py-12 w-full min-h-screen">
         {/* Title Section */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-black text-slate-800 tracking-tight mb-4">
@@ -99,6 +81,7 @@ export default function BlogPage() {
           ))}
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

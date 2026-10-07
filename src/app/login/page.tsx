@@ -27,11 +27,12 @@ function LoginContent() {
     setError(null);
     try {
       await signInWithGoogle();
-      // AuthContext akan set cookie dan profile, lalu useEffect redirect
+      // AuthContext akan set cookie dan profile, lalu useEffect redirect.
+      // Kita TIDAK mengeset setSigning(false) di sini agar tombol tetap
+      // dalam state loading sementara AuthContext memproses session cookie.
     } catch (err: any) {
       console.error(err);
       setError("Login gagal. Silakan coba lagi.");
-    } finally {
       setSigning(false);
     }
   };

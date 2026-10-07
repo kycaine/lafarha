@@ -42,12 +42,12 @@ const NAV_LINKS: { label: string; href: string; dropdown: { label: string; desc:
     label: "Layanan",
     href: "#layanan",
     dropdown: [
-      { label: "Akomodasi Hotel", desc: "Bintang 3–5 Makkah & Madinah", href: "#product", Icon: Building2 },
-      { label: "Transportasi Darat", desc: "Bus & coaster premium", href: "#product", Icon: Bus },
-      { label: "Tiket Penerbangan", desc: "Garuda & Arab airlines", href: "#product", Icon: Plane },
-      { label: "Visa & Dokumen", desc: "Pengurusan resmi & cepat", href: "#product", Icon: Ticket },
-      { label: "Layanan Tambahan", desc: "Ziarah, VIP handling, guide", href: "#product", Icon: Star },
-      { label: "Muthawif & Guide", desc: "Pembimbing bersertifikat KEMENAG", href: "#product", Icon: Map },
+      { label: "Akomodasi Hotel", desc: "Bintang 3–5 Makkah & Madinah", href: "#layanan", Icon: Building2 },
+      { label: "Transportasi Darat", desc: "Bus & coaster premium", href: "#layanan", Icon: Bus },
+      { label: "Tiket Penerbangan", desc: "Garuda & Arab airlines", href: "#layanan", Icon: Plane },
+      { label: "Visa & Dokumen", desc: "Pengurusan resmi & cepat", href: "#layanan", Icon: Ticket },
+      { label: "Layanan Tambahan", desc: "Ziarah, VIP handling, guide", href: "#layanan", Icon: Star },
+      { label: "Muthawif & Guide", desc: "Pembimbing bersertifikat KEMENAG", href: "#layanan", Icon: Map },
     ],
   },
   {
@@ -573,7 +573,6 @@ export default function BannerSection() {
                   width: scrolled ? "28px" : "36px",
                   height: scrolled ? "28px" : "36px",
                   transition: "width 600ms cubic-bezier(0.4,0,0.2,1), height 600ms cubic-bezier(0.4,0,0.2,1)",
-                  filter: "drop-shadow(0px 4px 10px rgba(0, 0, 0, 0.95)) drop-shadow(0px 2px 6px rgba(0, 0, 0, 0.9))",
                 }}
               />
               <div className="hidden sm:flex flex-col justify-center" style={{ lineHeight: "1.1" }}>
@@ -584,7 +583,6 @@ export default function BannerSection() {
                     fontSize: scrolled ? "16px" : "20px",
                     fontFamily: 'var(--font-cinzel), serif',
                     transition: "color 600ms cubic-bezier(0.4,0,0.2,1), font-size 600ms cubic-bezier(0.4,0,0.2,1)",
-                    textShadow: "0 4px 14px rgba(0, 0, 0, 0.95), 0 2px 4px rgba(0, 0, 0, 0.9), 0 0 20px rgba(0, 0, 0, 0.85)"
                   }}
                 >
                   FARHA
@@ -596,7 +594,6 @@ export default function BannerSection() {
                     fontSize: scrolled ? "8px" : "10px",
                     marginTop: "-1px",
                     transition: "font-size 600ms cubic-bezier(0.4,0,0.2,1)",
-                    textShadow: "0 3px 10px rgba(0, 0, 0, 0.95), 0 1px 3px rgba(0, 0, 0, 0.9)"
                   }}
                 >
                   Umrah Services
