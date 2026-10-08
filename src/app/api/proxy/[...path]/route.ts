@@ -70,7 +70,6 @@ async function handleProxy(req: NextRequest) {
       method: req.method,
       headers,
       redirect: "manual",
-      cache: "no-store",
     };
 
     // Forward body if not GET/HEAD
@@ -116,6 +115,10 @@ async function handleProxy(req: NextRequest) {
     return proxyResponse;
   } catch (error: any) {
     console.error("Proxy error:", error);
-    return NextResponse.json({ error: "Failed to fetch from API" }, { status: 502 });
+    return NextResponse.json({ 
+      error: "Failed to fetch from API", 
+      message: error?.message || String(error),
+      targetUrl: `${process.env.NEXT_PUBLIC_API_URL}${path}${url.search}`
+    }, { status: 502 });
   }
 }

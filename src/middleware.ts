@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getIronSession } from "iron-session";
 import { getSessionOptions, SessionData } from "@/lib/session";
+import { UserRole } from "@/lib/user-store";
 
-type Role = "master" | "admin" | "counter" | "user";
-
-const ROUTE_RULES: { pattern: RegExp; allowedRoles: Role[] }[] = [
+const ROUTE_RULES: { pattern: RegExp; allowedRoles: UserRole[] }[] = [
   {
     // /admin/users — master saja
     pattern: /^\/admin\/users(\/.*)?$/,
@@ -32,7 +31,7 @@ export async function middleware(req: NextRequest) {
 
   const res = NextResponse.next();
   const session = await getIronSession<SessionData>(req, res, getSessionOptions());
-  
+
   const role = session.role;
   const token = session.uid; // we just check if it exists
   console.log("[Middleware] Path:", pathname, "Session isLoggedIn:", session.isLoggedIn, "Role:", role);

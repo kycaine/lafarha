@@ -77,6 +77,10 @@ CREATE TABLE IF NOT EXISTS users (
   updated_at   INTEGER
 );
 
+-- Insert master user directly
+INSERT OR IGNORE INTO users (id, email, display_name, photo_url, role, created_at, updated_at) 
+VALUES ('master_initial', 'talkto.rezki@gmail.com', 'Master Admin', '', 'master', 0, 0);
+
 -- Indexes
 CREATE INDEX IF NOT EXISTS idx_transactions_status    ON transactions(status);
 CREATE INDEX IF NOT EXISTS idx_transaction_items_tid  ON transaction_items(transaction_id);

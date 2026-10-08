@@ -540,7 +540,7 @@ export default function BannerSection() {
     transition:
       "opacity 600ms cubic-bezier(0.4,0,0.2,1), width 600ms cubic-bezier(0.4,0,0.2,1), border-radius 600ms cubic-bezier(0.4,0,0.2,1), background-color 600ms cubic-bezier(0.4,0,0.2,1), box-shadow 600ms cubic-bezier(0.4,0,0.2,1), margin-top 600ms cubic-bezier(0.4,0,0.2,1), height 600ms cubic-bezier(0.4,0,0.2,1), padding-left 600ms cubic-bezier(0.4,0,0.2,1), padding-right 600ms cubic-bezier(0.4,0,0.2,1)",
     willChange: "opacity, width, border-radius, background-color, margin-top, height",
-    width: scrolled ? "min(1000px, calc(100vw - 2rem))" : "100%",
+    width: scrolled ? "min(70%, calc(100vw - 2rem))" : "100%",
     borderRadius: scrolled ? "1rem" : "0px",
     marginTop: scrolled ? "12px" : "0px",
     height: scrolled ? "48px" : "64px",
@@ -562,7 +562,27 @@ export default function BannerSection() {
       {/* ── Navbar ── */}
       <div className="fixed top-0 left-0 right-0 z-50 flex justify-center pointer-events-none">
         <nav className="pointer-events-auto overflow-visible" style={navStyle}>
-          <div className="h-full flex items-center justify-between">
+          <div className="h-full flex items-center justify-between relative">
+
+            {/* Center Mobile Text (only visible on mobile when scrolled) */}
+            <div
+              className="absolute left-1/2 top-1/2 flex sm:hidden items-center justify-center transition-all duration-500"
+              style={{
+                opacity: scrolled ? 1 : 0,
+                transform: `translate(-50%, -50%) ${scrolled ? 'scale(1)' : 'scale(0.95)'}`,
+                pointerEvents: 'none'
+              }}
+            >
+              <span
+                className="font-bold tracking-wide text-white"
+                style={{
+                  fontSize: "17px",
+                  fontFamily: 'var(--font-cinzel), serif',
+                }}
+              >
+                FARHA
+              </span>
+            </div>
 
             {/* Logo */}
             <div className="flex items-center gap-2.5 flex-1">

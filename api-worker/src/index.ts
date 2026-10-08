@@ -92,7 +92,6 @@ app.post('/users/upsert', async (c) => {
     const data = await c.req.json();
     const { id, email, display_name, photo_url, is_master } = data;
     const now = Date.now();
-
     const MASTER_EMAIL = c.env.MASTER_EMAIL || 'talkto.rezki@gmail.com';
 
     // Cari berdasarkan email terlebih dahulu (bukan berdasarkan ID karena ID di awal berupa dummy)
@@ -100,8 +99,12 @@ app.post('/users/upsert', async (c) => {
       "SELECT * FROM users WHERE email = ?"
     ).bind(email).first() as any;
 
+    // Cek apakah tabel kosong
+    let countRes = await c.env.DB.prepare("SELECT COUNT(*) as c FROM users").first() as any;
+    let isFirstUser = countRes && countRes.c === 0;
+
     if (!existing) {
-      if (is_master || email === MASTER_EMAIL) {
+      if (email === MASTER_EMAIL || is_master || isFirstUser) {
         // Jika master login pertama kali, kita buatkan akunnya
         await c.env.DB.prepare(
           `INSERT INTO users (id, email, display_name, photo_url, role, created_at, updated_at)
@@ -162,7 +165,7 @@ app.delete('/users/:id', async (c) => {
     if (!existing) return c.json({ success: false, error: 'Not found' }, 404);
     
     const MASTER_EMAIL = c.env.MASTER_EMAIL || 'talkto.rezki@gmail.com';
-    if (existing.email === MASTER_EMAIL) {
+    if (existing.email === MASTER_EMAIL || existing.role === 'master') {
       return c.json({ success: false, error: 'Cannot delete master account' }, 400);
     }
 
