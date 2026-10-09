@@ -698,7 +698,7 @@ export default function BannerSection() {
                       pointerEvents: profileDropdown ? "auto" : "none",
                       transition: "opacity 180ms ease, transform 180ms ease",
                     }}
-                    className="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl border border-slate-100 shadow-xl shadow-slate-200/60 overflow-hidden z-50"
+                    className="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl border border-slate-100 overflow-hidden z-50"
                   >
                     {/* User info mini */}
                     <div className="px-4 py-3 border-b border-slate-50">
