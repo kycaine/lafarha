@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import images from "../../../contents/gallery/gallery.json";
+import images from "@/contents/gallery/gallery.json";
 
 export default function GallerySection() {
   return (

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Building2, Bus, Plane, Ticket, Star, Map } from "lucide-react";
-import servicesData from "../../../contents/service/service.json";
+import servicesData from "@/contents/service/service.json";
 
 const iconMap: Record<string, React.FC<any>> = {
   Building2,
