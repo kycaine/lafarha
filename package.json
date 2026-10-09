@@ -17,6 +17,7 @@
     "db:init-prod": "cd apps/api && npx wrangler d1 execute DB --remote --file=../../schema.sql --config wrangler.prod.toml"
   },
   "devDependencies": {
-    "concurrently": "^10.0.5"
+    "concurrently": "^10.0.5",
+    "typescript": "^5.9.3"
   }
 }
