@@ -16,7 +16,12 @@
 ## GitHub Secrets Setup (Required for CI/CD)
 To ensure the automated GitHub Actions pipeline (`ci.yml`) can deploy to Cloudflare successfully, the following repository secrets must be configured in **Settings -> Secrets and variables -> Actions**:
 
-1. **`CLOUDFLARE_API_TOKEN`**: A custom Cloudflare API token with `Edit` permissions for Pages, Workers Scripts, D1, R2, and `Read` permissions for Account Settings. 
+1. **`CLOUDFLARE_API_TOKEN`**: A custom Cloudflare API token. Ensure the following **Account** permissions are granted:
+   - `D1`: Read & Write
+   - `Pages`: Read & Write
+   - `Workers R2 Storage`: Read & Write
+   - `Workers Scripts`: Read & Write
+   - `Account Settings`: Read
 2. **`CLOUDFLARE_ACCOUNT_ID`**: Set this to `ef964688891b9260ac3e9a712c69cd74`. **Critical:** Setting this explicitly prevents Wrangler's known bug where it crashes trying to fetch User Memberships during Pages deployment.
 3. **`ENV_PRODUCTION`**: The environment variables text block for the `dev` environment. Next.js reads this file (`.env.production`) during `npm run build` to inject frontend secrets (like `NEXT_PUBLIC_API_URL` and Firebase keys).
 4. **`ENV_PROD`**: The environment variables text block for the `main` (production) environment.
