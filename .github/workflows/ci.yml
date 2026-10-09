@@ -24,6 +24,15 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Setup Environment Variables
+        run: |
+          cat << 'EOF' > apps/web/.env.production
+          ${{ secrets.ENV_PRODUCTION }}
+          EOF
+          cat << 'EOF' > apps/web/.env.prod
+          ${{ secrets.ENV_PROD }}
+          EOF
+
       - name: Run ESLint
         run: npm run lint
 
@@ -48,6 +57,15 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+
+      - name: Setup Environment Variables
+        run: |
+          cat << 'EOF' > apps/web/.env.production
+          ${{ secrets.ENV_PRODUCTION }}
+          EOF
+          cat << 'EOF' > apps/web/.env.prod
+          ${{ secrets.ENV_PROD }}
+          EOF
 
       - name: Deploy to Development Environment
         if: github.ref == 'refs/heads/dev'
