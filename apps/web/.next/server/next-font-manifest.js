@@ -1,0 +1,1 @@
+self.__NEXT_FONT_MANIFEST="{\"pages\":{},\"app\":{\"/home/kyxdx/projects/LA/apps/web/src/app/layout\":[\"static/media/46bdd75a3ff56824-s.p.woff2\",\"static/media/a273567b21a7c318-s.p.woff2\",\"static/media/e4af272ccee01ff0-s.p.woff2\",\"static/media/eaead17c7dbfcd5d-s.p.woff2\"]},\"appUsingSizeAdjust\":true,\"pagesUsingSizeAdjust\":false}"
