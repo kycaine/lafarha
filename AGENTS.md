@@ -39,10 +39,10 @@ Do not flood the context window upfront. Dynamically locate and read relevant fi
 ## 5. Custom Workspace Commands
 
 - **`/add-product`**:
-  Jika user mengirim prompt `/add-product`, agen harus:
-  1. Membaca `src/contents/products/catalog.json`.
-  2. Menanyakan interaktif kepada user mengenai: `ID Produk`, `Judul`, `Nama Icon`, `Membutuhkan jumlah Pax? (y/n)`, dan `Schema form module (jika ada)`.
-  3. Setelah user menjawab, agen otomatis mengedit file `catalog.json` dengan menambahkan objek produk baru ke dalam array `products` dan menambahkan state kosong ke `defaultModuleSpecs` sesuai ID tersebut.
-  4. Agen juga harus mengecek apabila ada ID duplikat.
-  5. **Penting:** Pastikan mengecek direktori `src/modules/catalog/components/modules/` terlebih dahulu untuk melihat apakah ada *form module* yang sudah ada dan bisa dipakai ulang (reusable) sebelum memutuskan untuk membuat file module baru.
+  If the user sends the `/add-product` prompt, the agent must:
+  1. Read `src/contents/products/catalog.json`.
+  2. Ask the user interactively about: `Product ID`, `Title`, `Icon Name`, `Requires Pax amount? (y/n)`, and `Form module schema (if any)`.
+  3. After the user answers, the agent automatically edits the `catalog.json` file by adding a new product object into the `products` array and adding an empty state to `defaultModuleSpecs` according to the ID.
+  4. The agent must also check for duplicate IDs.
+  5. **Important:** Make sure to check the `src/modules/catalog/components/modules/` directory first to see if there is an existing reusable *form module* before deciding to create a new module file.
 

@@ -1,51 +1,22 @@
 {
-  "name": "farha-app",
+  "name": "la-farha-workspace",
   "version": "0.1.0",
   "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "concurrently -n \"FE,BE\" -c \"cyan.bold,green.bold\" --kill-others-on-fail \"npm run dev:fe\" \"npm run dev:be\"",
-    "dev:fe": "next dev -p 3000",
-    "dev:be": "cd api-worker && npx wrangler dev",
-    "build": "next build",
-    "build:dev": "bash scripts/build-pages.sh dev",
-    "build:prod": "bash scripts/build-pages.sh prod",
-    "deploy:dev": "cd api-worker && npx wrangler deploy --config wrangler.toml && cd .. && npm run build:dev && npx wrangler pages deploy .vercel/output/static --project-name dev-farha --branch=dev",
-    "deploy:prod": "cd api-worker && npx wrangler deploy --config wrangler.prod.toml && cd .. && npm run build:prod && npx wrangler pages deploy .vercel/output/static --project-name farha --branch=main",
-    "db:init-local": "cd api-worker && npx wrangler d1 execute DB --local --file=../schema.sql",
-    "db:sync-local": "node scripts/sync-local-db.mjs",
-    "db:init-dev": "cd api-worker && npx wrangler d1 execute DB --remote --file=../schema.sql --config wrangler.toml",
-    "db:init-prod": "cd api-worker && npx wrangler d1 execute DB --remote --file=../schema.sql --config wrangler.prod.toml",
-    "start": "next start",
-    "lint": "eslint"
-  },
-  "dependencies": {
-    "@base-ui/react": "^1.8.0",
-    "@types/three": "^0.186.0",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "firebase": "^12.19.0",
-    "html2canvas-pro": "^2.5.0",
-    "iron-session": "^9.0.1",
-    "jspdf": "^4.2.1",
-    "lucide-react": "^1.46.0",
-    "next": "^14.2.13",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "tailwind-merge": "^3.7.0",
-    "tailwindcss-animate": "^1.0.7",
-    "three": "^0.186.0"
+    "dev": "concurrently -n \"WEB,API\" -c \"cyan.bold,green.bold\" --kill-others-on-fail \"npm run dev -w farha-web\" \"npm run dev -w farha-api\"",
+    "build": "npm run build -w farha-web",
+    "lint": "npm run lint -w farha-web",
+    "deploy:dev": "cd apps/api && npx wrangler deploy --config wrangler.toml && cd ../.. && npm run build:dev -w farha-web && cd apps/web && npx wrangler pages deploy .vercel/output/static --project-name dev-farha --branch=dev",
+    "deploy:prod": "cd apps/api && npx wrangler deploy --config wrangler.prod.toml && cd ../.. && npm run build:prod -w farha-web && cd apps/web && npx wrangler pages deploy .vercel/output/static --project-name farha --branch=main",
+    "db:init-local": "cd apps/api && npx wrangler d1 execute DB --local --file=../../schema.sql",
+    "db:init-dev": "cd apps/api && npx wrangler d1 execute DB --remote --file=../../schema.sql --config wrangler.toml",
+    "db:init-prod": "cd apps/api && npx wrangler d1 execute DB --remote --file=../../schema.sql --config wrangler.prod.toml"
   },
   "devDependencies": {
-    "@cloudflare/next-on-pages": "^1.13.16",
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "concurrently": "^10.0.5",
-    "eslint": "^9",
-    "eslint-config-next": "^14.2.13",
-    "potrace": "^2.1.8",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "concurrently": "^10.0.5"
   }
 }

@@ -77,6 +77,28 @@ CREATE TABLE IF NOT EXISTS users (
   updated_at   INTEGER
 );
 
+-- Insert master user directly
+INSERT OR IGNORE INTO users (id, email, display_name, photo_url, role, created_at, updated_at) 
+VALUES ('master_initial', 'talkto.rezki@gmail.com', 'Master Admin', '', 'master', 0, 0);
+
 -- Indexes
 CREATE INDEX IF NOT EXISTS idx_transactions_status    ON transactions(status);
 CREATE INDEX IF NOT EXISTS idx_transaction_items_tid  ON transaction_items(transaction_id);
+
+-- Muthawif applications
+CREATE TABLE IF NOT EXISTS muthawifs (
+  id         TEXT PRIMARY KEY,
+  nama       TEXT NOT NULL,
+  email      TEXT NOT NULL UNIQUE,
+  cv_file    TEXT,
+  status     TEXT NOT NULL DEFAULT 'PENDING',
+  panggilan  TEXT,
+  foto       TEXT,
+  umur       INTEGER,
+  languages  TEXT,
+  experience TEXT,
+  location   TEXT,
+  rating     REAL,
+  created_at INTEGER,
+  updated_at INTEGER
+);

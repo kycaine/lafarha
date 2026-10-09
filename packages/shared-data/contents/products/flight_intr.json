@@ -1,0 +1,19 @@
+{
+  "direct": [
+    "Saudia Airlines",
+    "Garuda Indonesia",
+    "Lion Air",
+    "Riyadh Air"
+  ],
+  "transit": [
+    "Emirates",
+    "Qatar Airways",
+    "Etihad Airways",
+    "Oman Air",
+    "Malaysia Airlines",
+    "Singapore Airlines",
+    "Air Arabia",
+    "Flydubai",
+    "Hainan Airlines"
+  ]
+}

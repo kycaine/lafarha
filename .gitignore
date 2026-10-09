@@ -16,16 +16,16 @@ api-worker/node_modules
 # ============================================================
 # NEXT.JS (Frontend)
 # ============================================================
-/.next/
-/out/
-/build
+.next/
+out/
+build/
 next-env.d.ts
 
 # ============================================================
-# CLOUDFLARE WORKER (api-worker)
+# CLOUDFLARE WORKER (apps/api)
 # ============================================================
-api-worker/.wrangler/
-api-worker/dist/
+apps/api/.wrangler/
+apps/api/dist/
 
 # ============================================================
 # CLOUDFLARE & WRANGLER (Global)
