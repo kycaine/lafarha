@@ -135,53 +135,60 @@ You are tasked with building a web-based **Land Arrangement (LA) Umrah Inquiry &
 
 ---
 
-## 4. Suggested Tech Stack
+## 4. Suggested Tech Stack (Current Architecture)
 
-* **Frontend & Backend:** **Next.js (App Router)** deployed on **Cloudflare Pages** (via `@cloudflare/next-on-pages` untuk Edge Runtime) + Tailwind CSS + Shadcn UI.
-  * *Critical Constraint:* Routes and Layouts using D1/Server Actions MUST export `export const runtime = "edge";` and `export const dynamic = "force-dynamic";` to prevent static build crashes. 
-  * *Critical Constraint:* local `next.config.ts` must call `setupDevPlatform()` for D1 bindings to work during `next dev`.
-* **Database:** **Cloudflare D1** (Serverless SQL/SQLite) for relational data & storing JSON schemas.
-* **Security & Rate Limiting:** Cloudflare Turnstile integration on the client submission button; **Cloudflare KV** or native **Workers Rate Limiting API** for IP-based sliding window rate-limiting.
-* **Deep Links:** Native `encodeURIComponent` formatting for direct WhatsApp handoff.
+* **Monorepo Architecture:** Managed via NPM Workspaces (or `pnpm`), separating frontend and backend for independent deployments while sharing typed contracts.
+* **Frontend (`apps/web`):** **Next.js (App Router)** deployed on **Cloudflare Pages**.
+  * UI: Tailwind CSS, `cn()` utility, generic UI components (Button, Input, Card).
+  * State & Context: `AuthContext.tsx`, `AlertContext.tsx`.
+* **Backend (`apps/api`):** **Hono Framework** deployed on **Cloudflare Workers**.
+  * Provides strict REST endpoints consumed by the frontend via a centralized `fetchApi()` utility.
+* **Database & Storage:** 
+  * **Cloudflare D1** (Serverless SQLite) as the primary database.
+  * **Cloudflare R2** for file and media storage.
+* **Authentication:** **Firebase Auth** (Google Provider) used exclusively for Identity/Login (Admin/Muthawif), with user profiles automatically synced (`upsertUserProfile`) to Cloudflare D1. Session persistence is handled securely.
+* **Automated CI/CD:** GitHub Actions (`.github/workflows/ci.yml`) managing isolated builds and sequential `wrangler` deployments for both Worker and Pages to `dev` and `main` environments.
 
 ---
 
-## 5. Recommended Folder Structure (Modular Monolith)
+## 5. Recommended Folder Structure (Monorepo)
 
-Since we are using Next.js on Cloudflare, we will organize the project using a **Modular Monolith (Feature-Sliced)** pattern. This means instead of separating files by technical type (e.g., all UI components together, all backend logic together), we group them by **Business Feature (Domain)**.
+The project is structured as a Monorepo to separate the Edge API from the Frontend UI, while maintaining a Modular Monolith pattern inside the Next.js app.
 
 ```text
 /
-├── env.d.ts
-├── next.config.mjs
-├── wrangler.toml
-├── src/
-│   ├── app/
-│   │   ├── (public)/
-│   │   │   ├── page.tsx
-│   │   │   └── quote/[id]/
-│   │   └── admin/
-│   │       ├── dashboard/
-│   │       └── orders/[id]/
+├── .github/workflows/
+│   └── ci.yml               # Automated build & deploy pipeline
+├── apps/
+│   ├── api/                 # Cloudflare Worker (Backend)
+│   │   ├── src/
+│   │   │   └── index.ts     # Hono API entrypoint & routes
+│   │   ├── wrangler.toml    # Worker config (D1, R2 bindings)
+│   │   └── package.json
 │   │
-│   ├── modules/
-│   │   ├── catalog/
-│   │   │   ├── components/
-│   │   │   ├── actions.ts
-│   │   │   └── schema.ts
-│   │   │
-│   │   ├── ordering/
-│   │   │   ├── components/
-│   │   │   ├── actions.ts
-│   │   │   └── schema.ts
-│   │   │
-│   │   └── communications/
-│   │       ├── actions.ts
-│   │       └── templates.ts
-│   │
-│   └── shared/
-│       ├── ui/
-│       ├── utils/
-│       ├── db/
-│       └── types/
+│   └── web/                 # Next.js App Router (Frontend)
+│       ├── src/
+│       │   ├── app/
+│       │   │   ├── (public)/      # Guest facing forms
+│       │   │   └── admin/         # Authenticated admin routes (Dashboard, Users, Contacts)
+│       │   │
+│       │   ├── lib/               # Core utilities
+│       │   │   ├── api.ts         # fetchApi wrapper
+│       │   │   ├── firebase.ts    # Firebase client init
+│       │   │   └── auth.ts        # Server-side auth & signOut
+│       │   │
+│       │   ├── modules/           # Business Domains
+│       │   │   ├── catalog/       # ProductCatalog, HotelSpecsModule, FlightLogicModule
+│       │   │   └── ordering/      # Transactions, actions.ts, Status Badges
+│       │   │
+│       │   └── shared/            # Cross-cutting UI & Context
+│       │       ├── AuthContext.tsx
+│       │       └── AlertContext.tsx
+│       │
+│       ├── next.config.mjs
+│       └── package.json
+│
+├── package.json             # Root workspace config
+├── DEPLOYMENTS.md           # CI/CD and Secrets guide
+└── MASTER_PROMPT.md         # Architecture prompt
 ```

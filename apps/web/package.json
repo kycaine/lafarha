@@ -1,0 +1,45 @@
+{
+  "name": "farha-web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "npm run build:css && next build",
+    "build:css": "npx @tailwindcss/cli -i src/app/globals.css -o public/styles.css --minify",
+    "build:dev": "bash scripts/build-pages.sh dev",
+    "build:prod": "bash scripts/build-pages.sh prod",
+    "start": "next start",
+    "lint": "eslint",
+    "dev": "concurrently \"npx @tailwindcss/cli -i src/app/globals.css -o public/styles.css --minify --watch\" \"next dev -p 3000\""
+  },
+  "dependencies": {
+    "@base-ui/react": "^1.8.0",
+    "@types/three": "^0.186.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "firebase": "^12.19.0",
+    "html2canvas-pro": "^2.5.0",
+    "iron-session": "^9.0.1",
+    "jspdf": "^4.2.1",
+    "lucide-react": "^1.46.0",
+    "next": "^14.2.13",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwind-merge": "^3.7.0",
+    "tailwindcss-animate": "^1.0.7",
+    "three": "^0.186.0"
+  },
+  "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.13.16",
+    "@tailwindcss/cli": "^4.3.3",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "concurrently": "^10.0.5",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^14.2.13",
+    "potrace": "^2.1.8",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5"
+  }
+}

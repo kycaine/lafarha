@@ -1,9 +1,0 @@
-name = "farha-worker"
-main = "src/index.ts"
-compatibility_date = "2024-02-28"
-compatibility_flags = ["nodejs_compat"]
-
-[[d1_databases]]
-binding = "DB"
-database_name = "farha-db"
-database_id = "0f08116b-258e-4a70-9b88-3bba0a2e2a12"

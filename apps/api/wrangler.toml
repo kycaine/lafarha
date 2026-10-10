@@ -1,0 +1,14 @@
+name = "dev-farha-worker"
+main = "src/index.ts"
+compatibility_date = "2024-02-28"
+compatibility_flags = ["nodejs_compat"]
+account_id = "ef964688891b9260ac3e9a712c69cd74"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "dev-farha-db"
+database_id = "ce9fb6ee-7f6e-45d3-836a-fda15e01da9b"
+
+[[r2_buckets]]
+binding = "STORAGE"
+bucket_name = "dev-farha-storage"
