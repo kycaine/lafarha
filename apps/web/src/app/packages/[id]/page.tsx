@@ -210,7 +210,7 @@ export default function PackageDetailPage() {
                 <p className="text-emerald-800 font-bold text-[15px] tracking-wide">Platform Land Arrangement Umrah</p>
               </div>
               <div className="text-right text-xs text-slate-600 space-y-1">
-                <p className="font-bold text-slate-800 text-sm">PT. Farha Inovasi Mandiri</p>
+                <p className="font-bold text-slate-800 text-sm">LA FARHA</p>
                 <p>{fullAddress}</p>
                 <p>Telp: {phoneDisplay}</p>
                 <p>Email: {emailDisplay} | Web: www.lafarha.id</p>
@@ -332,7 +332,7 @@ export default function PackageDetailPage() {
           <div className="pdf-only hidden border-t border-slate-200 pt-4 mt-6">
             <div className="flex items-center justify-between text-xs text-slate-500">
               <p>* Syarat & ketentuan berlaku. Harga dan fasilitas dapat berubah sewaktu-waktu sesuai kebijakan maskapai dan hotel.</p>
-              <p className="font-semibold text-emerald-800">PT. Farha Inovasi Mandiri</p>
+              <p className="font-semibold text-emerald-800">LA FARHA</p>
             </div>
           </div>
 
