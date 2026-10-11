@@ -839,7 +839,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
                       <p className="text-emerald-800 font-bold text-[15px] tracking-wide">Platform Land Arrangement Umrah</p>
                     </div>
                     <div className="text-right text-xs text-slate-600 space-y-1">
-                      <p className="font-bold text-slate-800 text-sm">PT. Farha Inovasi Travel</p>
+                      <p className="font-bold text-slate-800 text-sm">LA FARHA</p>
                       <p>{fullAddress}</p>
                       <p>Telp: {phoneDisplay}</p>
                       <p>Email: {emailDisplay} | Web: www.lafarha.id</p>
