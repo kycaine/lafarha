@@ -12,6 +12,8 @@ import { fetchApi } from "@/lib/api";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas-pro";
 
+export const runtime = 'edge';
+
 export default function PackageDetailPage() {
   const { id } = useParams();
   const router = useRouter();
