@@ -26,10 +26,6 @@ const PagodaIcon = ({ className }: { className?: string }) => (
 );
 
 export default function PackagesPage() {
-  const [detailModal, setDetailModal] = useState<string | null>(null);
-
-  const selectedPackage = packagesData.readyPackages.find((p: any) => p.id === detailModal);
-
   return (
     <main className="min-h-screen flex flex-col bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white">
       <Header />
@@ -102,14 +98,20 @@ export default function PackagesPage() {
                         {item}
                       </li>
                     ))}
+                    {pkg.excludes && pkg.excludes.map((item: string, i: number) => (
+                      <li key={`ex-${i}`} className="flex items-start gap-2 text-xs xl:text-sm text-slate-400 dark:text-slate-500">
+                        <span className="w-4 h-4 xl:w-5 xl:h-5 flex items-center justify-center rounded-full border-2 border-red-400/50 text-red-400/50 text-[10px] shrink-0 font-bold leading-none pb-[1px]">✕</span>
+                        {item}
+                      </li>
+                    ))}
                   </ul>
                   <div className="flex flex-col gap-2 mt-auto relative z-10">
                     <a href={`https://wa.me/6281234567890?text=Halo%20FARHA%2C%20saya%20tertarik%20dengan%20${pkg.name}%20seharga%20${pkg.priceString}.`} target="_blank" rel="noreferrer" className={`w-full py-3 rounded-xl ${theme.bgButton} ${theme.hoverBgButton} text-white font-bold text-sm text-center transition-colors shadow-md hover:shadow-lg`}>
                       Pilih Paket
                     </a>
-                    <button onClick={() => setDetailModal(pkg.id as any)} className={`w-full py-3 rounded-xl border-2 border-slate-200 dark:border-slate-800 ${theme.hoverBorder} text-slate-700 dark:text-slate-300 font-bold text-sm text-center transition-colors`}>
+                    <Link href={`/packages/${pkg.id}`} className={`block w-full py-3 rounded-xl border-2 border-slate-200 dark:border-slate-800 ${theme.hoverBorder} text-slate-700 dark:text-slate-300 font-bold text-sm text-center transition-colors`}>
                       Detail Paket
-                    </button>
+                    </Link>
                   </div>
                 </div>
               );
@@ -118,9 +120,8 @@ export default function PackagesPage() {
         </div>
 
         {/* Divider */}
-        <div className="w-full h-px bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-800 to-transparent mb-10 mt-6"></div>
+        {/* <div className="w-full h-px bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-800 to-transparent mb-10 mt-6"></div>
 
-        {/* Custom Package Builder Section */}
         <header className="mb-8 text-center">
           <h3 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-3">
             Buat Paket Sesuai Kebutuhan
@@ -130,51 +131,10 @@ export default function PackagesPage() {
           </p>
         </header>
 
-        <PackageBuilder />
+        <PackageBuilder /> */}
       </div>
 
-      {/* Detail Modal */}
-      {detailModal && selectedPackage && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }} onClick={(e) => { if (e.target === e.currentTarget) setDetailModal(null); }}>
-          <div className="bg-white dark:bg-[#111] w-full max-w-md rounded-3xl p-8 relative shadow-2xl animate-in fade-in zoom-in-95 duration-200">
-            <button onClick={() => setDetailModal(null)} className="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-800 dark:hover:text-white">
-              ✕
-            </button>
-            <h3 className="text-2xl font-bold mb-6 text-slate-800 dark:text-white">
-              Detail {selectedPackage.name}
-            </h3>
-
-            <div className="space-y-6">
-              <div>
-                <h4 className="font-semibold text-emerald-600 dark:text-emerald-400 mb-3 flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5" /> Termasuk
-                </h4>
-                <ul className="list-disc pl-5 space-y-1.5 text-sm text-slate-600 dark:text-slate-300">
-                  {selectedPackage.includes.map((item: string, i: number) => (
-                    <li key={i}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-
-              <div>
-                <h4 className="font-semibold text-red-500 mb-3 flex items-center gap-2">
-                  <span className="w-5 h-5 flex items-center justify-center rounded-full border-2 border-red-500 text-xs">✕</span> Tidak Termasuk
-                </h4>
-                <ul className="list-disc pl-5 space-y-1.5 text-sm text-slate-600 dark:text-slate-300">
-                  <li>Hotel Domestik</li>
-                  <li>Tiket Pesawat Domestik</li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="mt-8">
-              <a href={`https://wa.me/6281234567890?text=Halo%20FARHA%2C%20saya%20tertarik%20dengan%20${selectedPackage.name}.`} target="_blank" rel="noreferrer" className="block w-full py-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-center transition-colors">
-                Pilih Paket Ini
-              </a>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Detail Modal Removed in favor of dedicated page */}
       <Footer />
     </main>
   );

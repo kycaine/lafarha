@@ -98,6 +98,45 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
   const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
   const [contactForm, setContactForm] = useState({ name: "", whatsapp: "" });
 
+  const [contactSettings, setContactSettings] = useState<{
+    office_address?: string;
+    office_city?: string;
+    whatsapp_number?: string;
+    whatsapp_counter?: string;
+    email?: string;
+  } | null>(null);
+
+  useEffect(() => {
+    fetchApi('/settings/contact')
+      .then((res) => {
+        if (res && res.success) {
+          setContactSettings(res);
+        }
+      })
+      .catch((err) => {
+        console.warn("Failed to fetch contact settings:", err);
+      });
+  }, []);
+
+  const fullAddress = useMemo(() => {
+    if (contactSettings?.office_address) {
+      if (
+        contactSettings.office_city &&
+        !contactSettings.office_address.toLowerCase().includes(contactSettings.office_city.toLowerCase())
+      ) {
+        return `${contactSettings.office_address}, ${contactSettings.office_city}`;
+      }
+      return contactSettings.office_address;
+    }
+    if (contactSettings?.office_city) {
+      return contactSettings.office_city;
+    }
+    return "Gedung Office 8, SCBD, Jakarta Selatan";
+  }, [contactSettings]);
+
+  const phoneDisplay = contactSettings?.whatsapp_number || contactSettings?.whatsapp_counter || "+62 811 1234 5678";
+  const emailDisplay = contactSettings?.email || "info@farha.id";
+
   // Pax & manifest data (tidak termasuk nama/WA lagi)
   const [formData, setFormData] = useState({
     pax: "",
@@ -121,19 +160,19 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  
+
   // ─── Deep Linking / URL Query Initialization ──────────────────────────────
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const product = params.get("product");
-      
+
       if (product) {
         setSelectedServices([product]);
-        
+
         setModuleSpecs((prev) => {
           const newSpecs = { ...prev };
-          
+
           if (product === "HOTEL") {
             const city = params.get("city");
             const checkin = params.get("checkin");
@@ -147,7 +186,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
               newSpecs.HOTEL.needsMekah = false;
               if (checkin) newSpecs.HOTEL.madinahCheckIn = checkin;
             }
-          } 
+          }
           else if (product === "FLIGHT_INTL") {
             const route = params.get("route");
             const date = params.get("date");
@@ -176,7 +215,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
             if (type) newSpecs.VISA.type = type;
             // Pax is handled globally in formData, so we do it outside prev
           }
-          
+
           return newSpecs;
         });
 
@@ -232,12 +271,12 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
     // Generic modules — also in registry for uniformity
     TextInput: (srvId, mod, i) => (
       <div key={i} className="space-y-2">
-        <Label>{mod.label}</Label>
+        <Label>{mod.label} {mod.required === false && <span className="text-slate-400 text-xs font-normal">(Opsional)</span>}</Label>
         <Input
           placeholder="Ketik jawaban..."
           value={genericData[srvId]?.[mod.name] || ""}
           onChange={e => handleGenericChange(srvId, mod.name, e.target.value)}
-          required
+          required={mod.required !== false}
         />
       </div>
     ),
@@ -249,6 +288,23 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
           value={genericData[srvId]?.[mod.name] || ""}
           onChange={val => handleGenericChange(srvId, mod.name, val)}
         />
+      </div>
+    ),
+
+    Select: (srvId, mod, i) => (
+      <div key={i} className="space-y-2">
+        <Label>{mod.label}</Label>
+        <select
+          className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300"
+          value={genericData[srvId]?.[mod.name] || ""}
+          onChange={e => handleGenericChange(srvId, mod.name, e.target.value)}
+          required
+        >
+          <option value="" disabled>Pilih {mod.label}</option>
+          {mod.options?.map((opt: string) => (
+            <option key={opt} value={opt}>{opt}</option>
+          ))}
+        </select>
       </div>
     ),
   };
@@ -397,9 +453,9 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
     targetWidth = Math.max(targetWidth, 1200);
 
     try {
-      const canvas = await html2canvas(element, { 
-        scale: 2, 
-        useCORS: true, 
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
         logging: false,
         windowWidth: targetWidth,
         onclone: (clonedDoc) => {
@@ -409,7 +465,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
             clonedElement.style.height = 'max-content';
             clonedElement.style.maxHeight = 'none';
             clonedElement.style.width = targetWidth + 'px';
-            
+
             // Allow horizontal tables to expand fully
             const scrollables = clonedElement.querySelectorAll('.overflow-x-auto, .overflow-auto');
             scrollables.forEach(el => {
@@ -430,22 +486,22 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
       const pdf = new jsPDF('p', 'mm', 'a4');
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
-      
+
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      
+
       let heightLeft = pdfHeight;
       let position = 0;
-      
+
       pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
       heightLeft -= pageHeight;
-      
+
       while (heightLeft > 0) {
         position = heightLeft - pdfHeight;
         pdf.addPage();
         pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
         heightLeft -= pageHeight;
       }
-      
+
       pdf.save(filename);
     } catch (error: any) {
       console.error('Failed to generate PDF', error);
@@ -490,16 +546,19 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {displayedProducts.map((srv) => {
+            const hasForm = srv.form_schema && srv.form_schema.length > 0;
             const isSelected = selectedServices.includes(srv.id);
             const IconComp = ICON_MAP[srv.icon] || HelpCircle;
 
             return (
               <div
                 key={srv.id}
-                onClick={() => toggleService(srv.id)}
-                className={`relative cursor-pointer flex flex-col items-center justify-center p-6 rounded-2xl border-2 transition-all duration-200 ${isSelected
-                  ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 shadow-md scale-105'
-                  : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-black/40 text-slate-500 hover:border-emerald-300'
+                onClick={() => hasForm && toggleService(srv.id)}
+                className={`relative flex flex-col items-center justify-center p-6 rounded-2xl border-2 transition-all duration-200 ${!hasForm
+                  ? 'opacity-50 cursor-not-allowed border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-black/20 text-slate-400'
+                  : isSelected
+                    ? 'cursor-pointer border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 shadow-md scale-105'
+                    : 'cursor-pointer border-slate-200 dark:border-slate-800 bg-white dark:bg-black/40 text-slate-500 hover:border-emerald-300'
                   }`}
               >
                 <IconComp className="h-8 w-8" />
@@ -771,7 +830,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
             </div>
             <div className="p-6 overflow-auto flex-1 bg-slate-50 dark:bg-slate-900/50" id="pricing-table-container">
               <div className="w-full bg-white dark:bg-[#111] rounded-lg border border-slate-200 dark:border-slate-800 p-6 space-y-8">
-                
+
                 {/* PDF Header - Hidden in UI, visible in PDF */}
                 <div className="pdf-logo hidden flex-col border-b border-slate-300 pb-6 mb-6">
                   <div className="flex items-start justify-between">
@@ -780,10 +839,10 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
                       <p className="text-emerald-800 font-bold text-[15px] tracking-wide">Platform Land Arrangement Umrah</p>
                     </div>
                     <div className="text-right text-xs text-slate-600 space-y-1">
-                      <p className="font-bold text-slate-800 text-sm">PT. Farha Inovasi Mandiri</p>
-                      <p>Gedung Office 8, SCBD, Jakarta Selatan</p>
-                      <p>Telp: +62 811 1234 5678</p>
-                      <p>Email: info@farha.id | Web: www.farha.id</p>
+                      <p className="font-bold text-slate-800 text-sm">PT. Farha Inovasi Travel</p>
+                      <p>{fullAddress}</p>
+                      <p>Telp: {phoneDisplay}</p>
+                      <p>Email: {emailDisplay} | Web: www.lafarha.id</p>
                     </div>
                   </div>
                 </div>
@@ -971,7 +1030,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
             </div>
             <div className="p-6 overflow-auto flex-1 bg-slate-50 dark:bg-slate-900/50" id="hotel-pricing-table-container">
               <div className="w-full bg-white dark:bg-[#111] rounded-lg border border-slate-200 dark:border-slate-800 p-6 space-y-8">
-                
+
                 {/* PDF Header - Hidden in UI, visible in PDF */}
                 <div className="pdf-logo hidden flex-col border-b border-slate-300 pb-6 mb-6">
                   <div className="flex items-start justify-between">
@@ -981,9 +1040,9 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
                     </div>
                     <div className="text-right text-xs text-slate-600 space-y-1">
                       <p className="font-bold text-slate-800 text-sm">PT. Farha Inovasi Mandiri</p>
-                      <p>Gedung Office 8, SCBD, Jakarta Selatan</p>
-                      <p>Telp: +62 811 1234 5678</p>
-                      <p>Email: info@farha.id | Web: www.farha.id</p>
+                      <p>{fullAddress}</p>
+                      <p>Telp: {phoneDisplay}</p>
+                      <p>Email: {emailDisplay} | Web: www.lafarha.id</p>
                     </div>
                   </div>
                 </div>

@@ -93,7 +93,7 @@
       "title": "Handling",
       "icon": "Briefcase",
       "requires_pax": 0,
-      "form_schema": "[]"
+      "form_schema": "[{\"type\":\"Select\", \"name\":\"handling_arab\", \"label\":\"Lokasi Handling Arab\", \"options\":[\"Jeddah (JED)\", \"Madinah (MED)\", \"Taif (TIF)\", \"Tidak Perlu\"]}, {\"type\":\"Select\", \"name\":\"handling_indo\", \"label\":\"Lokasi Handling Indonesia\", \"options\":[\"CGK Jakarta\", \"SUB Surabaya\", \"KNO Medan\", \"KJT Kertajati\", \"YIA Yogyakarta\", \"Tidak Perlu\"]}, {\"type\":\"DatePickerNative\", \"name\":\"tanggal_handling\", \"label\":\"Tanggal Pelaksanaan\"}, {\"type\":\"TextInput\", \"name\":\"data_handling\", \"label\":\"Masukkan Data Tambahan\", \"required\": false}]"
     },
     {
       "id": "TRANSPORTASI",
@@ -101,13 +101,6 @@
       "icon": "Bus",
       "requires_pax": 1,
       "form_schema": "[{\"type\":\"TransportModule\"}]"
-    },
-    {
-      "id": "REKBER",
-      "title": "Rekber",
-      "icon": "CheckCircle2",
-      "requires_pax": 0,
-      "form_schema": "[]"
     },
     {
       "id": "VISA",

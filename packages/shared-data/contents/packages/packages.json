@@ -151,6 +151,85 @@
   ],
   "readyPackages": [
     {
+      "id": "ramadhan",
+      "name": "Paket Ramadhan 2027",
+      "desc": "Berangkat 23 Februari",
+      "priceString": "Rp 39.000.000",
+      "features": [
+        "Siskopatuh",
+        "Hendling Saudi",
+        "Visa & Transfortasi",
+        "Hotel Madinah & Mekkah",
+        "City Tour Cina"
+      ],
+      "includes": [
+        "Handling Saudi",
+        "Handling Jakarta",
+        "Visa Umrah",
+        "Transportasi full trip (3 trip)",
+        "Hotel Madinah 5 malam (Kayan Internasional 200m, 15-20 Ramadhan)",
+        "Hotel Mekkah 11 malam (Al Kiswah Tower 900m, 20 Ramadhan - 1 Syawwal)",
+        "Bus Antar jemput Hotel - Masjidil Haram",
+        "Makan Sahur dan Makan Malam (2x Sehari)",
+        "Tiket Pesawat Transit Pulang Pergi (Hainan Airlines)",
+        "Hotel Cina 1 malam",
+        "City Tour Cina Haiko",
+        "Tasreh Raudhah",
+        "Air Zam-Zam 5 liter",
+        "Muthawif & Tour Leader"
+      ],
+      "excludes": [
+        "Hotel Domestik",
+        "Tiket Pesawat Domestik",
+        "Perlengkapan",
+        "Paspor",
+        "Vaksin"
+      ],
+      "theme": "emerald",
+      "icon": "MoonStar",
+      "iconColor": "emerald"
+    },
+    {
+      "id": "turkey2026",
+      "name": "Paket Desember 2026: Umrah + Turkey",
+      "desc": "Program 14 Hari",
+      "priceString": "Rp 36.800.000",
+      "features": [
+        "Paket Standard",
+        "Pesawat via Turkey",
+        "City Tour Turkey",
+        "Hotel & Makan (Turkey)"
+      ],
+      "includes": [
+        "Starting Jakarta Akhir Desember (Liburan Akhir Tahun)",
+        "Handling Saudi",
+        "Handling Jakarta",
+        "Visa Umrah",
+        "Transportasi Full Trip (5 trip)",
+        "Tiket Pesawat Pulang Pergi via Turkey",
+        "City Tour Turkey (termasuk Guide)",
+        "Hotel Mekah 4 malam (Nada Ajyad)",
+        "Hotel Madinah 4 malam (Jawaharat Al Rasheed)",
+        "Hotel Turkey 3 malam (Bintang 4)",
+        "Makan 3x Sehari",
+        "Muthawif & Tour Leader",
+        "Air Zam-Zam 5 liter",
+        "Tasreh Raudhah"
+      ],
+      "excludes": [
+        "Hotel Domestik",
+        "Tiket Pesawat Domestik",
+        "Perlengkapan",
+        "Paspor",
+        "Vaksin"
+      ],
+      "theme": "emerald",
+      "icon": "MoonStar",
+      "iconColor": "emerald"
+    }
+  ],
+  "draftPackages": [
+    {
       "id": "ekonomis",
       "name": "Paket Ekonomis",
       "desc": "Umrah hemat & nyaman",
@@ -168,6 +247,10 @@
         "Visa Umrah",
         "Transportasi Bus",
         "Muthawif & Tour Leader"
+      ],
+      "excludes": [
+        "Hotel Domestik",
+        "Tiket Pesawat Domestik"
       ],
       "theme": "emerald",
       "icon": "Wallet",
@@ -197,31 +280,14 @@
         "Transportasi full trip",
         "Siskopatuh"
       ],
+      "excludes": [
+        "Hotel Domestik",
+        "Tiket Pesawat Domestik"
+      ],
       "theme": "amber",
       "icon": "Sparkles",
       "isFavorite": true,
       "iconColor": "amber"
-    },
-    {
-      "id": "turkey",
-      "name": "Standard + Turkey",
-      "desc": "Umrah plus city tour",
-      "priceString": "Rp 35 Jt",
-      "features": [
-        "Paket Standard",
-        "Pesawat via Turkey",
-        "City Tour Turkey",
-        "Hotel & Makan (Turkey)"
-      ],
-      "includes": [
-        "Semua fasilitas Paket Standard",
-        "Tiket penerbangan via Turkey",
-        "City Tour Turkey (termasuk Guide)",
-        "Akomodasi Hotel & Makan selama di Turkey"
-      ],
-      "theme": "emerald",
-      "icon": "MoonStar",
-      "iconColor": "orange"
     },
     {
       "id": "china",
@@ -239,6 +305,10 @@
         "Tiket penerbangan via China",
         "City Tour China (termasuk Guide)",
         "Akomodasi Hotel & Makan selama di China"
+      ],
+      "excludes": [
+        "Hotel Domestik",
+        "Tiket Pesawat Domestik"
       ],
       "theme": "emerald",
       "icon": "Pagoda",
