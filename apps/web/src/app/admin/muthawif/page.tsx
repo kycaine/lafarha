@@ -189,11 +189,14 @@ export default function AdminMuthawifPage() {
                 {selectedMuthawif.cv_file ? (
                   <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl flex items-center justify-between border border-slate-100 dark:border-slate-700">
                     <div className="truncate pr-4 flex-1">
-                      <span className="font-medium text-slate-700 dark:text-slate-300">CV:</span> {selectedMuthawif.cv_filename || "Dokumen CV.pdf"}
+                      <span className="font-medium text-slate-700 dark:text-slate-300">CV:</span>{" "}
+                      {selectedMuthawif.cv_filename || (selectedMuthawif.cv_file.startsWith('/storage/') ? selectedMuthawif.cv_file.split('/').pop() : "Dokumen CV.pdf")}
                     </div>
                     <a 
                       href={selectedMuthawif.cv_file} 
                       download={selectedMuthawif.cv_filename || "CV.pdf"}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="text-emerald-600 hover:text-emerald-700 bg-emerald-50 dark:bg-emerald-900/30 px-3 py-1.5 rounded-lg font-medium flex items-center gap-2 shrink-0 transition-colors"
                     >
                       <Download className="w-4 h-4" /> Unduh

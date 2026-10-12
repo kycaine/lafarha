@@ -27,13 +27,38 @@ export default function DaftarMuthawifPage() {
 
     setIsSubmitting(true);
     try {
+      // 1. Upload CV ke Object Storage R2 terlebih dahulu
+      let cvPath = cvBase64;
+      try {
+        const uploadRes = await fetch('/api/proxy/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            base64: cvBase64,
+            folder: 'cv'
+          })
+        });
+        const uploadJson = await uploadRes.json();
+        if (uploadJson.success && uploadJson.url) {
+          cvPath = uploadJson.url;
+        } else if (!uploadJson.success && uploadJson.error) {
+          throw new Error(uploadJson.error);
+        }
+      } catch (uploadErr: any) {
+        console.warn("Upload ke storage via proxy:", uploadErr);
+        if (uploadErr.message?.includes('5 MB') || uploadErr.message?.includes('melebihi')) {
+          throw uploadErr;
+        }
+      }
+
+      // 2. Kirim pendaftaran muthawif dengan link/path CV
       const res = await fetch('/api/proxy/muthawifs', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           nama: formData.nama,
           email: formData.email,
-          cv_file: cvBase64
+          cv_file: cvPath
         })
       });
 
@@ -114,6 +139,13 @@ export default function DaftarMuthawifPage() {
                 onChange={(e) => {
                   if (e.target.files && e.target.files.length > 0) {
                     const file = e.target.files[0];
+                    const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
+                    if (file.size > MAX_SIZE) {
+                      alert("Ukuran file CV melebihi batas maksimal 5 MB. Silakan pilih file yang lebih kecil.");
+                      e.target.value = '';
+                      return;
+                    }
+
                     setFormData({ ...formData, cvFileName: file.name });
                     
                     const reader = new FileReader();

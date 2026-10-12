@@ -572,11 +572,46 @@ app.get('/muthawifs/:id', async (c) => {
 app.post('/muthawifs', async (c) => {
   try {
     const data = await c.req.json();
+    if (!data.nama || !data.email) {
+      return c.json({ success: false, error: 'Nama dan email wajib diisi' }, 400);
+    }
+
     const id = `MUTHAWIF-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+    let cvUrl = data.cv_file || null;
+
+    // Jika cv_file berupa data base64 dan R2 STORAGE tersedia, simpan ke R2 agar DB tetap ringan
+    if (cvUrl && cvUrl.startsWith('data:') && c.env.STORAGE) {
+      const match = cvUrl.match(/^data:([^;]+);base64,(.+)$/s);
+      if (match) {
+        const contentType = match[1];
+        const raw = match[2];
+        const binary = atob(raw);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+
+        if (bytes.length > 5 * 1024 * 1024) {
+          return c.json({ success: false, error: 'Ukuran file CV melebihi batas maksimal 5 MB' }, 400);
+        }
+
+        let ext = 'pdf';
+        if (contentType.includes('pdf')) ext = 'pdf';
+        else if (contentType.includes('wordprocessingml') || contentType.includes('docx')) ext = 'docx';
+        else if (contentType.includes('msword') || contentType.includes('doc')) ext = 'doc';
+        else if (contentType.includes('png')) ext = 'png';
+        else if (contentType.includes('jpeg') || contentType.includes('jpg')) ext = 'jpg';
+
+        const key = `cv/${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${ext}`;
+        await c.env.STORAGE.put(key, bytes, {
+          httpMetadata: { contentType },
+        });
+        cvUrl = `/storage/${key}`;
+      }
+    }
+
     await c.env.DB.prepare(
       "INSERT INTO muthawifs (id, nama, email, cv_file, created_at) VALUES (?, ?, ?, ?, ?)"
     ).bind(
-      id, data.nama, data.email, data.cv_file || null, Date.now()
+      id, data.nama, data.email, cvUrl, Date.now()
     ).run();
     return c.json({ success: true, id });
   } catch (error: any) {
@@ -747,7 +782,7 @@ app.get('/storage/:key{.*}', async (c) => {
   return new Response(object.body, { headers });
 });
 
-// POST /upload - Upload image to R2 or base64 fallback
+// POST /upload - Upload image/document to R2 or base64 fallback
 app.post('/upload', async (c) => {
   try {
     const data = await c.req.json();
@@ -757,13 +792,27 @@ app.post('/upload', async (c) => {
     // If R2 STORAGE is available, save to R2
     if (c.env.STORAGE) {
       const match = base64.match(/^data:([^;]+);base64,(.+)$/s);
-      const contentType = match ? match[1] : 'image/webp';
+      const contentType = match ? match[1] : 'application/octet-stream';
       const raw = match ? match[2] : base64;
       const binary = atob(raw);
       const bytes = new Uint8Array(binary.length);
       for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
 
-      const ext = contentType.includes('webp') ? 'webp' : 'png';
+      // Max file size 5 MB
+      const MAX_SIZE = 5 * 1024 * 1024;
+      if (bytes.length > MAX_SIZE) {
+        return c.json({ success: false, error: 'Ukuran file melebihi batas maksimal 5 MB' }, 400);
+      }
+
+      let ext = 'bin';
+      if (contentType.includes('webp')) ext = 'webp';
+      else if (contentType.includes('png')) ext = 'png';
+      else if (contentType.includes('jpeg') || contentType.includes('jpg')) ext = 'jpg';
+      else if (contentType.includes('pdf')) ext = 'pdf';
+      else if (contentType.includes('wordprocessingml') || contentType.includes('docx')) ext = 'docx';
+      else if (contentType.includes('msword') || contentType.includes('doc')) ext = 'doc';
+      else if (contentType.includes('svg')) ext = 'svg';
+
       const key = `${folder}/${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${ext}`;
       await c.env.STORAGE.put(key, bytes, {
         httpMetadata: { contentType },

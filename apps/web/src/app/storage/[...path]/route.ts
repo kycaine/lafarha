@@ -26,10 +26,13 @@ export async function GET(req: NextRequest) {
     }
 
     const headers = new Headers();
-    const contentType = upstream.headers.get("content-type") || "image/webp";
+    const contentType = upstream.headers.get("content-type") || (path.endsWith(".pdf") ? "application/pdf" : "image/webp");
     headers.set("Content-Type", contentType);
     headers.set("Cache-Control", "public, max-age=31536000, immutable");
     headers.set("Access-Control-Allow-Origin", "*");
+
+    const contentDisposition = upstream.headers.get("content-disposition");
+    if (contentDisposition) headers.set("Content-Disposition", contentDisposition);
 
     const etag = upstream.headers.get("etag");
     if (etag) headers.set("ETag", etag);
