@@ -107,22 +107,6 @@ export default function Footer() {
                   </div>
                 )}
 
-                {/* Counter WhatsApp (jika ada) */}
-                {contact.whatsapp_counter && (
-                  <div className="flex flex-col">
-                    <span className="text-white/40 text-[10px] uppercase mb-0.5 tracking-wider font-semibold">
-                      WhatsApp Counter
-                    </span>
-                    <a
-                      href={`https://wa.me/${cleanPhone(contact.whatsapp_counter)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-[#C9A84C] transition-colors font-medium text-white/90"
-                    >
-                      {contact.whatsapp_counter}
-                    </a>
-                  </div>
-                )}
 
                 {/* Email */}
                 {contact.email && (
