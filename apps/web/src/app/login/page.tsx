@@ -57,14 +57,12 @@ function LoginContent() {
         {/* Card */}
         <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl shadow-slate-200/60 border border-white/60 p-10 flex flex-col items-center gap-8">
           {/* Logo */}
-          <div className="flex flex-col items-center gap-3">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#C9A84C] to-[#8B6914] flex items-center justify-center shadow-lg shadow-[#C9A84C]/30">
-              <span className="text-white font-black text-2xl tracking-tight" style={{ fontFamily: 'var(--font-cinzel), serif' }}>F</span>
-            </div>
-            <div className="text-center">
-              <p className="font-bold text-lg text-slate-800 tracking-wide" style={{ fontFamily: 'var(--font-cinzel), serif' }}>FARHA</p>
-              <p className="text-[#C9A84C] text-[11px] font-semibold tracking-[0.25em] uppercase">Land Arrangement Umrah</p>
-            </div>
+          <div className="flex flex-col items-center">
+            <img
+              src="/farha-logo-full.svg"
+              alt="FARHA Logo"
+              className="h-24 w-auto object-contain drop-shadow-sm"
+            />
           </div>
 
           {/* Title */}

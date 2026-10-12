@@ -47,7 +47,7 @@ export default function Footer() {
   );
 
   return (
-    <footer id="footer" className="relative w-full h-screen min-h-[750px] bg-[#161616] overflow-hidden flex flex-col justify-center border-t border-white/5">
+    <footer id="footer" className="relative w-full h-auto min-h-fit md:h-screen md:min-h-[750px] bg-[#161616] overflow-hidden flex flex-col justify-center border-t border-white/5">
       {/* Background Glow & Big Logo */}
       <div className="absolute top-0 left-0 w-full h-full flex items-center justify-start pointer-events-none overflow-hidden z-0">
         <div className="absolute inset-0 bg-gradient-to-l from-[#161616] via-[#161616]/80 to-transparent z-10 hidden md:block" />
@@ -67,9 +67,9 @@ export default function Footer() {
         />
       </div>
 
-      <div className="w-full h-full relative z-20 flex flex-col justify-between py-12 md:py-16 px-6 md:px-[5vw]">
+      <div className="w-full h-auto md:h-full relative z-20 flex flex-col justify-between py-12 md:py-16 px-6 md:px-[5vw]">
         {/* Main Content Area */}
-        <div className="flex flex-col mt-auto mb-auto max-w-2xl pt-10 md:ml-auto w-full md:w-1/2">
+        <div className="flex flex-col md:mt-auto md:mb-auto max-w-2xl pt-6 md:pt-10 md:ml-auto w-full md:w-1/2">
 
           {/* Content Matching Banner */}
           <div className="flex flex-col mb-10">
