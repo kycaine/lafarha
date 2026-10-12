@@ -246,7 +246,7 @@ export default function Footer() {
           {/* Bottom Bar: Copyright */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-6 mt-4 border-t border-white/5 w-full text-white/40 text-[10px] sm:text-[11px] font-medium tracking-wide">
             <span>&copy; {new Date().getFullYear()} LA FARHA, All rights reserved.</span>
-            <span>Platform Land Arrangement Umrah</span>
+            <span>designed by Reternia.</span>
           </div>
 
         </div>
