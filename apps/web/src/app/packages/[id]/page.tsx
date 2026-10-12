@@ -213,7 +213,7 @@ export default function PackageDetailPage() {
                 <p className="font-bold text-slate-800 text-sm">LA FARHA</p>
                 <p>{fullAddress}</p>
                 <p>Telp: {phoneDisplay}</p>
-                <p>Email: {emailDisplay} | Web: www.lafarha.id</p>
+                <p>Email: {emailDisplay} | Web: lafarha.id</p>
               </div>
             </div>
           </div>
