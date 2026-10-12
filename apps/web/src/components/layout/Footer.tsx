@@ -225,7 +225,7 @@ export default function Footer() {
               <h4 className="text-white font-bold text-sm uppercase tracking-wider">Perusahaan</h4>
               <div className="text-white/70 text-xs sm:text-[13px] flex flex-col gap-3 font-medium">
                 <Link href="/tentang" className="hover:text-[#C9A84C] transition-colors">Tentang Kami</Link>
-                <Link href="/muthawif" className="hover:text-[#C9A84C] transition-colors">Muthawif</Link>
+                <Link href="/muthawif/daftar" className="hover:text-[#C9A84C] transition-colors">Daftar Muthawif</Link>
                 <Link href="/blog" className="hover:text-[#C9A84C] transition-colors">Blog & Artikel</Link>
                 <Link href="/gallery" className="hover:text-[#C9A84C] transition-colors">Galeri Dokumentasi</Link>
                 <a href={`https://wa.me/${cleanPhone(contact.whatsapp_number)}`} target="_blank" rel="noopener noreferrer" className="hover:text-[#C9A84C] transition-colors">Hubungi Kami</a>
