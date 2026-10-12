@@ -27,7 +27,7 @@ jobs:
       - name: Setup Environment Variables
         run: |
           cat << 'EOF' > apps/web/.env.production
-          ${{ secrets.ENV_PRODUCTION }}
+          ${{ secrets.ENV_DEV || secrets.ENV_PRODUCTION }}
           EOF
           cat << 'EOF' > apps/web/.env.prod
           ${{ secrets.ENV_PROD }}
@@ -61,7 +61,7 @@ jobs:
       - name: Setup Environment Variables
         run: |
           cat << 'EOF' > apps/web/.env.production
-          ${{ secrets.ENV_PRODUCTION }}
+          ${{ secrets.ENV_DEV || secrets.ENV_PRODUCTION }}
           EOF
           cat << 'EOF' > apps/web/.env.prod
           ${{ secrets.ENV_PROD }}
