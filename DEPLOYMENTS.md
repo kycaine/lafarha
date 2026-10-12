@@ -7,8 +7,8 @@
 - **Cloudflare Worker (Backend)**: `dev-farha-worker` (deployed from `apps/api`)
 
 ### Production (Branch: `main`)
-- **Cloudflare Pages (Frontend)**: `farha` (built from `apps/web`)
-- **Cloudflare Worker (Backend)**: `farha-worker` (deployed from `apps/api`)
+- **Cloudflare Pages (Frontend)**: `lafarha` (built from `apps/web`)
+- **Cloudflare Worker (Backend)**: `lafarha-worker` (deployed from `apps/api`)
 
 ## Accounts & Authentication
 - **Cloudflare Account ID**: `ef964688891b9260ac3e9a712c69cd74`

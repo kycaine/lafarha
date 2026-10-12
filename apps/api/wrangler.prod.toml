@@ -1,4 +1,4 @@
-name = "farha-worker"
+name = "lafarha-worker"
 main = "src/index.ts"
 compatibility_date = "2024-02-28"
 compatibility_flags = ["nodejs_compat"]
@@ -6,5 +6,9 @@ account_id = "ef964688891b9260ac3e9a712c69cd74"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "farha-db"
-database_id = "0f08116b-258e-4a70-9b88-3bba0a2e2a12"
+database_name = "lafarha-db"
+database_id = "23fb72f5-b1eb-42b0-997b-633356d863a4"
+
+[[r2_buckets]]
+binding = "STORAGE"
+bucket_name = "lafarha-storage"

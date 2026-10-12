@@ -29,7 +29,7 @@ Every time it runs, the CI provisions a free server from GitHub (Ubuntu) and per
 
 Currently, the deployment process is still manual via terminal commands on the local machine:
 - `npm run deploy:dev` (For the development environment: `dev-farha`)
-- `npm run deploy:prod` (For the production environment: `farha`)
+- `npm run deploy:prod` (For the production environment: `lafarha`)
 
 ### How CD Will Work When Enabled
 Once you are ready to enable CD, GitHub Actions will run the deployment scripts above **only if the CI stage (Lint & Build) is proven successful**.

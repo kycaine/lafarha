@@ -11,7 +11,7 @@
     "build": "npm run build -w farha-web",
     "lint": "npm run lint -w farha-web",
     "deploy:dev": "cd apps/api && npx wrangler deploy --config wrangler.toml && cd ../.. && npm run build:dev -w farha-web && cd apps/web && npx wrangler pages deploy .vercel/output/static --project-name dev-farha --branch=dev",
-    "deploy:prod": "cd apps/api && npx wrangler deploy --config wrangler.prod.toml && cd ../.. && npm run build:prod -w farha-web && cd apps/web && npx wrangler pages deploy .vercel/output/static --project-name farha --branch=main",
+    "deploy:prod": "cd apps/api && npx wrangler deploy --config wrangler.prod.toml && cd ../.. && npm run build:prod -w farha-web && cd apps/web && npx wrangler pages deploy .vercel/output/static --project-name lafarha --branch=main",
     "db:init-local": "cd apps/api && npx wrangler d1 execute DB --local --file=../../schema.sql",
     "db:init-dev": "cd apps/api && npx wrangler d1 execute DB --remote --file=../../schema.sql --config wrangler.toml",
     "db:init-prod": "cd apps/api && npx wrangler d1 execute DB --remote --file=../../schema.sql --config wrangler.prod.toml"
