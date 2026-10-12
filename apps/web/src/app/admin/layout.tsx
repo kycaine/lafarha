@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ListOrdered, Users, Shield, Settings, LogOut, ChevronDown, User, PhoneCall, Menu, Home, X } from "lucide-react";
+import { ListOrdered, Users, Shield, Settings, LogOut, ChevronDown, User, PhoneCall, Menu, Home, X, ImageIcon, BookOpen } from "lucide-react";
 import { useAuth } from "@/shared/AuthContext";
 import { signOut } from "@/lib/auth";
 import { useRouter, usePathname } from "next/navigation";
@@ -52,6 +52,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const menuItems = [
     { label: "Pipeline Orders", href: "/admin/dashboard", icon: ListOrdered },
+    { label: "Manajemen Galeri", href: "/admin/galeri", icon: ImageIcon },
+    { label: "Manajemen Blog", href: "/admin/blog", icon: BookOpen },
     { label: "Manajemen Mitra", href: "/admin/mitra", icon: Users },
     { label: "Manajemen Muthawif", href: "/admin/muthawif", icon: Users },
     { label: "Kontak & Sosmed", href: "/admin/kontak", icon: PhoneCall },

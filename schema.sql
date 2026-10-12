@@ -102,3 +102,26 @@ CREATE TABLE IF NOT EXISTS muthawifs (
   created_at INTEGER,
   updated_at INTEGER
 );
+
+-- Gallery photos
+CREATE TABLE IF NOT EXISTS gallery (
+  id         TEXT PRIMARY KEY,
+  image      TEXT NOT NULL,
+  caption    TEXT,
+  created_at INTEGER
+);
+
+-- Articles / Blog
+CREATE TABLE IF NOT EXISTS articles (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  title      TEXT NOT NULL,
+  excerpt    TEXT,
+  content    TEXT NOT NULL,
+  author     TEXT,
+  date       TEXT,
+  image      TEXT,
+  category   TEXT,
+  created_at INTEGER,
+  updated_at INTEGER
+);
+

@@ -3,6 +3,7 @@ import { cors } from 'hono/cors';
 
 type Bindings = {
   DB: D1Database;
+  STORAGE?: R2Bucket;
   API_SECRET_KEY: string;
   MASTER_EMAIL?: string;
 };
@@ -16,8 +17,12 @@ app.use('/*', cors({
   allowHeaders: ['Content-Type', 'Authorization', 'X-API-Key', 'X-User-ID', 'X-User-Role'],
 }));
 
-// Protect all routes with API Key
+// Protect API routes with API Key, allow public access for static storage
 app.use('/*', async (c, next) => {
+  if (c.req.path.startsWith('/storage/')) {
+    return next();
+  }
+
   // Check API Key
   const apiKey = c.req.header('X-API-Key');
   if (!apiKey || apiKey !== c.env.API_SECRET_KEY) {
@@ -725,5 +730,183 @@ app.put('/settings/contact', async (c) => {
   }
 });
 
+
+// -- Storage & Upload API --
+
+// GET /storage/:key - Serve image directly from R2
+app.get('/storage/:key{.*}', async (c) => {
+  if (!c.env.STORAGE) return c.json({ error: 'Storage not configured' }, 500);
+  const key = c.req.param('key');
+  const object = await c.env.STORAGE.get(key);
+  if (!object) return c.json({ error: 'Not found' }, 404);
+
+  const headers = new Headers();
+  object.writeHttpMetadata(headers);
+  headers.set('etag', object.httpEtag);
+  headers.set('Cache-Control', 'public, max-age=31536000, immutable');
+  return new Response(object.body, { headers });
+});
+
+// POST /upload - Upload image to R2 or base64 fallback
+app.post('/upload', async (c) => {
+  try {
+    const data = await c.req.json();
+    const { base64, folder = 'uploads' } = data;
+    if (!base64) return c.json({ success: false, error: 'base64 data required' }, 400);
+
+    // If R2 STORAGE is available, save to R2
+    if (c.env.STORAGE) {
+      const match = base64.match(/^data:([^;]+);base64,(.+)$/s);
+      const contentType = match ? match[1] : 'image/webp';
+      const raw = match ? match[2] : base64;
+      const binary = atob(raw);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+
+      const ext = contentType.includes('webp') ? 'webp' : 'png';
+      const key = `${folder}/${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${ext}`;
+      await c.env.STORAGE.put(key, bytes, {
+        httpMetadata: { contentType },
+      });
+
+      return c.json({ success: true, url: `/storage/${key}` });
+    }
+
+    // Fallback if no R2: return base64
+    return c.json({ success: true, url: base64 });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
+
+// -- Gallery API --
+
+app.get('/gallery', async (c) => {
+  try {
+    const { results } = await c.env.DB.prepare(
+      "SELECT * FROM gallery ORDER BY created_at DESC"
+    ).all();
+    return c.json({ success: true, data: results });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
+app.post('/gallery', async (c) => {
+  if (!requireRole(c, ['master', 'admin'])) return c.json({ success: false, error: 'Forbidden' }, 403);
+  try {
+    const data = await c.req.json();
+    const id = `GAL-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+    await c.env.DB.prepare(
+      "INSERT INTO gallery (id, image, caption, created_at) VALUES (?, ?, ?, ?)"
+    ).bind(id, data.image, data.caption || '', Date.now()).run();
+    return c.json({ success: true, id });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
+app.delete('/gallery/:id', async (c) => {
+  if (!requireRole(c, ['master', 'admin'])) return c.json({ success: false, error: 'Forbidden' }, 403);
+  try {
+    const id = c.req.param('id');
+    await c.env.DB.prepare("DELETE FROM gallery WHERE id = ?").bind(id).run();
+    return c.json({ success: true });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
+
+// -- Articles / Blog API --
+
+app.get('/articles', async (c) => {
+  try {
+    const { results } = await c.env.DB.prepare(
+      "SELECT * FROM articles ORDER BY id ASC"
+    ).all();
+    return c.json({ success: true, data: results });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
+app.get('/articles/:id', async (c) => {
+  try {
+    const id = c.req.param('id');
+    const article = await c.env.DB.prepare(
+      "SELECT * FROM articles WHERE id = ?"
+    ).bind(id).first();
+    if (!article) return c.json({ success: false, error: 'Not found' }, 404);
+    return c.json({ success: true, data: article });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
+app.post('/articles', async (c) => {
+  if (!requireRole(c, ['master', 'admin'])) return c.json({ success: false, error: 'Forbidden' }, 403);
+  try {
+    const data = await c.req.json();
+    const now = Date.now();
+    const res = await c.env.DB.prepare(
+      `INSERT INTO articles (title, excerpt, content, author, date, image, category, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
+    ).bind(
+      data.title,
+      data.excerpt || '',
+      data.content,
+      data.author || 'Tim Farha',
+      data.date || new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }),
+      data.image || '',
+      data.category || 'Umrah',
+      now,
+      now
+    ).run();
+    return c.json({ success: true, id: res.meta.last_row_id });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
+app.put('/articles/:id', async (c) => {
+  if (!requireRole(c, ['master', 'admin'])) return c.json({ success: false, error: 'Forbidden' }, 403);
+  try {
+    const id = c.req.param('id');
+    const data = await c.req.json();
+    const now = Date.now();
+    await c.env.DB.prepare(
+      `UPDATE articles SET 
+        title = ?, excerpt = ?, content = ?, author = ?, 
+        date = ?, image = ?, category = ?, updated_at = ?
+       WHERE id = ?`
+    ).bind(
+      data.title,
+      data.excerpt || '',
+      data.content,
+      data.author || 'Tim Farha',
+      data.date || '',
+      data.image || '',
+      data.category || 'Umrah',
+      now,
+      id
+    ).run();
+    return c.json({ success: true });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
+app.delete('/articles/:id', async (c) => {
+  if (!requireRole(c, ['master', 'admin'])) return c.json({ success: false, error: 'Forbidden' }, 403);
+  try {
+    const id = c.req.param('id');
+    await c.env.DB.prepare("DELETE FROM articles WHERE id = ?").bind(id).run();
+    return c.json({ success: true });
+  } catch (error: any) {
+    return c.json({ success: false, error: error.message }, 500);
+  }
+});
+
 export default app;
-// Trigger CI/CD Dev

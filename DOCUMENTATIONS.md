@@ -267,7 +267,7 @@ Mengelola alur pemesanan (Order/Quote) mulai dari pengajuan user, penawaran harg
 - **Request Body:**
 ```json
 {
-  "name": "H. Ahmad Fauzi",
+  "name": "Kiki Tampan",
   "whatsapp": "6281234567890",
   "notes": "{\"services\":[\"HOTEL\",\"FLIGHT\"],\"pax\":45,\"hotel\":{\"city\":\"Makkah\"}}"
 }
@@ -290,7 +290,7 @@ Mengelola alur pemesanan (Order/Quote) mulai dari pengajuan user, penawaran harg
   "data": [
     {
       "id": "HOT-PES-74912",
-      "client_name": "H. Ahmad Fauzi",
+      "client_name": "Kiki Tampan",
       "client_whatsapp": "6281234567890",
       "status": "PENDING",
       "total_amount_idr": null,
@@ -311,7 +311,7 @@ Mengelola alur pemesanan (Order/Quote) mulai dari pengajuan user, penawaran harg
   "success": true,
   "data": {
     "id": "HOT-PES-74912",
-    "client_name": "H. Ahmad Fauzi",
+    "client_name": "Kiki Tampan",
     "client_whatsapp": "6281234567890",
     "status": "PENDING",
     "total_amount_idr": null,
@@ -593,9 +593,148 @@ Mengelola konfigurasi kontak, WhatsApp CS & Counter, alamat kantor, dan tautan s
 ```
 - **Response `200 OK`:** `{"success": true}`
 
+
 ---
 
-## 9. Contoh Request (cURL & Fetch)
+## 9. Storage & Upload API (`/upload` & `/storage`)
+
+Mengelola upload gambar ke Cloudflare R2 bucket.
+
+### 9.1. Upload Image (WebP)
+- **Method:** `POST`
+- **Path:** `/upload`
+- **Request Body:**
+```json
+{
+  "base64": "data:image/webp;base64,UklGR...",
+  "folder": "gallery"
+}
+```
+*(Folder opsional: `'gallery'`, `'blog'`, `'mitra'`).*
+- **Response `200 OK`:**
+```json
+{
+  "success": true,
+  "url": "/storage/gallery/1728710000000-ab12cd.webp"
+}
+```
+
+### 9.2. Serve Image
+- **Method:** `GET`
+- **Path:** `/storage/:key`
+- **Akses:** Publik (tidak memerlukan API Key)
+- **Response:** Binary image stream dengan header `Cache-Control: public, max-age=31536000, immutable`.
+
+---
+
+## 10. Gallery API (`/gallery`)
+
+Mengelola foto dokumentasi perjalanan umrah LA Farha.
+
+### 10.1. Get All Gallery Photos
+- **Method:** `GET`
+- **Path:** `/gallery`
+- **Response `200 OK`:**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "GAL-AB12CD",
+      "image": "/storage/gallery/1728710000000-ab12cd.webp",
+      "caption": "Momen di Masjid Nabawi",
+      "created_at": 1728710000000
+    }
+  ]
+}
+```
+
+### 10.2. Add Photo to Gallery
+- **Method:** `POST`
+- **Path:** `/gallery`
+- **Akses:** `master`, `admin`
+- **Request Body:**
+```json
+{
+  "image": "/storage/gallery/1728710000000-ab12cd.webp",
+  "caption": "Momen di Masjid Nabawi"
+}
+```
+- **Response `200 OK`:** `{"success": true, "id": "GAL-AB12CD"}`
+
+### 10.3. Delete Photo
+- **Method:** `DELETE`
+- **Path:** `/gallery/:id`
+- **Akses:** `master`, `admin`
+- **Response `200 OK`:** `{"success": true}`
+
+---
+
+## 11. Articles & Blog API (`/articles`)
+
+Mengelola artikel edukasi dan panduan umrah.
+
+### 11.1. Get All Articles
+- **Method:** `GET`
+- **Path:** `/articles`
+- **Response `200 OK`:**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "title": "Panduan Lengkap Persiapan Fisik Sebelum Berangkat Umrah",
+      "excerpt": "Kesehatan fisik sangat penting...",
+      "content": "Isi lengkap artikel...",
+      "author": "Tim Farha",
+      "date": "25 Oktober 2026",
+      "image": "/storage/blog/1728710000000-ef56gh.webp",
+      "category": "Persiapan"
+    }
+  ]
+}
+```
+
+### 11.2. Get Article by ID
+- **Method:** `GET`
+- **Path:** `/articles/:id`
+- **Response `200 OK`:** Detail 1 artikel.
+
+### 11.3. Create Article
+- **Method:** `POST`
+- **Path:** `/articles`
+- **Akses:** `master`, `admin`
+- **Request Body:**
+```json
+{
+  "title": "Tips Umrah Mandiri",
+  "excerpt": "Ringkasan...",
+  "content": "Konten lengkap...",
+  "author": "Tim Farha",
+  "date": "12 Oktober 2026",
+  "image": "/storage/blog/cover.webp",
+  "category": "Tips"
+}
+```
+- **Response `200 OK`:** `{"success": true, "id": 7}`
+
+### 11.4. Update Article
+- **Method:** `PUT`
+- **Path:** `/articles/:id`
+- **Akses:** `master`, `admin`
+- **Request Body:** Format sama seperti Create Article.
+- **Response `200 OK`:** `{"success": true}`
+
+### 11.5. Delete Article
+- **Method:** `DELETE`
+- **Path:** `/articles/:id`
+- **Akses:** `master`, `admin`
+- **Response `200 OK`:** `{"success": true}`
+
+---
+
+## 12. Contoh Request (cURL & Fetch)
 
 ### Contoh cURL Direct ke Worker:
 ```bash
