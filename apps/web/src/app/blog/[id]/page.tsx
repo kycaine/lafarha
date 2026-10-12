@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import { Calendar, User, ArrowLeft, BookOpen } from "lucide-react";
 import initialArticles from "@/contents/blog/articles.json";
 import { fetchApi } from "@/lib/api";
+import { getStorageImageUrl } from "@/lib/image-utils";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
@@ -84,7 +85,7 @@ export default function BlogDetailPage() {
         {article.image ? (
           <div className="relative w-full aspect-video rounded-3xl overflow-hidden mb-10 shadow-lg bg-slate-200 dark:bg-slate-800">
             <img
-              src={article.image}
+              src={getStorageImageUrl(article.image)}
               alt={article.title}
               className="w-full h-full object-cover"
             />

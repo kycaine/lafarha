@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { BookOpen, Plus, Edit2, Trash2, Upload, RefreshCw, CheckCircle, Image as ImageIcon, Calendar, User, Search, X } from "lucide-react";
 import { fetchApi } from "@/lib/api";
-import { convertAndCompressToWebp, formatFileSize, CompressedImageResult } from "@/lib/image-utils";
+import { convertAndCompressToWebp, formatFileSize, getStorageImageUrl, CompressedImageResult } from "@/lib/image-utils";
 import { useAlert } from "@/shared/AlertContext";
 
 interface ArticleItem {
@@ -292,7 +292,7 @@ export default function AdminBlogPage() {
                   {/* Cover thumbnail */}
                   <div className="w-24 h-20 md:w-32 md:h-24 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 shrink-0 border border-slate-200 dark:border-slate-700 relative">
                     {article.image ? (
-                      <img src={article.image} alt={article.title} className="w-full h-full object-cover" />
+                      <img src={getStorageImageUrl(article.image)} alt={article.title} className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-amber-50 to-emerald-50 dark:from-slate-800 dark:to-slate-900 text-slate-400 p-2 text-center">
                         <ImageIcon className="w-6 h-6 mb-1 text-[#C9A84C]" />
@@ -371,7 +371,7 @@ export default function AdminBlogPage() {
                     {compressedImage ? (
                       <img src={compressedImage.dataUrl} alt="Preview Baru" className="w-full h-full object-cover" />
                     ) : currentImageUrl ? (
-                      <img src={currentImageUrl} alt="Cover Sekarang" className="w-full h-full object-cover" />
+                      <img src={getStorageImageUrl(currentImageUrl)} alt="Cover Sekarang" className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 text-xs">
                         <ImageIcon className="w-6 h-6 mb-1" />

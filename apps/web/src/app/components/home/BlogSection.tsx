@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Calendar, ArrowRight, ChevronLeft, ChevronRight, BookOpen } from "lucide-react";
 import initialArticles from "@/contents/blog/articles.json";
 import { fetchApi } from "@/lib/api";
+import { getStorageImageUrl } from "@/lib/image-utils";
 
 interface Article {
   id: number;
@@ -136,7 +137,7 @@ export default function BlogSection() {
                   <div className="relative w-full h-48 overflow-hidden bg-slate-100 dark:bg-slate-800">
                     {article.image ? (
                       <img
-                        src={article.image}
+                        src={getStorageImageUrl(article.image)}
                         alt={article.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       />

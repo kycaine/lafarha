@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { fetchApi } from "@/lib/api";
+import { getStorageImageUrl } from "@/lib/image-utils";
 import { Camera, Image as ImageIcon } from "lucide-react";
 
 interface GalleryItem {
@@ -122,7 +123,7 @@ export default function GallerySection() {
           <div className="expandable-grid">
             {gallery.map((item, index) => (
               <div key={item.id || index} className="grid-item">
-                <img src={item.image} alt={item.caption || `Momen ${index + 1}`} loading="lazy" />
+                <img src={getStorageImageUrl(item.image)} alt={item.caption || `Momen ${index + 1}`} loading="lazy" />
                 {item.caption && (
                   <div className="caption-overlay">
                     <p className="line-clamp-2">{item.caption}</p>

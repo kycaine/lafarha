@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Upload, Trash2, Image as ImageIcon, Sparkles, CheckCircle, AlertCircle, RefreshCw } from "lucide-react";
 import { fetchApi } from "@/lib/api";
-import { convertAndCompressToWebp, formatFileSize, CompressedImageResult } from "@/lib/image-utils";
+import { convertAndCompressToWebp, formatFileSize, getStorageImageUrl, CompressedImageResult } from "@/lib/image-utils";
 import { useAlert } from "@/shared/AlertContext";
 
 interface GalleryItem {
@@ -321,7 +321,7 @@ export default function AdminGaleriPage() {
                 className="group relative aspect-square rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm"
               >
                 <img
-                  src={item.image}
+                  src={getStorageImageUrl(item.image)}
                   alt={item.caption || "Foto Galeri"}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
