@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Star, MapPin, Languages, CheckCircle2, X, UserCircle2 } from 'lucide-react';
+import { Star, MapPin, Languages, CheckCircle2, X, UserCircle2, Briefcase } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/layout/Header';
@@ -74,11 +74,6 @@ export default function MuthawifDirectoryPage() {
                       {muthawif.nama}
                       <CheckCircle2 className="w-4 h-4 text-emerald-500" />
                     </CardTitle>
-                    <div className="flex items-center text-[#8B6914] text-sm font-medium mt-1">
-                      <Star className="w-4 h-4 mr-1 fill-[#C9A84C] text-[#C9A84C]" />
-                      {muthawif.rating || "5.0"} 
-                      <span className="text-slate-400 dark:text-slate-500 font-normal ml-1">({muthawif.experience || "Berpengalaman"})</span>
-                    </div>
                   </div>
                 </div>
               </CardHeader>
@@ -86,6 +81,12 @@ export default function MuthawifDirectoryPage() {
                 <div className="flex items-center text-sm text-slate-600 dark:text-slate-300">
                   <MapPin className="w-4 h-4 mr-2 text-slate-400" />
                   {muthawif.location || "Mekkah & Madinah"}
+                </div>
+                <div className="flex items-start text-sm text-slate-600 dark:text-slate-300">
+                  <Briefcase className="w-4 h-4 mr-2 text-slate-400 mt-0.5 shrink-0" />
+                  <p className="line-clamp-2 break-words min-w-0">
+                    {muthawif.experience || "Berpengalaman"}
+                  </p>
                 </div>
                 <div className="flex items-start text-sm text-slate-600 dark:text-slate-300">
                   <Languages className="w-4 h-4 mr-2 text-slate-400 mt-0.5" />
@@ -141,10 +142,6 @@ export default function MuthawifDirectoryPage() {
                   )}
                   
                   <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-5 gap-y-2 mt-3 text-sm font-medium text-slate-600 dark:text-slate-300">
-                    <div className="flex items-center text-[#8B6914]">
-                      <Star className="w-4 h-4 mr-1.5 fill-[#C9A84C] text-[#C9A84C]" />
-                      {selectedMuthawif.rating || "5.0"} Rating
-                    </div>
                     <div className="flex items-center">
                       <MapPin className="w-4 h-4 mr-1.5 text-slate-400" />
                       {selectedMuthawif.location || "Mekkah & Madinah"}
