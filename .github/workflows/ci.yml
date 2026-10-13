@@ -24,13 +24,18 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Setup Environment Variables
+      - name: Setup Environment Variables (prod)
+        if: github.ref == 'refs/heads/main' || github.base_ref == 'main'
         run: |
           cat << 'EOF' > apps/web/.env.production
-          ${{ secrets.ENV_DEV || secrets.ENV_PRODUCTION }}
-          EOF
-          cat << 'EOF' > apps/web/.env.prod
           ${{ secrets.ENV_PROD }}
+          EOF
+
+      - name: Setup Environment Variables (dev)
+        if: github.ref != 'refs/heads/main' && github.base_ref != 'main'
+        run: |
+          cat << 'EOF' > apps/web/.env.production
+          ${{ secrets.ENV_DEV }}
           EOF
 
       - name: Run ESLint
@@ -58,14 +63,20 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Setup Environment Variables
+      - name: Setup Environment Variables (dev)
+        if: github.ref == 'refs/heads/dev'
         run: |
           cat << 'EOF' > apps/web/.env.production
-          ${{ secrets.ENV_DEV || secrets.ENV_PRODUCTION }}
+          ${{ secrets.ENV_DEV }}
           EOF
+
+      - name: Setup Environment Variables (prod)
+        if: github.ref == 'refs/heads/main'
+        run: |
           cat << 'EOF' > apps/web/.env.prod
           ${{ secrets.ENV_PROD }}
           EOF
+          cp apps/web/.env.prod apps/web/.env.production
 
       - name: Deploy to Development Environment
         if: github.ref == 'refs/heads/dev'
