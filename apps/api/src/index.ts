@@ -1,11 +1,15 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
+import { sendEmail, muthawifApprovedTemplate } from './email';
 
 type Bindings = {
   DB: D1Database;
   STORAGE?: R2Bucket;
   API_SECRET_KEY: string;
   MASTER_EMAIL?: string;
+  RESEND_API_KEY?: string;
+  APP_URL?: string;
+  EMAIL_REPLY_TO?: string;
 };
 
 const app = new Hono<{ Bindings: Bindings }>();
@@ -682,6 +686,23 @@ app.patch('/muthawifs/:id/approve', async (c) => {
       ).bind(dummyId, muthawif.email, muthawif.nama, '', 'muthawif', now, now).run();
     } else {
       await c.env.DB.prepare("UPDATE users SET role = 'muthawif' WHERE email = ?").bind(muthawif.email).run();
+    }
+
+    // Send approval email in background; failure must not break approval
+    if (c.env.RESEND_API_KEY && muthawif.email) {
+      const appUrl = c.env.APP_URL || 'https://lafarha.id';
+      const { subject, html } = muthawifApprovedTemplate(muthawif.nama, `${appUrl}/login`);
+      c.executionCtx.waitUntil(
+        sendEmail({
+          apiKey: c.env.RESEND_API_KEY,
+          to: muthawif.email,
+          subject,
+          html,
+          replyTo: c.env.EMAIL_REPLY_TO,
+        }).catch((err) => console.error('Approval email failed:', err))
+      );
+    } else {
+      console.warn('RESEND_API_KEY not set; skipping approval email');
     }
 
     return c.json({ success: true });

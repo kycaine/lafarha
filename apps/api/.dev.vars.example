@@ -2,3 +2,8 @@
 # API_SECRET_KEY HARUS sama dengan API_SECRET_KEY di ../.env.development.
 API_SECRET_KEY="ganti_dengan_string_acak_panjang"
 MASTER_EMAIL="email-master@example.com"
+
+# Resend (kirim email). Produksi: npx wrangler secret put RESEND_API_KEY -c wrangler.prod.toml
+RESEND_API_KEY="re_xxx"
+APP_URL="https://lafarha.id"
+# EMAIL_REPLY_TO="admin@lafarha.id"
