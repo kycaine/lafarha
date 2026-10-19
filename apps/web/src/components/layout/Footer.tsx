@@ -172,7 +172,7 @@ export default function Footer() {
                 {contact.tiktok && (
                   <a href={contact.tiktok} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 group w-fit">
                     <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 group-hover:bg-white group-hover:text-black group-hover:border-white text-white flex items-center justify-center transition-all duration-300">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" /></svg>
                     </div>
                     <span className="text-white/70 text-xs sm:text-[13px] font-medium group-hover:text-white transition-colors">TikTok</span>
                   </a>
@@ -192,7 +192,7 @@ export default function Footer() {
                 {contact.twitter && (
                   <a href={contact.twitter} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 group w-fit">
                     <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 group-hover:bg-white group-hover:text-black group-hover:border-white text-white flex items-center justify-center transition-all duration-300">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
                     </div>
                     <span className="text-white/70 text-xs sm:text-[13px] font-medium group-hover:text-white transition-colors">X (Twitter)</span>
                   </a>
@@ -245,8 +245,8 @@ export default function Footer() {
 
           {/* Bottom Bar: Copyright */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-6 mt-4 border-t border-white/5 w-full text-white/40 text-[10px] sm:text-[11px] font-medium tracking-wide">
-            <span>&copy; {new Date().getFullYear()} LA FARHA, All rights reserved.</span>
-            <span>designed by Reternia.</span>
+            <span>&copy; 2023 - {new Date().getFullYear()} PT. LAFARHA GRUP INDONESIA. Platform Land Arrangement Umrah Indonesia.</span>
+
           </div>
 
         </div>

@@ -34,11 +34,11 @@ export default function PackagesPage() {
         {/* Pre-made Packages Section */}
         <div className="mb-12">
           <header className="mb-10 text-center">
-            <h3 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-3">
-              Paket Umrah Siap Berangkat
-            </h3>
+            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-3 font-heading">
+              Paket Land Arrangement Umrah Siap Berangkat
+            </h1>
             <p className="text-base text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
-              Pilih dari paket yang sudah kami rancang khusus untuk kenyamanan dan kekhusyukan ibadah Anda.
+              Pilihan paket Land Arrangement komprehensif yang dirancang khusus untuk kenyamanan, efisiensi biaya, dan kemudahan operasional travel agent Anda.
             </p>
           </header>
 
