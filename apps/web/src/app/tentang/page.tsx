@@ -28,7 +28,6 @@ const FOUNDERS = [
     image: "/rezki.jpg",
     isMain: false,
     url: "https://rezkiade.com",
-    urlLabel: "rezkiade.com",
   },
   {
     name: "Ahmad Fatih",
@@ -142,39 +141,44 @@ export default function TentangPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 items-center">
-            {FOUNDERS.map((founder) => (
-              <div
-                key={founder.name}
-                className={`group flex flex-col bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(201,168,76,0.08)] transition-all duration-300 ${founder.isMain ? 'order-first md:order-none' : ''}`}
-              >
-                {/* Image Container filling the top half */}
-                <div className={`relative w-full bg-slate-100 overflow-hidden ${founder.isMain ? 'aspect-[4/5]' : 'aspect-square'}`}>
-                  <Image
-                    src={founder.image}
-                    alt={`Foto ${founder.name}`}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                </div>
+            {FOUNDERS.map((founder) => {
+              const CardTag = founder.url ? "a" : "div";
+              const linkProps = founder.url
+                ? {
+                    href: founder.url,
+                    target: "_blank",
+                    rel: "noopener noreferrer",
+                    title: `Kunjungi profil ${founder.name}`,
+                  }
+                : {};
 
-                {/* Content at the bottom */}
-                <div className={`text-center bg-white relative z-10 flex-grow flex flex-col justify-center ${founder.isMain ? 'p-8' : 'p-6'}`}>
-                  <h3 className={`${founder.isMain ? 'text-2xl lg:text-3xl' : 'text-xl lg:text-2xl'} font-black text-slate-800 mb-1`}>{founder.name}</h3>
-                  <p className="text-[#C9A84C] font-bold text-sm tracking-widest uppercase">{founder.role}</p>
-                  {founder.url && (
-                    <a
-                      href={founder.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-2 text-xs font-medium text-slate-400 hover:text-[#C9A84C] underline transition-colors"
-                    >
-                      Kunjungi {founder.urlLabel}
-                    </a>
-                  )}
-                </div>
-              </div>
-            ))}
+              return (
+                <CardTag
+                  key={founder.name}
+                  {...linkProps}
+                  className={`group flex flex-col bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(201,168,76,0.08)] transition-all duration-300 ${founder.url ? "cursor-pointer hover:border-[#C9A84C]/40 hover:-translate-y-1" : ""} ${founder.isMain ? "order-first md:order-none" : ""}`}
+                >
+                  {/* Image Container filling the top half */}
+                  <div className={`relative w-full bg-slate-100 overflow-hidden ${founder.isMain ? "aspect-[4/5]" : "aspect-square"}`}>
+                    <Image
+                      src={founder.image}
+                      alt={`Foto ${founder.name}`}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  </div>
+
+                  {/* Content at the bottom */}
+                  <div className={`text-center bg-white relative z-10 flex-grow flex flex-col justify-center ${founder.isMain ? "p-8" : "p-6"}`}>
+                    <h3 className={`${founder.isMain ? "text-2xl lg:text-3xl" : "text-xl lg:text-2xl"} font-black text-slate-800 mb-1 group-hover:text-[#8B6914] transition-colors`}>
+                      {founder.name}
+                    </h3>
+                    <p className="text-[#C9A84C] font-bold text-sm tracking-widest uppercase">{founder.role}</p>
+                  </div>
+                </CardTag>
+              );
+            })}
           </div>
         </div>
       </div>
