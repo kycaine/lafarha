@@ -1,10 +1,24 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import Footer from "@/components/layout/Footer";
 
-export const metadata = {
-  title: "Tentang Kami — FARHA",
-  description: "Kenali lebih dekat tentang tim dan perusahaan FARHA.",
+export const metadata: Metadata = {
+  title: "Tentang Kami — Profil Perusahaan LA Farha & Dewan Pendiri",
+  description:
+    "Kenali profil PT LA Farha, platform B2B Land Arrangement Umrah terpercaya di Indonesia. Didukung oleh dewan pendiri berintegritas dan teknologi canggih.",
+  alternates: {
+    canonical: "https://lafarha.id/tentang",
+  },
+  openGraph: {
+    title: "Tentang Kami — Profil Perusahaan LA Farha & Dewan Pendiri",
+    description:
+      "Kenali profil PT LA Farha, platform B2B Land Arrangement Umrah terpercaya di Indonesia. Didukung oleh dewan pendiri berintegritas dan teknologi canggih.",
+    url: "https://lafarha.id/tentang",
+    siteName: "LA Farha",
+    locale: "id_ID",
+    type: "website",
+  },
 };
 
 const FOUNDERS = [
@@ -13,6 +27,8 @@ const FOUNDERS = [
     role: "CTO / Co-Founder",
     image: "/rezki.jpg",
     isMain: false,
+    url: "https://rezkiade.com",
+    urlLabel: "rezkiade.com",
   },
   {
     name: "Ahmad Fatih",
@@ -28,9 +44,44 @@ const FOUNDERS = [
   },
 ];
 
+const aboutSchema = {
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  mainEntity: {
+    "@type": "TravelAgency",
+    name: "LA Farha",
+    url: "https://lafarha.id",
+    description:
+      "Platform B2B penyedia Land Arrangement Umrah terintegrasi untuk Travel Agent di seluruh Indonesia.",
+    founder: [
+      {
+        "@type": "Person",
+        name: "Ahmad Fatih",
+        jobTitle: "CEO / Founder",
+      },
+      {
+        "@type": "Person",
+        name: "Rezki Ade",
+        alternateName: "Rezki Ade Pratama Putra",
+        jobTitle: "CTO / Co-Founder",
+        url: "https://rezkiade.com",
+      },
+      {
+        "@type": "Person",
+        name: "Hasbi Jamal",
+        jobTitle: "CMO / Co-Founder",
+      },
+    ],
+  },
+};
+
 export default function TentangPage() {
   return (
     <main className="flex flex-col min-h-screen bg-slate-50 relative overflow-hidden">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutSchema) }}
+      />
       {/* Gold Banner with Layered Waves */}
       <div className="relative w-full h-[50vh] min-h-[400px] bg-gradient-to-br from-[#d4b455] to-[#8B6914] flex flex-col justify-center items-center overflow-hidden">
         {/* Navigation inside Banner */}
@@ -42,7 +93,7 @@ export default function TentangPage() {
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:-translate-x-1 transition-transform">
               <path d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
-            <span className="font-medium text-sm">Kembali</span>
+            <span className="font-medium text-sm">Kembali ke Beranda</span>
           </Link>
         </nav>
 
@@ -68,7 +119,6 @@ export default function TentangPage() {
       </div>
 
       <div className="flex-grow flex flex-col items-center pt-16 pb-24 px-6 relative z-0 min-h-screen">
-
         {/* Description Section */}
         <div className="max-w-3xl w-full mb-24">
           <div className="text-slate-500 text-lg leading-relaxed mx-auto space-y-6 text-justify">
@@ -87,12 +137,12 @@ export default function TentangPage() {
         {/* Team Section */}
         <div className="max-w-6xl w-full">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-slate-800 mb-4 font-heading">Pendiri Kami</h2>
+            <h2 className="text-3xl font-bold text-slate-800 mb-4 font-heading">Dewan Pendiri & Pimpinan</h2>
             <div className="w-16 h-1 bg-gradient-to-r from-[#C9A84C] to-transparent mx-auto rounded-full" />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 items-center">
-            {FOUNDERS.map((founder, index) => (
+            {FOUNDERS.map((founder) => (
               <div
                 key={founder.name}
                 className={`group flex flex-col bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(201,168,76,0.08)] transition-all duration-300 ${founder.isMain ? 'order-first md:order-none' : ''}`}
@@ -110,8 +160,18 @@ export default function TentangPage() {
 
                 {/* Content at the bottom */}
                 <div className={`text-center bg-white relative z-10 flex-grow flex flex-col justify-center ${founder.isMain ? 'p-8' : 'p-6'}`}>
-                  <h3 className={`${founder.isMain ? 'text-3xl' : 'text-2xl'} font-black text-slate-800 mb-1`}>{founder.name}</h3>
+                  <h3 className={`${founder.isMain ? 'text-2xl lg:text-3xl' : 'text-xl lg:text-2xl'} font-black text-slate-800 mb-1`}>{founder.name}</h3>
                   <p className="text-[#C9A84C] font-bold text-sm tracking-widest uppercase">{founder.role}</p>
+                  {founder.url && (
+                    <a
+                      href={founder.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-2 text-xs font-medium text-slate-400 hover:text-[#C9A84C] underline transition-colors"
+                    >
+                      Kunjungi {founder.urlLabel}
+                    </a>
+                  )}
                 </div>
               </div>
             ))}

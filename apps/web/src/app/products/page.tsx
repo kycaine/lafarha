@@ -28,11 +28,11 @@ export default function PenawaranPage() {
 
       <div className="flex-1 w-full max-w-[1600px] mx-auto px-4 md:px-6 xl:px-8 pt-6 pb-12 min-h-screen">
         <header className="mb-10 text-center">
-          <h3 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-3">
-            Rancang Perjalanan Anda
-          </h3>
+          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-3 font-heading">
+            Katalog Modul Land Arrangement Umrah
+          </h1>
           <p className="text-base text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
-            Bisa pilih beberapa layanan sekaligus
+            Sesuaikan kebutuhan travel agent Anda. Pilih beberapa layanan sekaligus mulai dari Hotel Makkah & Madinah, Tiket Pesawat, Transportasi Bus, hingga Pengurusan Visa resmi.
           </p>
         </header>
 
