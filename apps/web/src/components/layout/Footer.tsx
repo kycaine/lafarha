@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { fetchApi } from "@/lib/api";
 import Link from "next/link";
+import { getWhatsAppFallbackUrl, handleWhatsAppClick } from "@/lib/whatsapp";
 
 export default function Footer() {
   const [contact, setContact] = useState<any>({
@@ -97,7 +98,8 @@ export default function Footer() {
                       {contact.whatsapp_label || "Customer Service"}
                     </span>
                     <a
-                      href={`https://wa.me/${cleanPhone(contact.whatsapp_number)}`}
+                      href={getWhatsAppFallbackUrl(contact.whatsapp_number)}
+                      onClick={handleWhatsAppClick(contact.whatsapp_number)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="hover:text-[#C9A84C] transition-colors font-medium text-white/90"
@@ -228,7 +230,15 @@ export default function Footer() {
                 <Link href="/muthawif" className="hover:text-[#C9A84C] transition-colors">Daftar Muthawif</Link>
                 <Link href="/blog" className="hover:text-[#C9A84C] transition-colors">Blog & Artikel</Link>
                 <Link href="/gallery" className="hover:text-[#C9A84C] transition-colors">Galeri Dokumentasi</Link>
-                <a href={`https://wa.me/${cleanPhone(contact.whatsapp_number)}`} target="_blank" rel="noopener noreferrer" className="hover:text-[#C9A84C] transition-colors">Hubungi Kami</a>
+                <a
+                  href={getWhatsAppFallbackUrl(contact.whatsapp_number)}
+                  onClick={handleWhatsAppClick(contact.whatsapp_number)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[#C9A84C] transition-colors"
+                >
+                  Hubungi Kami
+                </a>
               </div>
             </div>
 

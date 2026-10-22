@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import { getTransactionById } from "@/modules/ordering/actions";
 import { fetchApi } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { getWhatsAppFallbackUrl, handleWhatsAppClick } from "@/lib/whatsapp";
 
 function QuotePageContent() {
   const searchParams = useSearchParams();
@@ -50,13 +51,12 @@ function QuotePageContent() {
     }
   }, [id]);
 
-  /** Buat link wa.me ke admin dengan pesan yang sudah include info customer */
-  const buildWaLink = () => {
-    const nomor = counterWa;
+  /** Buat pesan WA ke admin dengan informasi pesanan customer */
+  const buildWaMessage = () => {
     const nama = order?.client_name ?? "-";
     const waUser = order?.client_whatsapp ?? "-";
     const harga = order?.total_amount_idr?.toLocaleString("id-ID") ?? "0";
-    const message = [
+    return [
       `Halo Min,`,
       ``,
       `Saya ingin konfirmasi pesanan berikut:`,
@@ -67,8 +67,6 @@ function QuotePageContent() {
       ``,
       `Mohon info selanjutnya untuk proses pembayaran. Terima kasih 🙏`,
     ].join("\n");
-
-    return `https://wa.me/${nomor}?text=${encodeURIComponent(message)}`;
   };
 
   if (loading) return <div className="min-h-screen flex items-center justify-center text-white bg-black">Loading...</div>;
@@ -111,12 +109,14 @@ function QuotePageContent() {
 
               <div className="pt-8">
                 <a
-                  href={counterWa ? buildWaLink() : "#"}
+                  href={counterWa ? getWhatsAppFallbackUrl(counterWa, buildWaMessage()) : "#"}
                   onClick={(e) => {
                     if (!counterWa) {
                       e.preventDefault();
                       alert("Service sedang maintain (Nomor Counter tidak tersedia).");
+                      return;
                     }
+                    handleWhatsAppClick(counterWa, buildWaMessage())(e);
                   }}
                   target="_blank"
                   rel="noopener noreferrer"

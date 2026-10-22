@@ -11,6 +11,7 @@ import packagesData from "@/contents/packages/packages.json";
 import { fetchApi } from "@/lib/api";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas-pro";
+import { getWhatsAppFallbackUrl, handleWhatsAppClick } from "@/lib/whatsapp";
 
 export const runtime = 'edge';
 
@@ -342,7 +343,8 @@ export default function PackageDetailPage() {
             <p className="text-emerald-600 dark:text-emerald-500 mb-6">Hubungi admin kami untuk informasi lebih lanjut atau segera lakukan pemesanan.</p>
             <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
               <a
-                href={`https://wa.me/${waLinkNumber}?text=Halo%20FARHA%2C%20saya%20tertarik%20dengan%20${encodeURIComponent(pkg.name)}%20seharga%20${encodeURIComponent(pkg.priceString)}.`}
+                href={getWhatsAppFallbackUrl(waLinkNumber, `Halo FARHA, saya tertarik dengan ${pkg.name} seharga ${pkg.priceString}.`)}
+                onClick={handleWhatsAppClick(waLinkNumber, `Halo FARHA, saya tertarik dengan ${pkg.name} seharga ${pkg.priceString}.`)}
                 target="_blank"
                 rel="noreferrer"
                 className="px-8 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all w-full sm:w-auto text-base text-center"

@@ -11,6 +11,7 @@ import { useAlert } from "@/shared/AlertContext";
 import { Building2, Bus, Ticket, User, Phone, Plane, CheckCircle2, UploadCloud, Users, Check, Briefcase, Car, CalendarDays, MapPin, HelpCircle, X, MessageCircle, Search, ChevronDown, ChevronUp, MoonStar } from "lucide-react";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas-pro";
+import { openWhatsApp } from "@/lib/whatsapp";
 
 const ICON_MAP: Record<string, any> = {
   Building2,
@@ -364,9 +365,6 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
       transTour: selectedServices.includes("TRANS_TOUR") ? moduleSpecs['TRANS_TOUR'] : null,
       customFields
     });
-    // Buka tab baru sebelum await untuk menghindari popup blocker
-    const waTab = window.open('about:blank', '_blank');
-
     try {
       const res = await createTransaction({
         name: contactForm.name,
@@ -379,7 +377,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
       if (res.success) {
         const txId = res.transactionId;
 
-        const adminLink = `${typeof window !== 'undefined' ? window.location.origin : ''}/counter/products/${txId}`;
+        const adminLink = `${typeof window !== 'undefined' ? window.location.origin : ''}/products/${txId}`;
 
         // Bangun pesan WA untuk admin (Laporan)
         const waMessage = [
@@ -393,12 +391,11 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
           adminLink
         ].join("\n");
 
-        const waUrl = `https://wa.me/${counterWa}?text=${encodeURIComponent(waMessage)}`;
-        const txUrl = `/products/${txId}`;
-
-        // Arahkan tab baru ke WA, dan tab saat ini ke halaman penawaran
-        if (waTab) waTab.location.href = waUrl;
-        window.location.href = txUrl;
+        // Buka WhatsApp langsung & arahkan halaman ke status pesanan dengan autoWa safety net
+        if (counterWa) {
+          openWhatsApp(counterWa, waMessage);
+        }
+        window.location.href = `/products/${txId}?autoWa=1`;
 
         // Reset semua state
         setShowContactModal(false);
@@ -406,11 +403,9 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
         setFormData({ pax: "", manifestFileName: "", notes: "" });
         setSelectedServices([]);
       } else {
-        if (waTab) waTab.close();
         showAlert({ title: "Gagal", message: "Gagal mengirim pesanan: " + res.error, type: "error" });
       }
     } catch (err) {
-      if (waTab) waTab.close();
       console.error(err);
       showAlert({ title: "Error", message: "Terjadi kesalahan. Silakan coba lagi.", type: "error" });
     } finally {
