@@ -29,8 +29,6 @@ import {
   Send,
   X,
   ClipboardPaste,
-  Eye,
-  Settings2,
   Lock,
   ChevronRight,
   ShieldCheck,
@@ -226,9 +224,6 @@ function UnifiedTransactionPage() {
   const [error, setError] = useState(false);
   const autoWaTriggeredRef = useRef(false);
 
-  // View mode: 'counter' (untuk kelola & edit harga) atau 'customer' (invoice tampilan publik)
-  const [viewMode, setViewMode] = useState<"counter" | "customer">("customer");
-
   // Counter State
   const [waInput, setWaInput] = useState("");
   const [waEditing, setWaEditing] = useState(false);
@@ -238,13 +233,6 @@ function UnifiedTransactionPage() {
   const [publishing, setPublishing] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
   const [showVerifyModal, setShowVerifyModal] = useState(false);
-
-  // Sinkronkan viewMode jika user terdeteksi sebagai petugas counter
-  useEffect(() => {
-    if (!authLoading && isCounter) {
-      setViewMode("counter");
-    }
-  }, [authLoading, isCounter]);
 
   useEffect(() => {
     Promise.all([
@@ -470,7 +458,7 @@ function UnifiedTransactionPage() {
     alert("ID Pesanan tersalin ke clipboard!");
   };
 
-  if (loading) {
+  if (loading || authLoading) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-[#C9A84C] border-t-transparent rounded-full animate-spin" />
@@ -524,33 +512,15 @@ function UnifiedTransactionPage() {
             </div>
           </Link>
 
-          {/* Right Action & Mode Switcher */}
+          {/* Right Action */}
           <div className="flex items-center gap-3">
             {isCounter ? (
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setViewMode((prev) => (prev === "counter" ? "customer" : "counter"))}
-                  className="flex items-center gap-2 px-3.5 py-2 rounded-xl border text-xs font-bold transition-all bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 shadow-sm hover:border-[#C9A84C]"
-                >
-                  {viewMode === "counter" ? (
-                    <>
-                      <Eye className="w-4 h-4 text-blue-500" />
-                      <span className="hidden sm:inline">Preview</span> Tampilan Jamaah
-                    </>
-                  ) : (
-                    <>
-                      <Settings2 className="w-4 h-4 text-emerald-500" />
-                      <span>Mode Edit Counter</span>
-                    </>
-                  )}
-                </button>
-                <Link
-                  href="/counter"
-                  className="hidden md:flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white transition-colors"
-                >
-                  Meja Kalkulator <ChevronRight className="w-3.5 h-3.5" />
-                </Link>
-              </div>
+              <Link
+                href="/counter"
+                className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm transition-colors"
+              >
+                Meja Kalkulator <ChevronRight className="w-3.5 h-3.5" />
+              </Link>
             ) : (
               <Link
                 href={`/login?next=/products/${id}`}
@@ -563,20 +533,6 @@ function UnifiedTransactionPage() {
           </div>
         </div>
       </nav>
-
-      {/* ── Mode Counter Active Indicator ── */}
-      {isCounter && viewMode === "customer" && (
-        <div className="bg-blue-600 text-white text-xs font-medium py-2 px-4 text-center flex items-center justify-center gap-2 shadow-sm">
-          <Eye className="w-4 h-4" />
-          <span>Anda sedang melihat <strong>Pratinjau Tampilan Jamaah</strong>.</span>
-          <button
-            onClick={() => setViewMode("counter")}
-            className="underline font-bold ml-1 hover:text-blue-100"
-          >
-            Buka Mode Edit Counter
-          </button>
-        </div>
-      )}
 
       {/* ── Modal Input WA Customer (Khusus Petugas Counter Jika WA Kosong) ── */}
       {isCounter && showVerifyModal && !tx.client_whatsapp && (
@@ -633,7 +589,7 @@ function UnifiedTransactionPage() {
       {/* ────────────────────────────────────────────────────────────────────────── */}
       {/* KONDISI 1: TAMPILAN COUNTER (Edit & Kalkulasi Harga)                        */}
       {/* ────────────────────────────────────────────────────────────────────────── */}
-      {isCounter && viewMode === "counter" ? (
+      {isCounter ? (
         <div className="container mx-auto px-4 md:px-6 py-8 max-w-6xl space-y-6">
           {/* Header Info Pesanan */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
