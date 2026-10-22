@@ -133,10 +133,11 @@ export function openWhatsApp(
   const platform = getDevicePlatform();
 
   // Skenario 1: Desktop (PC / Laptop / Mac)
-  // Buka WhatsApp Web di tab baru agar halaman website saat ini tetap terbuka
+  // Gunakan universalUrl (api.whatsapp.com) agar instan (<150ms), otomatis mendeteksi WhatsApp Desktop (jika ada),
+  // dan tidak berat seperti web.whatsapp.com yang harus download puluhan MB assets.
   if (platform.isDesktop) {
     const target = options?.newTabOnDesktop !== false ? "_blank" : "_self";
-    window.open(urls.webUrl, target, "noopener,noreferrer");
+    window.open(urls.universalUrl, target, "noopener,noreferrer");
     return;
   }
 

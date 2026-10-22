@@ -377,7 +377,7 @@ export function ProductCatalog({ initialProducts = [] }: { initialProducts?: any
       if (res.success) {
         const txId = res.transactionId;
 
-        const adminLink = `${typeof window !== 'undefined' ? window.location.origin : ''}/counter/products/${txId}`;
+        const adminLink = `${typeof window !== 'undefined' ? window.location.origin : ''}/products/${txId}`;
 
         // Bangun pesan WA untuk admin (Laporan)
         const waMessage = [

@@ -1,52 +1,92 @@
 "use client";
 
-import { useEffect, useState, Suspense, useRef } from "react";
-import { useParams, useSearchParams } from "next/navigation";
-import { getTransactionById } from "@/modules/ordering/actions";
+import { useEffect, useState, useMemo, Suspense, useRef } from "react";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+import {
+  getTransactionById,
+  updateTransactionContact,
+  updateTransactionQuote,
+  updateTransactionStatus,
+} from "@/modules/ordering/actions";
 import { fetchApi } from "@/lib/api";
-import { openWhatsApp, getWhatsAppFallbackUrl, handleWhatsAppClick } from "@/lib/whatsapp";
-import { CheckCircle2, Clock, XCircle, MessageCircle, ArrowLeft } from "lucide-react";
+import { useAuth } from "@/shared/AuthContext";
+import {
+  openWhatsApp,
+  getWhatsAppFallbackUrl,
+  handleWhatsAppClick,
+} from "@/lib/whatsapp";
+import {
+  CheckCircle2,
+  Clock,
+  XCircle,
+  MessageCircle,
+  ArrowLeft,
+  Phone,
+  Edit,
+  Save,
+  Copy,
+  Package,
+  Send,
+  X,
+  ClipboardPaste,
+  Eye,
+  Settings2,
+  Lock,
+  ChevronRight,
+  ShieldCheck,
+} from "lucide-react";
 import Link from "next/link";
 
 const STATUS_CONFIG = {
   PENDING: {
     icon: Clock,
     color: "text-amber-500",
-    bg: "bg-amber-50",
-    border: "border-amber-200",
+    bg: "bg-amber-50 dark:bg-amber-950/20",
+    border: "border-amber-200 dark:border-amber-800/50",
     label: "Menunggu Kalkulasi",
     desc: "Tim kami sedang menghitung harga terbaik untuk pesanan Anda. Anda akan dihubungi via WhatsApp setelah penawaran siap.",
   },
   QUOTED: {
     icon: CheckCircle2,
-    color: "text-emerald-600",
-    bg: "bg-emerald-50",
-    border: "border-emerald-200",
+    color: "text-emerald-600 dark:text-emerald-400",
+    bg: "bg-emerald-50 dark:bg-emerald-950/20",
+    border: "border-emerald-200 dark:border-emerald-800/50",
     label: "Penawaran Siap",
     desc: "Harga sudah dikalkulasikan. Silakan konfirmasi via WhatsApp untuk melanjutkan pemesanan.",
   },
   CLOSED: {
     icon: CheckCircle2,
-    color: "text-blue-600",
-    bg: "bg-blue-50",
-    border: "border-blue-200",
+    color: "text-blue-600 dark:text-blue-400",
+    bg: "bg-blue-50 dark:bg-blue-950/20",
+    border: "border-blue-200 dark:border-blue-800/50",
     label: "Pesanan Selesai",
     desc: "Pesanan Anda sudah dikonfirmasi dan diproses. Terima kasih telah mempercayai kami.",
   },
   CANCELLED: {
     icon: XCircle,
-    color: "text-red-500",
-    bg: "bg-red-50",
-    border: "border-red-200",
+    color: "text-red-500 dark:text-red-400",
+    bg: "bg-red-50 dark:bg-red-950/20",
+    border: "border-red-200 dark:border-red-800/50",
     label: "Dibatalkan",
     desc: "Penawaran ini telah dibatalkan. Hubungi kami jika ada pertanyaan.",
   },
 };
 
-function TransactionStatusPage() {
+const STATUS_BADGE: Record<string, string> = {
+  PENDING: "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800",
+  QUOTED: "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800",
+  CLOSED: "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800",
+  CANCELLED: "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 border-red-200 dark:border-red-800",
+};
+
+function UnifiedTransactionPage() {
   const params = useParams();
   const searchParams = useSearchParams();
+  const router = useRouter();
   const id = params.id as string;
+
+  const { user, userProfile, loading: authLoading } = useAuth();
+  const isCounter = userProfile?.role === "counter" || userProfile?.role === "master" || userProfile?.role === "admin";
 
   const [tx, setTx] = useState<any>(null);
   const [counterWa, setCounterWa] = useState("");
@@ -54,9 +94,89 @@ function TransactionStatusPage() {
   const [error, setError] = useState(false);
   const autoWaTriggeredRef = useRef(false);
 
-  const buildPendingWaMessage = (txData?: any) => {
+  // View mode: 'counter' (untuk kelola & edit harga) atau 'customer' (invoice tampilan publik)
+  const [viewMode, setViewMode] = useState<"counter" | "customer">("customer");
+
+  // Counter State
+  const [waInput, setWaInput] = useState("");
+  const [waEditing, setWaEditing] = useState(false);
+  const [waSaving, setWaSaving] = useState(false);
+  const [itemPrices, setItemPrices] = useState<Record<number, string>>({});
+  const [validityHours, setValidityHours] = useState(24);
+  const [publishing, setPublishing] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);
+  const [showVerifyModal, setShowVerifyModal] = useState(false);
+
+  // Sinkronkan viewMode jika user terdeteksi sebagai petugas counter
+  useEffect(() => {
+    if (!authLoading && isCounter) {
+      setViewMode("counter");
+    }
+  }, [authLoading, isCounter]);
+
+  useEffect(() => {
+    Promise.all([
+      getTransactionById(id),
+      fetchApi("/settings/contact").catch(() => ({})),
+    ]).then(([txData, contactData]) => {
+      if (txData) {
+        setTx(txData);
+        setWaInput(txData.client_whatsapp || "");
+        if (!txData.client_whatsapp && isCounter) {
+          setShowVerifyModal(true);
+        }
+        const initialPrices: Record<number, string> = {};
+        (txData.items || []).forEach((item: any) => {
+          initialPrices[item.id] = item.subtotal ? String(item.subtotal) : "";
+        });
+        setItemPrices(initialPrices);
+      } else {
+        setError(true);
+      }
+
+      const apiWa = contactData?.whatsapp_counter || contactData?.whatsapp_number;
+      if (apiWa) {
+        setCounterWa(apiWa);
+      }
+      setLoading(false);
+
+      // Jika checkout mengarahkan ke sini dengan autoWa=1, picu WhatsApp
+      if (searchParams.get("autoWa") === "1" && !autoWaTriggeredRef.current && apiWa) {
+        autoWaTriggeredRef.current = true;
+        const msg = buildCustomerPendingWaMessage(txData);
+        openWhatsApp(apiWa, msg);
+        if (typeof window !== "undefined") {
+          window.history.replaceState({}, "", `/products/${id}`);
+        }
+      }
+    });
+  }, [id, searchParams, isCounter]);
+
+  // Pre-parse specs
+  const parsedItems = useMemo(
+    () =>
+      (tx?.items || []).map((item: any) => ({
+        ...item,
+        specs: item.specs ? (typeof item.specs === "string" ? JSON.parse(item.specs) : item.specs) : {},
+      })),
+    [tx?.items]
+  );
+
+  // Grand total kalkulasi counter
+  const grandTotal = useMemo(
+    () =>
+      parsedItems.reduce((sum: number, item: any) => {
+        const pax = Number(item.specs.pax) || 1;
+        return sum + Number(itemPrices[item.id] || 0) * pax;
+      }, 0),
+    [parsedItems, itemPrices]
+  );
+
+  // Message Builders
+  const buildCustomerPendingWaMessage = (txData?: any) => {
     const currentTx = txData || tx;
-    const adminLink = `${typeof window !== 'undefined' ? window.location.origin : ''}/counter/products/${currentTx?.id || id}`;
+    const origin = typeof window !== "undefined" ? window.location.origin : "";
+    const txLink = `${origin}/products/${currentTx?.id || id}`;
     const itemsList = currentTx?.items?.length
       ? currentTx.items.map((i: any) => `• Layanan    : ${i.title}`).join("\n")
       : "";
@@ -69,11 +189,13 @@ function TransactionStatusPage() {
       itemsList,
       ``,
       `lihat transaksi berikut`,
-      adminLink,
-    ].filter(Boolean).join("\n");
+      txLink,
+    ]
+      .filter(Boolean)
+      .join("\n");
   };
 
-  const buildQuotedWaMessage = () => {
+  const buildCustomerQuotedWaMessage = () => {
     return [
       `Halo Min,`,
       ``,
@@ -86,34 +208,117 @@ function TransactionStatusPage() {
     ].join("\n");
   };
 
-  useEffect(() => {
-    Promise.all([
-      getTransactionById(id),
-      fetchApi('/settings/contact').catch(() => ({})),
-    ]).then(([txData, contactData]) => {
-      if (txData) setTx(txData);
-      else setError(true);
-      const apiWa = contactData?.whatsapp_counter || contactData?.whatsapp_number;
-      if (apiWa) {
-        setCounterWa(apiWa);
-      }
-      setLoading(false);
+  const buildAdminShareWaMessage = () => {
+    const origin = typeof window !== "undefined" ? window.location.origin : "";
+    const lines = [
+      `Halo ${tx?.client_name || "Pelanggan"},`,
+      ``,
+      `Berikut penawaran untuk pesanan *${tx?.id}*:`,
+      ``,
+      ...parsedItems.map((item: any) => {
+        const pax = Number(item.specs.pax) || 1;
+        const price = Number(itemPrices[item.id] || 0);
+        return `• *${item.title}* (${pax} Pax) — Rp ${(price * pax).toLocaleString("id-ID")}`;
+      }),
+      ``,
+      `💰 *Total: Rp ${grandTotal.toLocaleString("id-ID")}*`,
+      `⏳ Penawaran berlaku ${validityHours} jam`,
+      ``,
+      `Cek rincian pesanan Anda di:`,
+      `${origin}/products/${tx?.id}`,
+      ``,
+      `Balas pesan ini untuk konfirmasi pesanan. Terima kasih! 🙏`,
+    ];
+    return lines.join("\n");
+  };
 
-      // Jika diarahkan dari checkout dengan flag autoWa=1, picu WhatsApp secara otomatis
-      if (searchParams.get('autoWa') === '1' && !autoWaTriggeredRef.current && apiWa) {
-        autoWaTriggeredRef.current = true;
-        const msg = buildPendingWaMessage(txData);
-        openWhatsApp(apiWa, msg);
-        if (typeof window !== 'undefined') {
-          window.history.replaceState({}, '', `/products/${id}`);
-        }
-      }
+  // Handlers Counter
+  const normalizePhone = (text: string) => {
+    let digits = text.replace(/\D/g, "");
+    if (digits.startsWith("62")) {
+      digits = "0" + digits.substring(2);
+    }
+    return digits;
+  };
+
+  const handlePaste = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      setWaInput(normalizePhone(text));
+    } catch {
+      alert("Gagal membaca clipboard. Izinkan akses clipboard di browser Anda.");
+    }
+  };
+
+  const handleSaveWa = async () => {
+    if (!waInput.trim()) return;
+    setWaSaving(true);
+    const res = await updateTransactionContact(id, waInput.trim());
+    setWaSaving(false);
+    if (res.success) {
+      setWaEditing(false);
+      setShowVerifyModal(false);
+      setTx((prev: any) => ({ ...prev, client_whatsapp: waInput.trim() }));
+    } else {
+      alert("Gagal menyimpan: " + res.error);
+    }
+  };
+
+  const handlePublishQuote = async () => {
+    if (grandTotal === 0) {
+      alert("Isi harga terlebih dahulu.");
+      return;
+    }
+    setPublishing(true);
+    const res = await updateTransactionQuote(id, {
+      totalAmount: grandTotal,
+      validityHours,
+      items: itemPrices,
     });
-  }, [id, searchParams]);
+    setPublishing(false);
+    if (res.success) {
+      setTx((prev: any) => ({
+        ...prev,
+        status: "QUOTED",
+        total_amount_idr: grandTotal,
+        quote_expiry: Date.now() + validityHours * 3600 * 1000,
+      }));
+      alert("Penawaran berhasil diterbitkan!");
+    } else {
+      alert("Gagal: " + res.error);
+    }
+  };
+
+  const handleUpdateStatus = async (newStatus: "CLOSED" | "CANCELLED") => {
+    const label = newStatus === "CLOSED" ? "Selesai (Closed)" : "Dibatalkan (Cancelled)";
+    if (!confirm(`Tandai transaksi ini sebagai ${label}?`)) return;
+    setActionLoading(true);
+    const res = await updateTransactionStatus(id, newStatus);
+    setActionLoading(false);
+    if (res.success) {
+      setTx((prev: any) => ({ ...prev, status: newStatus }));
+    } else {
+      alert("Gagal: " + res.error);
+    }
+  };
+
+  const handleShareWaToCustomer = () => {
+    const phone = waInput || tx?.client_whatsapp || "";
+    if (!phone) {
+      alert("Isi nomor WA customer terlebih dahulu.");
+      return;
+    }
+    openWhatsApp(phone, buildAdminShareWaMessage());
+  };
+
+  const handleCopyMessage = () => {
+    navigator.clipboard.writeText(buildAdminShareWaMessage());
+    alert("Pesan penawaran tersalin ke clipboard!");
+  };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-[#C9A84C] border-t-transparent rounded-full animate-spin" />
       </div>
     );
@@ -121,12 +326,15 @@ function TransactionStatusPage() {
 
   if (error || !tx) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center text-slate-800">
-        <div className="text-center space-y-4">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-800 dark:text-slate-100 p-6">
+        <div className="text-center space-y-4 max-w-md">
           <XCircle className="w-16 h-16 text-red-500 mx-auto" />
           <h1 className="text-2xl font-bold">Transaksi Tidak Ditemukan</h1>
-          <p className="text-slate-500">ID: {id}</p>
-          <Link href="/products" className="inline-flex items-center justify-center gap-2 mt-6 bg-black text-white hover:bg-gray-900 px-6 py-3 rounded-xl transition-all text-base font-black shadow-md uppercase tracking-wide">
+          <p className="text-slate-500 dark:text-slate-400">ID: {id}</p>
+          <Link
+            href="/products"
+            className="inline-flex items-center justify-center gap-2 mt-4 bg-black text-white hover:bg-gray-900 px-6 py-3 rounded-xl transition-all text-sm font-bold shadow-md uppercase tracking-wide"
+          >
             ← Kembali ke Penawaran
           </Link>
         </div>
@@ -134,130 +342,493 @@ function TransactionStatusPage() {
     );
   }
 
-  const status = tx.status as keyof typeof STATUS_CONFIG;
+  const status = (tx.status as keyof typeof STATUS_CONFIG) || "PENDING";
   const cfg = STATUS_CONFIG[status] ?? STATUS_CONFIG.PENDING;
-  const Icon = cfg.icon;
+  const StatusIcon = cfg.icon;
+  const isQuoted = tx.status === "QUOTED";
+  const isClosed = tx.status === "CLOSED";
+  const isCancelled = tx.status === "CANCELLED";
+  const isEditable = !isClosed && !isCancelled;
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50 text-slate-800">
-      {/* Navbar */}
-      <nav className="w-full border-b border-slate-200 bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-10">
-        <div className="container mx-auto px-6 h-16 flex items-center justify-between">
+    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 text-slate-800 dark:text-slate-100">
+      {/* ── Top Bar / Navbar ── */}
+      <nav className="w-full border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-sm sticky top-0 z-30">
+        <div className="container mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
-            <img
-              src="/farha-logo-only.svg"
-              alt="FARHA Logo"
-              className="w-9 h-9"
-            />
+            <img src="/farha-logo-only.svg" alt="FARHA Logo" className="w-8 h-8" />
             <div className="leading-tight">
-              <span 
-                className="font-bold tracking-wide block text-[15px] text-slate-900"
-                style={{ fontFamily: 'var(--font-cinzel), serif' }}
+              <span
+                className="font-bold tracking-wide block text-[15px] text-slate-900 dark:text-white"
+                style={{ fontFamily: "var(--font-cinzel), serif" }}
               >
                 FARHA
               </span>
-              <span className="font-medium tracking-[0.2em] uppercase block text-[10px] text-[#C9A84C]">
+              <span className="font-medium tracking-[0.2em] uppercase block text-[9px] text-[#C9A84C]">
                 Umrah Services
               </span>
             </div>
           </Link>
-          
-          <div className="flex items-center gap-4">
-            <div className="text-xs text-slate-400 font-mono font-medium hidden sm:block">ID: {tx.id}</div>
-            <Link href="/products" className="flex items-center gap-2 bg-black text-white hover:bg-gray-900 px-4 py-2 rounded-xl transition-all text-sm font-bold shadow-md uppercase tracking-wide">
-              Buat Penawaran Baru
-            </Link>
+
+          {/* Right Action & Mode Switcher */}
+          <div className="flex items-center gap-3">
+            {isCounter ? (
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setViewMode((prev) => (prev === "counter" ? "customer" : "counter"))}
+                  className="flex items-center gap-2 px-3.5 py-2 rounded-xl border text-xs font-bold transition-all bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 shadow-sm hover:border-[#C9A84C]"
+                >
+                  {viewMode === "counter" ? (
+                    <>
+                      <Eye className="w-4 h-4 text-blue-500" />
+                      <span className="hidden sm:inline">Preview</span> Tampilan Jamaah
+                    </>
+                  ) : (
+                    <>
+                      <Settings2 className="w-4 h-4 text-emerald-500" />
+                      <span>Mode Edit Counter</span>
+                    </>
+                  )}
+                </button>
+                <Link
+                  href="/counter"
+                  className="hidden md:flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white transition-colors"
+                >
+                  Meja Kalkulator <ChevronRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            ) : (
+              <Link
+                href={`/login?next=/products/${id}`}
+                className="inline-flex items-center gap-1 text-xs font-medium text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 px-3 py-1.5 rounded-lg border border-transparent hover:border-slate-200 transition-colors"
+              >
+                <Lock className="w-3 h-3" />
+                <span>Petugas Counter?</span>
+              </Link>
+            )}
           </div>
         </div>
       </nav>
 
-      <div className="container mx-auto px-6 py-16 max-w-2xl">
-        {/* Status card */}
-        <div className={`rounded-2xl border p-8 text-center space-y-6 ${cfg.bg} ${cfg.border} shadow-sm`}>
-          <div className={`mx-auto w-20 h-20 rounded-full flex items-center justify-center bg-white shadow-sm border ${cfg.border}`}>
-            <Icon className={`w-10 h-10 ${cfg.color}`} />
-          </div>
+      {/* ── Mode Counter Active Indicator ── */}
+      {isCounter && viewMode === "customer" && (
+        <div className="bg-blue-600 text-white text-xs font-medium py-2 px-4 text-center flex items-center justify-center gap-2 shadow-sm">
+          <Eye className="w-4 h-4" />
+          <span>Anda sedang melihat <strong>Pratinjau Tampilan Jamaah</strong>.</span>
+          <button
+            onClick={() => setViewMode("counter")}
+            className="underline font-bold ml-1 hover:text-blue-100"
+          >
+            Buka Mode Edit Counter
+          </button>
+        </div>
+      )}
 
-          <div>
-            <p className="text-sm font-bold uppercase tracking-widest text-slate-500 mb-2">Status Pesanan</p>
-            <h1 className={`text-3xl font-extrabold ${cfg.color}`}>{cfg.label}</h1>
-          </div>
-
-          <p className="text-slate-600 leading-relaxed max-w-md mx-auto">{cfg.desc}</p>
-
-          {/* Harga (jika QUOTED atau CLOSED) */}
-          {(status === 'QUOTED' || status === 'CLOSED') && tx.total_amount_idr && (
-            <div className="pt-4 border-t border-slate-200/60 space-y-2">
-              <p className="text-sm font-semibold text-slate-500">Total Penawaran</p>
-              <p className="text-4xl font-black text-[#C9A84C]">
-                Rp {tx.total_amount_idr.toLocaleString("id-ID")}
+      {/* ── Modal Input WA Customer (Khusus Petugas Counter Jika WA Kosong) ── */}
+      {isCounter && showVerifyModal && !tx.client_whatsapp && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="w-full max-w-lg bg-white dark:bg-slate-900 rounded-3xl shadow-2xl p-6 md:p-8 space-y-6 border border-slate-100 dark:border-slate-800">
+            <div className="text-center">
+              <div className="w-14 h-14 bg-blue-50 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                <Phone className="w-7 h-7 text-blue-600 dark:text-blue-400" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-800 dark:text-white">Verifikasi Nomor WA Pelanggan</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                Nomor WA diperlukan agar penawaran dapat dikirimkan langsung ke pelanggan.
               </p>
-              {tx.quote_expiry && (
-                <p className="text-xs font-medium text-slate-400">
-                  Berlaku hingga: {new Date(tx.quote_expiry).toLocaleString("id-ID")}
+            </div>
+
+            <div className="space-y-4">
+              <div className="relative">
+                <input
+                  type="tel"
+                  placeholder="Contoh: 081234567890"
+                  value={waInput}
+                  onChange={(e) => setWaInput(normalizePhone(e.target.value))}
+                  className="w-full h-14 pl-4 pr-24 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 font-bold text-lg text-slate-800 dark:text-white outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <button
+                  onClick={handlePaste}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 h-10 px-3 bg-white dark:bg-slate-800 hover:bg-slate-100 border rounded-lg text-xs font-semibold flex items-center gap-1 text-slate-600 dark:text-slate-300"
+                >
+                  <ClipboardPaste className="w-3.5 h-3.5" /> Paste
+                </button>
+              </div>
+
+              <div className="flex gap-2">
+                <button
+                  onClick={handleSaveWa}
+                  disabled={waSaving || waInput.replace(/\D/g, "").length < 9}
+                  className="flex-1 h-12 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm flex items-center justify-center gap-2 disabled:opacity-50 transition-colors shadow-md"
+                >
+                  <Save className="w-4 h-4" />
+                  {waSaving ? "Menyimpan..." : "Simpan Nomor WA"}
+                </button>
+                <button
+                  onClick={() => setShowVerifyModal(false)}
+                  className="px-4 h-12 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-bold transition-colors"
+                >
+                  Nanti Saja
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ────────────────────────────────────────────────────────────────────────── */}
+      {/* KONDISI 1: TAMPILAN COUNTER (Edit & Kalkulasi Harga)                        */}
+      {/* ────────────────────────────────────────────────────────────────────────── */}
+      {isCounter && viewMode === "counter" ? (
+        <div className="container mx-auto px-4 md:px-6 py-8 max-w-6xl space-y-6">
+          {/* Header Info Pesanan */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div>
+              <div className="flex items-center gap-3 flex-wrap">
+                <span className="text-xs uppercase font-bold tracking-widest text-slate-400">Order ID:</span>
+                <span className="font-mono text-xl font-black text-slate-800 dark:text-white">{tx.id}</span>
+                <span className={`px-3 py-1 rounded-full text-xs font-bold border ${STATUS_BADGE[tx.status] ?? STATUS_BADGE.PENDING}`}>
+                  {tx.status}
+                </span>
+              </div>
+              <p className="text-sm text-slate-500 mt-1">
+                Pemesan: <strong className="text-slate-700 dark:text-slate-300">{tx.client_name}</strong> · Dibuat: {new Date(tx.created_at).toLocaleString("id-ID")}
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 px-3 py-1.5 rounded-xl flex items-center gap-1.5">
+                <ShieldCheck className="w-4 h-4" /> Mode Petugas Aktif
+              </span>
+            </div>
+          </div>
+
+          <div className="grid lg:grid-cols-3 gap-6">
+            {/* ── LEFT: Kalkulasi Item ── */}
+            <div className="lg:col-span-2 space-y-4">
+              {parsedItems.map((item: any, idx: number) => {
+                const pax = Number(item.specs.pax) || 1;
+                const rawPrice = itemPrices[item.id] || "";
+                const price = Number(rawPrice) || 0;
+
+                return (
+                  <div
+                    key={item.id}
+                    className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm"
+                  >
+                    <div className="flex items-center gap-3 px-6 py-4 bg-slate-50 dark:bg-slate-950/50 border-b border-slate-100 dark:border-slate-800">
+                      <div className="w-7 h-7 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 flex items-center justify-center font-bold text-xs">
+                        {idx + 1}
+                      </div>
+                      <p className="font-bold text-slate-800 dark:text-slate-100">{item.title}</p>
+                      <Package className="w-4 h-4 text-slate-400 ml-auto" />
+                    </div>
+
+                    <div className="p-6 space-y-4">
+                      {/* Specs Rincian Layanan */}
+                      <div className="bg-slate-50 dark:bg-slate-950 rounded-xl p-4 grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+                        <div>
+                          <p className="text-slate-400 mb-0.5">Pax</p>
+                          <p className="font-bold text-slate-700 dark:text-slate-200">{pax} Orang</p>
+                        </div>
+                        {Object.entries(item.specs)
+                          .filter(([k]) => k !== "pax" && k !== "customFields")
+                          .map(([k, v]) => (
+                            <div key={k}>
+                              <p className="text-slate-400 mb-0.5 capitalize">{k.replace(/([A-Z])/g, " $1").trim()}</p>
+                              <p className="font-medium text-slate-700 dark:text-slate-200 truncate">{String(v) || "-"}</p>
+                            </div>
+                          ))}
+                      </div>
+
+                      {/* Input Harga Jual */}
+                      <div className="grid sm:grid-cols-2 gap-4 items-end pt-2">
+                        <div className="space-y-1.5">
+                          <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+                            Harga Jual / Pax (IDR)
+                          </label>
+                          <div className="relative flex items-center">
+                            <span className="absolute left-3 text-slate-400 font-medium text-sm pointer-events-none">Rp</span>
+                            <input
+                              type="text"
+                              disabled={!isEditable}
+                              placeholder="0"
+                              className="w-full pl-9 pr-4 h-11 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 font-bold text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none transition-all disabled:opacity-60"
+                              value={rawPrice ? parseInt(rawPrice, 10).toLocaleString("id-ID") : ""}
+                              onChange={(e) => {
+                                const digits = e.target.value.replace(/\D/g, "");
+                                setItemPrices((prev) => ({ ...prev, [item.id]: digits }));
+                              }}
+                            />
+                          </div>
+                        </div>
+                        <div className="text-right pb-1">
+                          <p className="text-xs text-slate-400">Subtotal Item</p>
+                          <p className="text-lg font-black text-slate-800 dark:text-slate-100">
+                            Rp {(price * pax).toLocaleString("id-ID")}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+
+              {/* Masa Berlaku Penawaran */}
+              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+                <div className="flex items-center gap-2 mb-3 text-slate-700 dark:text-slate-300 font-semibold text-sm">
+                  <Clock className="w-4 h-4 text-sky-500" /> Masa Berlaku Penawaran
+                </div>
+                <div className="flex gap-2 flex-wrap">
+                  {[3, 12, 24, 48].map((h) => (
+                    <button
+                      key={h}
+                      disabled={!isEditable}
+                      onClick={() => setValidityHours(h)}
+                      className={`px-4 py-2 rounded-xl text-xs font-bold border transition-colors disabled:opacity-50 ${
+                        validityHours === h
+                          ? "bg-sky-500 text-white border-sky-500"
+                          : "bg-white dark:bg-slate-950 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-sky-400"
+                      }`}
+                    >
+                      {h} Jam
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* ── RIGHT: Sidebar Aksi Counter ── */}
+            <div className="space-y-4">
+              {/* Grand Total */}
+              <div className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/40 dark:to-teal-950/40 rounded-2xl border border-emerald-200/60 dark:border-emerald-800/50 p-6 shadow-sm">
+                <p className="text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-400 mb-3">
+                  Ringkasan Penawaran
                 </p>
+                <div className="space-y-2 text-xs mb-4">
+                  {parsedItems.map((item: any) => {
+                    const pax = Number(item.specs.pax) || 1;
+                    const price = Number(itemPrices[item.id] || 0);
+                    return (
+                      <div key={item.id} className="flex justify-between text-slate-600 dark:text-slate-400">
+                        <span className="truncate pr-2">
+                          {item.title} (×{pax})
+                        </span>
+                        <span className="font-semibold whitespace-nowrap">
+                          Rp {(price * pax).toLocaleString("id-ID")}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="pt-3 border-t border-emerald-200/60 dark:border-emerald-800/60 flex justify-between items-center">
+                  <span className="font-bold text-emerald-900 dark:text-emerald-300 text-sm">Total Penawaran</span>
+                  <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400">
+                    Rp {grandTotal.toLocaleString("id-ID")}
+                  </span>
+                </div>
+
+                {isEditable && (
+                  <button
+                    onClick={handlePublishQuote}
+                    disabled={publishing || grandTotal === 0}
+                    className="mt-5 w-full h-12 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-bold text-sm flex items-center justify-center gap-2 transition-colors shadow-md"
+                  >
+                    <Send className="w-4 h-4" />
+                    {publishing ? "Menyimpan..." : isQuoted ? "Perbarui Penawaran" : "Terbitkan Penawaran"}
+                  </button>
+                )}
+              </div>
+
+              {/* Komunikasi Pelanggan */}
+              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-4">
+                <p className="font-bold text-slate-800 dark:text-slate-100 text-sm">Kontak Pelanggan</p>
+
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wide flex items-center gap-1">
+                    <Phone className="w-3 h-3" /> Nomor WA Customer
+                  </label>
+                  {waEditing ? (
+                    <div className="flex gap-2">
+                      <input
+                        autoFocus
+                        type="tel"
+                        placeholder="08123456789"
+                        value={waInput}
+                        onChange={(e) => setWaInput(e.target.value)}
+                        className="flex-1 h-9 px-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-sm outline-none focus:ring-2 focus:ring-emerald-500"
+                      />
+                      <button
+                        onClick={handleSaveWa}
+                        disabled={waSaving || !waInput.trim()}
+                        className="h-9 w-9 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center disabled:opacity-50"
+                      >
+                        <Save className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => {
+                          setWaEditing(false);
+                          setWaInput(tx.client_whatsapp || "");
+                        }}
+                        className="h-9 w-9 rounded-lg border text-slate-500 hover:bg-slate-50 flex items-center justify-center"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+                      <span className="flex-1 text-xs font-mono font-medium text-slate-700 dark:text-slate-300">
+                        {waInput || <span className="text-slate-400 italic">Belum diisi</span>}
+                      </span>
+                      <button
+                        onClick={() => setWaEditing(true)}
+                        className="text-slate-400 hover:text-blue-600 transition-colors p-1"
+                      >
+                        <Edit className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-2 pt-1">
+                  <button
+                    onClick={handleShareWaToCustomer}
+                    className="w-full h-11 rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/50 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 font-bold text-xs flex items-center justify-center gap-2 transition-colors"
+                  >
+                    <MessageCircle className="w-4 h-4" /> Kirim Penawaran via WA
+                  </button>
+                  <button
+                    onClick={handleCopyMessage}
+                    className="w-full h-11 rounded-xl bg-slate-50 hover:bg-slate-100 dark:bg-slate-800/40 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-semibold text-xs flex items-center justify-center gap-2 transition-colors"
+                  >
+                    <Copy className="w-4 h-4" /> Salin Pesan Penawaran
+                  </button>
+                </div>
+              </div>
+
+              {/* Status Selesai / Batal */}
+              {isEditable && (
+                <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-2">
+                  <p className="font-bold text-slate-800 dark:text-slate-100 text-sm mb-2">Aksi Transaksi</p>
+                  {isQuoted && (
+                    <button
+                      onClick={() => handleUpdateStatus("CLOSED")}
+                      disabled={actionLoading}
+                      className="w-full h-11 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center gap-2 disabled:opacity-50 transition-colors"
+                    >
+                      <CheckCircle2 className="w-4 h-4" /> Tandai Selesai (Closed)
+                    </button>
+                  )}
+                  <button
+                    onClick={() => handleUpdateStatus("CANCELLED")}
+                    disabled={actionLoading}
+                    className="w-full h-11 rounded-xl border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 font-bold text-xs flex items-center justify-center gap-2 disabled:opacity-50 transition-colors"
+                  >
+                    <XCircle className="w-4 h-4" /> Batalkan Pesanan
+                  </button>
+                </div>
               )}
             </div>
-          )}
-
-          {/* CTA untuk PENDING (Pesanan Baru) */}
-          {status === 'PENDING' && (
-            <div className="pt-2 space-y-3">
-              <button
-                type="button"
-                onClick={() => {
-                  if (!counterWa) {
-                    alert("Service sedang maintain (Nomor Counter tidak tersedia).");
-                    return;
-                  }
-                  openWhatsApp(counterWa, buildPendingWaMessage());
-                }}
-                className="inline-flex items-center justify-center gap-2 h-12 px-8 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 hover:shadow-lg hover:shadow-emerald-600/20 text-white font-bold text-sm transition-all w-full sm:w-auto"
-              >
-                <MessageCircle className="w-4 h-4" />
-                Kirim Laporan ke WhatsApp Admin
-              </button>
-              <p className="text-xs text-slate-500 max-w-sm mx-auto">
-                WhatsApp tidak terbuka otomatis? Ketuk tombol di atas untuk mengirimkan rincian pesanan Anda ke admin kami.
-              </p>
-            </div>
-          )}
-
-          {/* CTA untuk QUOTED */}
-          {status === 'QUOTED' && (
-            <a
-              href={counterWa ? getWhatsAppFallbackUrl(counterWa, buildQuotedWaMessage()) : "#"}
-              onClick={(e) => {
-                if (!counterWa) {
-                  e.preventDefault();
-                  alert("Service sedang maintain (Nomor Counter tidak tersedia).");
-                  return;
-                }
-                handleWhatsAppClick(counterWa, buildQuotedWaMessage())(e);
-              }}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 h-12 px-8 rounded-xl bg-gradient-to-r from-[#C9A84C] to-[#8B6914] hover:shadow-lg hover:shadow-[#C9A84C]/20 text-white font-bold text-sm transition-all"
-            >
-              <MessageCircle className="w-4 h-4" />
-              Konfirmasi via WhatsApp
-            </a>
-          )}
+          </div>
         </div>
+      ) : (
+        /* ────────────────────────────────────────────────────────────────────────── */
+        /* KONDISI 2: TAMPILAN CUSTOMER / JAMAAH (Invoice & Status Pesanan)          */
+        /* ────────────────────────────────────────────────────────────────────────── */
+        <div className="container mx-auto px-4 md:px-6 py-12 max-w-2xl space-y-8">
+          {/* Status Card Utama */}
+          <div className={`rounded-3xl border p-8 text-center space-y-6 ${cfg.bg} ${cfg.border} shadow-sm`}>
+            <div
+              className={`mx-auto w-20 h-20 rounded-full flex items-center justify-center bg-white dark:bg-slate-900 shadow-sm border ${cfg.border}`}
+            >
+              <StatusIcon className={`w-10 h-10 ${cfg.color}`} />
+            </div>
 
-        {/* Detail layanan */}
-        {tx.items && tx.items.length > 0 && (
-          <div className="mt-8 space-y-3">
-            <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500">Layanan yang Dipesan</h2>
-            <div className="grid gap-3">
-              {tx.items.map((item: any) => {
-                const specs = item.specs ? JSON.parse(item.specs) : {};
-                return (
-                  <div key={item.id} className="bg-white border border-slate-200 rounded-xl px-5 py-4 flex items-center justify-between shadow-sm">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">Status Pesanan</p>
+              <h1 className={`text-3xl font-extrabold ${cfg.color}`}>{cfg.label}</h1>
+            </div>
+
+            <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed max-w-md mx-auto">
+              {cfg.desc}
+            </p>
+
+            {/* Total Penawaran Jika QUOTED atau CLOSED */}
+            {(status === "QUOTED" || status === "CLOSED") && tx.total_amount_idr && (
+              <div className="pt-4 border-t border-slate-200/60 dark:border-slate-800 space-y-2">
+                <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Penawaran</p>
+                <p className="text-4xl font-black text-[#C9A84C]">
+                  Rp {tx.total_amount_idr.toLocaleString("id-ID")}
+                </p>
+                {tx.quote_expiry && (
+                  <p className="text-xs font-medium text-slate-400">
+                    Berlaku hingga: {new Date(tx.quote_expiry).toLocaleString("id-ID")}
+                  </p>
+                )}
+              </div>
+            )}
+
+            {/* CTA untuk PENDING (Kirim laporan ke WA Admin) */}
+            {status === "PENDING" && (
+              <div className="pt-2 space-y-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!counterWa) {
+                      alert("Service sedang maintain (Nomor Counter tidak tersedia).");
+                      return;
+                    }
+                    openWhatsApp(counterWa, buildCustomerPendingWaMessage());
+                  }}
+                  className="inline-flex items-center justify-center gap-2 h-12 px-8 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 hover:shadow-lg hover:shadow-emerald-600/20 text-white font-bold text-sm transition-all w-full sm:w-auto"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  Kirim Laporan ke WhatsApp Admin
+                </button>
+                <p className="text-[11px] text-slate-400 max-w-sm mx-auto">
+                  WhatsApp tidak terbuka otomatis? Ketuk tombol di atas untuk mengirimkan rincian pesanan ke admin kami.
+                </p>
+              </div>
+            )}
+
+            {/* CTA untuk QUOTED (Konfirmasi Pesanan ke WA Admin) */}
+            {status === "QUOTED" && (
+              <div className="pt-2">
+                <a
+                  href={counterWa ? getWhatsAppFallbackUrl(counterWa, buildCustomerQuotedWaMessage()) : "#"}
+                  onClick={(e) => {
+                    if (!counterWa) {
+                      e.preventDefault();
+                      alert("Service sedang maintain (Nomor Counter tidak tersedia).");
+                      return;
+                    }
+                    handleWhatsAppClick(counterWa, buildCustomerQuotedWaMessage())(e);
+                  }}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 h-12 px-8 rounded-xl bg-gradient-to-r from-[#C9A84C] to-[#8B6914] hover:shadow-lg hover:shadow-[#C9A84C]/20 text-white font-bold text-sm transition-all w-full sm:w-auto"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  Konfirmasi via WhatsApp
+                </a>
+              </div>
+            )}
+          </div>
+
+          {/* Rincian Layanan yang Dipesan */}
+          {parsedItems && parsedItems.length > 0 && (
+            <div className="space-y-3">
+              <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400">Layanan yang Dipesan</h2>
+              <div className="grid gap-3">
+                {parsedItems.map((item: any) => (
+                  <div
+                    key={item.id}
+                    className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-5 py-4 flex items-center justify-between shadow-sm"
+                  >
                     <div>
-                      <p className="font-bold text-slate-800">{item.title}</p>
-                      {specs.pax && specs.pax !== 'N/A' && (
-                        <p className="text-xs font-medium text-slate-500 mt-0.5">{specs.pax} Pax</p>
+                      <p className="font-bold text-slate-800 dark:text-slate-100 text-sm">{item.title}</p>
+                      {item.specs?.pax && item.specs.pax !== "N/A" && (
+                        <p className="text-xs font-medium text-slate-400 mt-0.5">{item.specs.pax} Pax</p>
                       )}
                     </div>
                     {item.subtotal && (
@@ -266,29 +837,34 @@ function TransactionStatusPage() {
                       </p>
                     )}
                   </div>
-                );
-              })}
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Info */}
-        <p className="mt-8 text-center text-xs font-medium text-slate-500">
-          Simpan halaman ini untuk memantau status pesanan Anda. ID: <span className="font-mono text-slate-400">{tx.id}</span>
-        </p>
-      </div>
+          {/* Footer Card */}
+          <div className="text-center space-y-2 pt-4">
+            <p className="text-xs font-medium text-slate-400">
+              Simpan halaman ini untuk memantau status pesanan Anda.
+            </p>
+            <p className="text-xs font-mono text-slate-300 dark:text-slate-600">ID: {tx.id}</p>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
 
-export default function PenawaranDetailPage() {
+export default function UnifiedTransactionDetailPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
-      </div>
-    }>
-      <TransactionStatusPage />
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center">
+          <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+        </div>
+      }
+    >
+      <UnifiedTransactionPage />
     </Suspense>
   );
 }
