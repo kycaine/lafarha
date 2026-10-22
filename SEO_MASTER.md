@@ -173,3 +173,4 @@ Jalankan evaluasi teknis ini secara berkala:
 - [ ] **Cross-Entity Linking Health:** Pastikan tautan footer ke `https://reternia.com` dan `https://rezkiade.com` aktif dengan atribut `rel="noopener"`.
 - [ ] **Core Web Vitals:** Pastikan skor LCP < 2.0s, CLS = 0, dan FID/INP optimal melalui static pre-rendering Next.js.
 - [ ] **CTR & Title Optimization:** Evaluasi *Search Queries* di Google Search Console setiap bulan untuk mendeteksi kata kunci baru yang memiliki *impressions* tinggi untuk dijadikan artikel pilar berikutnya.
+
