@@ -13,6 +13,7 @@ import {
   Phone, Edit, Save, Copy, MessageCircle, CheckCircle2,
   XCircle, Clock, Package, ArrowLeft, Send, X, ClipboardPaste
 } from "lucide-react";
+import { openWhatsApp } from "@/lib/whatsapp";
 
 // ── Status badge ──────────────────────────────────────────────────────────────
 const STATUS_BADGE: Record<string, string> = {
@@ -172,13 +173,12 @@ function AdminTransactionPage() {
   };
 
   const handleShareWa = () => {
-    if (!waInput && !tx?.client_whatsapp) {
+    const phone = waInput || tx?.client_whatsapp || "";
+    if (!phone) {
       alert("Isi nomor WA customer terlebih dahulu.");
       return;
     }
-    let phone = (waInput || tx?.client_whatsapp || "").replace(/\D/g, '');
-    if (phone.startsWith('0')) phone = '62' + phone.substring(1);
-    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(buildWaMessage())}`, '_blank');
+    openWhatsApp(phone, buildWaMessage());
   };
 
   const handleCopy = () => {

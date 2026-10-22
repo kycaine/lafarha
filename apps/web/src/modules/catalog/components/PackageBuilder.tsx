@@ -9,6 +9,7 @@ import { createTransaction } from "@/modules/ordering/actions";
 import { fetchApi } from "@/lib/api";
 import { useAlert } from "@/shared/AlertContext";
 import { Building2, Bus, Ticket, User, Users, Plane, CheckCircle2, UploadCloud, Check, Briefcase, Car, MessageCircle, HelpCircle } from "lucide-react";
+import { openWhatsApp } from "@/lib/whatsapp";
 import { DatePickerNative } from "./UtilsCatalog";
 import { HotelSpecsModuleComponent } from "./modules/HotelSpecsModule";
 import { FlightLogicModuleComponent } from "./modules/FlightLogicModule";
@@ -150,8 +151,6 @@ export function PackageBuilder() {
       }
     });
 
-    const waTab = window.open('about:blank', '_blank');
-
     try {
       const res = await createTransaction({
         name: contactForm.name,
@@ -178,22 +177,20 @@ export function PackageBuilder() {
           adminLink
         ].join("\n");
 
-        const waUrl = `https://wa.me/${counterWa}?text=${encodeURIComponent(waMessage)}`;
-        const txUrl = `/products/${txId}`;
-
-        if (waTab) waTab.location.href = waUrl;
-        window.location.href = txUrl;
+        // Buka WhatsApp langsung & arahkan halaman ke status pesanan dengan autoWa safety net
+        if (counterWa) {
+          openWhatsApp(counterWa, waMessage);
+        }
+        window.location.href = `/products/${txId}?autoWa=1`;
 
         setShowContactModal(false);
         setContactForm({ name: "", whatsapp: "" });
         setFormData({ pax: "", manifestFileName: "", notes: "" });
         setSelectedServices([]);
       } else {
-        if (waTab) waTab.close();
         showAlert({ title: "Gagal", message: "Gagal mengirim pesanan: " + res.error, type: "error" });
       }
     } catch (err) {
-      if (waTab) waTab.close();
       console.error(err);
       showAlert({ title: "Error", message: "Terjadi kesalahan. Silakan coba lagi.", type: "error" });
     } finally {

@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
-import { useParams } from "next/navigation";
+import { useEffect, useState, Suspense, useRef } from "react";
+import { useParams, useSearchParams } from "next/navigation";
 import { getTransactionById } from "@/modules/ordering/actions";
 import { fetchApi } from "@/lib/api";
+import { openWhatsApp, getWhatsAppFallbackUrl, handleWhatsAppClick } from "@/lib/whatsapp";
 import { CheckCircle2, Clock, XCircle, MessageCircle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -44,12 +45,46 @@ const STATUS_CONFIG = {
 
 function TransactionStatusPage() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const id = params.id as string;
 
   const [tx, setTx] = useState<any>(null);
   const [counterWa, setCounterWa] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const autoWaTriggeredRef = useRef(false);
+
+  const buildPendingWaMessage = (txData?: any) => {
+    const currentTx = txData || tx;
+    const adminLink = `${typeof window !== 'undefined' ? window.location.origin : ''}/counter/products/${currentTx?.id || id}`;
+    const itemsList = currentTx?.items?.length
+      ? currentTx.items.map((i: any) => `• Layanan    : ${i.title}`).join("\n")
+      : "";
+
+    return [
+      `*LAPORAN PESANAN BARU MASUK*`,
+      ``,
+      `• ID Pesanan : ${currentTx?.id || id}`,
+      `• Nama       : ${currentTx?.client_name || "-"}`,
+      itemsList,
+      ``,
+      `lihat transaksi berikut`,
+      adminLink,
+    ].filter(Boolean).join("\n");
+  };
+
+  const buildQuotedWaMessage = () => {
+    return [
+      `Halo Min,`,
+      ``,
+      `Saya ingin konfirmasi pesanan berikut:`,
+      `• ID : ${tx?.id}`,
+      `• Nama : ${tx?.client_name}`,
+      `• Total : Rp ${tx?.total_amount_idr?.toLocaleString("id-ID")}`,
+      ``,
+      `Mohon info selanjutnya untuk proses pembayaran. Terima kasih 🙏`,
+    ].join("\n");
+  };
 
   useEffect(() => {
     Promise.all([
@@ -60,26 +95,21 @@ function TransactionStatusPage() {
       else setError(true);
       const apiWa = contactData?.whatsapp_counter || contactData?.whatsapp_number;
       if (apiWa) {
-        setCounterWa(apiWa.replace(/\D/g, ''));
+        setCounterWa(apiWa);
       }
       setLoading(false);
-    });
-  }, [id]);
 
-  const buildWaLink = () => {
-    const nomor = counterWa;
-    const message = [
-      `Halo Min,`,
-      ``,
-      `Saya ingin konfirmasi pesanan berikut:`,
-      `• ID : ${tx?.id}`,
-      `• Nama : ${tx?.client_name}`,
-      `• Total : Rp ${tx?.total_amount_idr?.toLocaleString("id-ID")}`,
-      ``,
-      `Mohon info selanjutnya untuk proses pembayaran. Terima kasih 🙏`,
-    ].join("\n");
-    return `https://wa.me/${nomor}?text=${encodeURIComponent(message)}`;
-  };
+      // Jika diarahkan dari checkout dengan flag autoWa=1, picu WhatsApp secara otomatis
+      if (searchParams.get('autoWa') === '1' && !autoWaTriggeredRef.current && apiWa) {
+        autoWaTriggeredRef.current = true;
+        const msg = buildPendingWaMessage(txData);
+        openWhatsApp(apiWa, msg);
+        if (typeof window !== 'undefined') {
+          window.history.replaceState({}, '', `/products/${id}`);
+        }
+      }
+    });
+  }, [id, searchParams]);
 
   if (loading) {
     return (
@@ -170,15 +200,40 @@ function TransactionStatusPage() {
             </div>
           )}
 
+          {/* CTA untuk PENDING (Pesanan Baru) */}
+          {status === 'PENDING' && (
+            <div className="pt-2 space-y-3">
+              <button
+                type="button"
+                onClick={() => {
+                  if (!counterWa) {
+                    alert("Service sedang maintain (Nomor Counter tidak tersedia).");
+                    return;
+                  }
+                  openWhatsApp(counterWa, buildPendingWaMessage());
+                }}
+                className="inline-flex items-center justify-center gap-2 h-12 px-8 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 hover:shadow-lg hover:shadow-emerald-600/20 text-white font-bold text-sm transition-all w-full sm:w-auto"
+              >
+                <MessageCircle className="w-4 h-4" />
+                Kirim Laporan ke WhatsApp Admin
+              </button>
+              <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                WhatsApp tidak terbuka otomatis? Ketuk tombol di atas untuk mengirimkan rincian pesanan Anda ke admin kami.
+              </p>
+            </div>
+          )}
+
           {/* CTA untuk QUOTED */}
           {status === 'QUOTED' && (
             <a
-              href={counterWa ? buildWaLink() : "#"}
+              href={counterWa ? getWhatsAppFallbackUrl(counterWa, buildQuotedWaMessage()) : "#"}
               onClick={(e) => {
                 if (!counterWa) {
                   e.preventDefault();
                   alert("Service sedang maintain (Nomor Counter tidak tersedia).");
+                  return;
                 }
+                handleWhatsAppClick(counterWa, buildQuotedWaMessage())(e);
               }}
               target="_blank"
               rel="noopener noreferrer"

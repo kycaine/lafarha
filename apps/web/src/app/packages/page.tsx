@@ -7,6 +7,7 @@ import Footer from '@/components/layout/Footer';
 import { useEffect, useState } from "react";
 import { CheckCircle2, Wallet, Sparkles, MoonStar } from "lucide-react";
 import packagesData from "@/contents/packages/packages.json";
+import { getWhatsAppFallbackUrl, handleWhatsAppClick } from "@/lib/whatsapp";
 
 
 const PagodaIcon = ({ className }: { className?: string }) => (
@@ -106,7 +107,13 @@ export default function PackagesPage() {
                     ))}
                   </ul>
                   <div className="flex flex-col gap-2 mt-auto relative z-10">
-                    <a href={`https://wa.me/6281234567890?text=Halo%20FARHA%2C%20saya%20tertarik%20dengan%20${pkg.name}%20seharga%20${pkg.priceString}.`} target="_blank" rel="noreferrer" className={`w-full py-3 rounded-xl ${theme.bgButton} ${theme.hoverBgButton} text-white font-bold text-sm text-center transition-colors shadow-md hover:shadow-lg`}>
+                    <a
+                      href={getWhatsAppFallbackUrl("6281234567890", `Halo FARHA, saya tertarik dengan ${pkg.name} seharga ${pkg.priceString}.`)}
+                      onClick={handleWhatsAppClick("6281234567890", `Halo FARHA, saya tertarik dengan ${pkg.name} seharga ${pkg.priceString}.`)}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={`w-full py-3 rounded-xl ${theme.bgButton} ${theme.hoverBgButton} text-white font-bold text-sm text-center transition-colors shadow-md hover:shadow-lg`}
+                    >
                       Pilih Paket
                     </a>
                     <Link href={`/packages/${pkg.id}`} className={`block w-full py-3 rounded-xl border-2 border-slate-200 dark:border-slate-800 ${theme.hoverBorder} text-slate-700 dark:text-slate-300 font-bold text-sm text-center transition-colors`}>

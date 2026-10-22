@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { updateOrderQuote, updateOrderContact, issueOrder } from "@/modules/ordering/actions";
 import { Clock, CheckCircle2, Copy, Ban, CreditCard, Package, Calculator, MessageCircle, Edit, Save, Phone } from "lucide-react";
+import { openWhatsApp } from "@/lib/whatsapp";
 
 export function CalculateForm({ order, items }: { order: any, items: any[] }) {
   
@@ -114,11 +115,12 @@ export function CalculateForm({ order, items }: { order: any, items: any[] }) {
 
   const handleChatWA = () => {
     const text = generateWhatsAppMessage();
-    let phone = (waInput || order.client_whatsapp || "").replace(/\D/g, '');
-    if (phone.startsWith('0')) {
-      phone = '62' + phone.substring(1);
+    const phone = waInput || order.client_whatsapp || "";
+    if (!phone) {
+      alert("Nomor WhatsApp belum diisi.");
+      return;
     }
-    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank');
+    openWhatsApp(phone, text);
   };
 
   const handleSaveWa = async () => {
