@@ -34,6 +34,15 @@ import {
   Lock,
   ChevronRight,
   ShieldCheck,
+  Plane,
+  Building2,
+  Luggage,
+  FileText,
+  Bus,
+  Users,
+  Calendar,
+  MapPin,
+  Sparkles,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -78,6 +87,129 @@ const STATUS_BADGE: Record<string, string> = {
   CLOSED: "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800",
   CANCELLED: "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 border-red-200 dark:border-red-800",
 };
+
+const SPEC_LABEL_MAP: Record<string, string> = {
+  pax: "Jumlah Pax",
+  // Hotel
+  rating: "Kelas / Bintang Hotel",
+  hotelRating: "Kelas / Bintang Hotel",
+  city: "Kota",
+  hotelName: "Nama Hotel",
+  checkIn: "Tanggal Check-In",
+  checkOut: "Tanggal Check-Out",
+  duration: "Durasi Menginap",
+  roomType: "Tipe Kamar",
+  needsMekah: "Menginap di Mekah",
+  mekahHotelName: "Hotel Mekah",
+  mekahCheckIn: "Check-In Mekah",
+  mekahCheckOut: "Check-Out Mekah",
+  mekahRooms: "Rincian Kamar Mekah",
+  needsMadinah: "Menginap di Madinah",
+  madinahHotelName: "Hotel Madinah",
+  madinahCheckIn: "Check-In Madinah",
+  madinahCheckOut: "Check-Out Madinah",
+  madinahRooms: "Rincian Kamar Madinah",
+  roomListFileName: "File Room List",
+  // Flight
+  origin: "Bandara Asal (Origin)",
+  destination: "Bandara Tujuan (Destination)",
+  route: "Rute Perjalanan",
+  departureDate: "Tanggal Keberangkatan",
+  returnDate: "Tanggal Kepulangan",
+  returnDepartureDate: "Tanggal Kepulangan",
+  returnOrigin: "Bandara Asal Kepulangan",
+  returnDestination: "Bandara Tujuan Kepulangan",
+  airline: "Maskapai Penerbangan",
+  flightType: "Tipe Penerbangan",
+  isRoundTrip: "Jenis Perjalanan",
+  isCheapest: "Opsi Tiket",
+  transitAirport: "Bandara Transit",
+  // Transport
+  tripType: "Tipe Perjalanan",
+  vehicle: "Armada / Kendaraan",
+  vehicleType: "Armada / Kendaraan",
+  pickupDate: "Tanggal Penjemputan",
+  date: "Tanggal Layanan",
+  pickupLocation: "Lokasi Penjemputan",
+  destinationLocation: "Lokasi Tujuan",
+  // Visa
+  visaType: "Tipe Visa",
+  visaCategory: "Kategori Visa",
+  passportFileName: "File Paspor",
+  country: "Negara Tujuan",
+  // Baggage
+  weight: "Berat / Kapasitas Bagasi",
+  // General
+  notes: "Catatan Layanan",
+};
+
+function formatSpecLabel(key: string): string {
+  if (SPEC_LABEL_MAP[key]) return SPEC_LABEL_MAP[key];
+  return key
+    .replace(/([A-Z])/g, " $1")
+    .replace(/_/g, " ")
+    .trim()
+    .replace(/^\w/, (c) => c.toUpperCase());
+}
+
+function formatSpecValue(key: string, val: any): string {
+  if (val === null || val === undefined || val === "") return "-";
+  if (typeof val === "boolean") {
+    if (key === "isRoundTrip") return val ? "Pulang-Pergi (Round Trip)" : "Sekali Jalan (One Way)";
+    if (key === "isCheapest") return val ? "Tiket Termurah / Fleksibel" : "Pilihan Maskapai Tertentu";
+    if (key === "needsMekah" || key === "needsMadinah") return val ? "Ya" : "Tidak";
+    return val ? "Ya" : "Tidak";
+  }
+  if (key === "rating" || key === "hotelRating") {
+    const num = Number(val);
+    if (!isNaN(num) && num > 0) return `⭐ ${num} Bintang`;
+  }
+  if (key === "pax") {
+    return `${val} Orang / Pax`;
+  }
+  if (key === "flightType") {
+    if (val === "direct") return "Direct (Penerbangan Langsung)";
+    if (val === "transit") return "Transit";
+  }
+  if (key === "tripType") {
+    if (val === "single") return "Single Trip";
+    if (val === "full") return "Full Trip";
+    if (val === "full_plus") return "Full Trip + Ziarah Tambahan";
+  }
+  if (typeof val === "object") {
+    if (Array.isArray(val)) {
+      return val.join(", ");
+    }
+    const nonZeroEntries = Object.entries(val).filter(([_, count]) => Number(count) > 0);
+    if (nonZeroEntries.length > 0) {
+      return nonZeroEntries.map(([k, count]) => `${k}: ${count}`).join(" · ");
+    }
+    return "-";
+  }
+  return String(val);
+}
+
+function getCategoryIcon(category?: string, title?: string) {
+  const cat = (category || "").toUpperCase();
+  const tit = (title || "").toLowerCase();
+
+  if (cat.includes("FLIGHT") || tit.includes("pesawat") || tit.includes("tiket")) {
+    return Plane;
+  }
+  if (cat.includes("HOTEL") || tit.includes("hotel") || tit.includes("penginapan")) {
+    return Building2;
+  }
+  if (cat.includes("VISA") || tit.includes("visa")) {
+    return FileText;
+  }
+  if (cat.includes("BAGGAGE") || tit.includes("bagasi")) {
+    return Luggage;
+  }
+  if (cat.includes("TRANS") || tit.includes("transport") || tit.includes("bus") || tit.includes("armada")) {
+    return Bus;
+  }
+  return Package;
+}
 
 function UnifiedTransactionPage() {
   const params = useParams();
@@ -161,6 +293,23 @@ function UnifiedTransactionPage() {
       })),
     [tx?.items]
   );
+
+  // Parse transaction notes JSON if available
+  const parsedTxNotes = useMemo(() => {
+    if (!tx?.notes) return null;
+    try {
+      return typeof tx.notes === "string" ? JSON.parse(tx.notes) : tx.notes;
+    } catch {
+      return { rawNotes: tx.notes };
+    }
+  }, [tx?.notes]);
+
+  const userNotes =
+    (typeof parsedTxNotes?.notes === "string" && parsedTxNotes.notes.trim()) ||
+    (typeof parsedTxNotes?.rawNotes === "string" && parsedTxNotes.rawNotes.trim()) ||
+    null;
+  const userManifest =
+    (typeof parsedTxNotes?.manifest === "string" && parsedTxNotes.manifest.trim()) || null;
 
   // Grand total kalkulasi counter
   const grandTotal = useMemo(
@@ -314,6 +463,11 @@ function UnifiedTransactionPage() {
   const handleCopyMessage = () => {
     navigator.clipboard.writeText(buildAdminShareWaMessage());
     alert("Pesan penawaran tersalin ke clipboard!");
+  };
+
+  const handleCopyId = () => {
+    navigator.clipboard.writeText(id);
+    alert("ID Pesanan tersalin ke clipboard!");
   };
 
   if (loading) {
@@ -490,6 +644,13 @@ function UnifiedTransactionPage() {
                 <span className={`px-3 py-1 rounded-full text-xs font-bold border ${STATUS_BADGE[tx.status] ?? STATUS_BADGE.PENDING}`}>
                   {tx.status}
                 </span>
+                <button
+                  onClick={handleCopyId}
+                  className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors p-1"
+                  title="Salin ID Transaksi"
+                >
+                  <Copy className="w-3.5 h-3.5" />
+                </button>
               </div>
               <p className="text-sm text-slate-500 mt-1">
                 Pemesan: <strong className="text-slate-700 dark:text-slate-300">{tx.client_name}</strong> · Dibuat: {new Date(tx.created_at).toLocaleString("id-ID")}
@@ -503,6 +664,26 @@ function UnifiedTransactionPage() {
             </div>
           </div>
 
+          {/* Catatan / Manifest dari Pemesan untuk Petugas */}
+          {(userNotes || userManifest) && (
+            <div className="bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/50 rounded-2xl p-5 space-y-2">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-amber-400 flex items-center gap-1.5">
+                <FileText className="w-4 h-4" /> Catatan dari Pelanggan
+              </h4>
+              {userNotes && (
+                <p className="text-xs font-medium text-slate-700 dark:text-slate-300 bg-white/70 dark:bg-slate-900/60 p-3 rounded-xl border border-amber-100 dark:border-amber-900/40">
+                  {userNotes}
+                </p>
+              )}
+              {userManifest && (
+                <div className="text-xs text-slate-600 dark:text-slate-400 flex items-center gap-2">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                  <span>File Manifest terlampir: <strong>{userManifest}</strong></span>
+                </div>
+              )}
+            </div>
+          )}
+
           <div className="grid lg:grid-cols-3 gap-6">
             {/* ── LEFT: Kalkulasi Item ── */}
             <div className="lg:col-span-2 space-y-4">
@@ -510,6 +691,20 @@ function UnifiedTransactionPage() {
                 const pax = Number(item.specs.pax) || 1;
                 const rawPrice = itemPrices[item.id] || "";
                 const price = Number(rawPrice) || 0;
+                const CategoryIcon = getCategoryIcon(item.category, item.title);
+
+                const specEntries = Object.entries(item.specs || {}).filter(([k, v]) => {
+                  if (k === "pax" || k === "customFields" || k === "services") return false;
+                  if (v === null || v === undefined || v === "") return false;
+                  if (typeof v === "object" && !Array.isArray(v)) {
+                    return Object.values(v).some((val) => Number(val) > 0 || (typeof val === "string" && val.trim() !== ""));
+                  }
+                  return true;
+                });
+
+                const customFieldEntries = item.specs?.customFields && typeof item.specs.customFields === "object"
+                  ? Object.entries(item.specs.customFields).filter(([_, v]) => v !== null && v !== undefined && v !== "")
+                  : [];
 
                 return (
                   <div
@@ -520,25 +715,30 @@ function UnifiedTransactionPage() {
                       <div className="w-7 h-7 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 flex items-center justify-center font-bold text-xs">
                         {idx + 1}
                       </div>
+                      <CategoryIcon className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                       <p className="font-bold text-slate-800 dark:text-slate-100">{item.title}</p>
                       <Package className="w-4 h-4 text-slate-400 ml-auto" />
                     </div>
 
                     <div className="p-6 space-y-4">
-                      {/* Specs Rincian Layanan */}
+                      {/* Specs Rincian Layanan Terstruktur */}
                       <div className="bg-slate-50 dark:bg-slate-950 rounded-xl p-4 grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
                         <div>
-                          <p className="text-slate-400 mb-0.5">Pax</p>
+                          <p className="text-slate-400 mb-0.5 font-medium">Pax</p>
                           <p className="font-bold text-slate-700 dark:text-slate-200">{pax} Orang</p>
                         </div>
-                        {Object.entries(item.specs)
-                          .filter(([k]) => k !== "pax" && k !== "customFields")
-                          .map(([k, v]) => (
-                            <div key={k}>
-                              <p className="text-slate-400 mb-0.5 capitalize">{k.replace(/([A-Z])/g, " $1").trim()}</p>
-                              <p className="font-medium text-slate-700 dark:text-slate-200 truncate">{String(v) || "-"}</p>
-                            </div>
-                          ))}
+                        {specEntries.map(([k, v]) => (
+                          <div key={k}>
+                            <p className="text-slate-400 mb-0.5 font-medium">{formatSpecLabel(k)}</p>
+                            <p className="font-semibold text-slate-700 dark:text-slate-200 break-words">{formatSpecValue(k, v)}</p>
+                          </div>
+                        ))}
+                        {customFieldEntries.map(([k, v]) => (
+                          <div key={k}>
+                            <p className="text-slate-400 mb-0.5 font-medium">{formatSpecLabel(k)}</p>
+                            <p className="font-semibold text-slate-700 dark:text-slate-200 break-words">{formatSpecValue(k, v)}</p>
+                          </div>
+                        ))}
                       </div>
 
                       {/* Input Harga Jual */}
@@ -733,36 +933,84 @@ function UnifiedTransactionPage() {
         </div>
       ) : (
         /* ────────────────────────────────────────────────────────────────────────── */
-        /* KONDISI 2: TAMPILAN CUSTOMER / JAMAAH (Invoice & Status Pesanan)          */
+        /* KONDISI 2: TAMPILAN CUSTOMER / JAMAAH (Invoice & Rincian Lengkap)           */
         /* ────────────────────────────────────────────────────────────────────────── */
-        <div className="container mx-auto px-4 md:px-6 py-12 max-w-2xl space-y-8">
-          {/* Status Card Utama */}
-          <div className={`rounded-3xl border p-8 text-center space-y-6 ${cfg.bg} ${cfg.border} shadow-sm`}>
-            <div
-              className={`mx-auto w-20 h-20 rounded-full flex items-center justify-center bg-white dark:bg-slate-900 shadow-sm border ${cfg.border}`}
-            >
-              <StatusIcon className={`w-10 h-10 ${cfg.color}`} />
+        <div className="container mx-auto px-4 md:px-6 py-8 md:py-12 max-w-4xl space-y-8">
+          {/* Header Info Transaksi Jamaah */}
+          <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 md:p-8 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-3 flex-wrap">
+                <span className="text-xs uppercase font-bold tracking-widest text-slate-400">ID Pesanan:</span>
+                <span className="font-mono text-xl md:text-2xl font-black text-slate-800 dark:text-white">
+                  {tx.id}
+                </span>
+                <button
+                  onClick={handleCopyId}
+                  className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors p-1"
+                  title="Salin ID Pesanan"
+                >
+                  <Copy className="w-4 h-4" />
+                </button>
+                <span className={`px-3 py-1 rounded-full text-xs font-bold border ${STATUS_BADGE[tx.status] ?? STATUS_BADGE.PENDING}`}>
+                  {STATUS_CONFIG[status]?.label || tx.status}
+                </span>
+              </div>
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                Pemesan: <strong className="text-slate-800 dark:text-slate-200">{tx.client_name || "-"}</strong>
+                {tx.created_at && (
+                  <span>
+                    {" "}· Tanggal:{" "}
+                    {new Date(tx.created_at).toLocaleDateString("id-ID", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </span>
+                )}
+              </p>
             </div>
-
-            <div>
-              <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">Status Pesanan</p>
-              <h1 className={`text-3xl font-extrabold ${cfg.color}`}>{cfg.label}</h1>
-            </div>
-
-            <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed max-w-md mx-auto">
-              {cfg.desc}
-            </p>
 
             {/* Total Penawaran Jika QUOTED atau CLOSED */}
             {(status === "QUOTED" || status === "CLOSED") && tx.total_amount_idr && (
+              <div className="text-left md:text-right pt-3 md:pt-0 border-t md:border-t-0 border-slate-100 dark:border-slate-800">
+                <p className="text-xs uppercase font-bold tracking-wider text-slate-400">Total Penawaran</p>
+                <p className="text-2xl md:text-3xl font-black text-[#C9A84C]">
+                  Rp {tx.total_amount_idr.toLocaleString("id-ID")}
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Status Card Utama / Banner */}
+          <div className={`rounded-3xl border p-6 md:p-8 text-center space-y-6 ${cfg.bg} ${cfg.border} shadow-sm`}>
+            <div
+              className={`mx-auto w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center bg-white dark:bg-slate-900 shadow-sm border ${cfg.border}`}
+            >
+              <StatusIcon className={`w-8 h-8 md:w-10 md:h-10 ${cfg.color}`} />
+            </div>
+
+            <div className="space-y-1">
+              <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Status Pesanan</p>
+              <h1 className={`text-2xl md:text-3xl font-extrabold ${cfg.color}`}>{cfg.label}</h1>
+            </div>
+
+            <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed max-w-lg mx-auto">
+              {cfg.desc}
+            </p>
+
+            {/* Total Penawaran & Expiry Jika QUOTED atau CLOSED */}
+            {(status === "QUOTED" || status === "CLOSED") && tx.total_amount_idr && (
               <div className="pt-4 border-t border-slate-200/60 dark:border-slate-800 space-y-2">
                 <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Penawaran</p>
-                <p className="text-4xl font-black text-[#C9A84C]">
+                <p className="text-3xl md:text-4xl font-black text-[#C9A84C]">
                   Rp {tx.total_amount_idr.toLocaleString("id-ID")}
                 </p>
                 {tx.quote_expiry && (
-                  <p className="text-xs font-medium text-slate-400">
-                    Berlaku hingga: {new Date(tx.quote_expiry).toLocaleString("id-ID")}
+                  <p className="text-xs font-medium text-slate-400 flex items-center justify-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5 text-emerald-500" />
+                    Berlaku hingga: {new Date(tx.quote_expiry).toLocaleString("id-ID", { dateStyle: "medium", timeStyle: "short" })}
                   </p>
                 )}
               </div>
@@ -780,7 +1028,7 @@ function UnifiedTransactionPage() {
                     }
                     openWhatsApp(counterWa, buildCustomerPendingWaMessage());
                   }}
-                  className="inline-flex items-center justify-center gap-2 h-12 px-8 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 hover:shadow-lg hover:shadow-emerald-600/20 text-white font-bold text-sm transition-all w-full sm:w-auto"
+                  className="inline-flex items-center justify-center gap-2.5 h-12 px-8 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 hover:shadow-lg hover:shadow-emerald-600/20 text-white font-bold text-sm transition-all w-full sm:w-auto"
                 >
                   <MessageCircle className="w-4 h-4" />
                   Kirim Laporan ke WhatsApp Admin
@@ -806,7 +1054,7 @@ function UnifiedTransactionPage() {
                   }}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 h-12 px-8 rounded-xl bg-gradient-to-r from-[#C9A84C] to-[#8B6914] hover:shadow-lg hover:shadow-[#C9A84C]/20 text-white font-bold text-sm transition-all w-full sm:w-auto"
+                  className="inline-flex items-center justify-center gap-2.5 h-12 px-8 rounded-xl bg-gradient-to-r from-[#C9A84C] to-[#8B6914] hover:shadow-lg hover:shadow-[#C9A84C]/20 text-white font-bold text-sm transition-all w-full sm:w-auto"
                 >
                   <MessageCircle className="w-4 h-4" />
                   Konfirmasi via WhatsApp
@@ -815,39 +1063,153 @@ function UnifiedTransactionPage() {
             )}
           </div>
 
-          {/* Rincian Layanan yang Dipesan */}
+          {/* ── RINCIAN LENGKAP LAYANAN YANG DIPESAN (CUSTOMER VIEW) ── */}
           {parsedItems && parsedItems.length > 0 && (
-            <div className="space-y-3">
-              <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400">Layanan yang Dipesan</h2>
-              <div className="grid gap-3">
-                {parsedItems.map((item: any) => (
-                  <div
-                    key={item.id}
-                    className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-5 py-4 flex items-center justify-between shadow-sm"
-                  >
-                    <div>
-                      <p className="font-bold text-slate-800 dark:text-slate-100 text-sm">{item.title}</p>
-                      {item.specs?.pax && item.specs.pax !== "N/A" && (
-                        <p className="text-xs font-medium text-slate-400 mt-0.5">{item.specs.pax} Pax</p>
-                      )}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400 flex items-center gap-2">
+                  <Package className="w-4 h-4" /> Rincian Lengkap Layanan yang Dipesan
+                </h2>
+                <span className="text-xs font-semibold text-slate-400">
+                  {parsedItems.length} Layanan
+                </span>
+              </div>
+
+              <div className="space-y-4">
+                {parsedItems.map((item: any, idx: number) => {
+                  const CategoryIcon = getCategoryIcon(item.category, item.title);
+                  const pax = Number(item.specs?.pax) || (item.specs?.pax && item.specs.pax !== "N/A" ? item.specs.pax : null);
+                  const hasPrice = (status === "QUOTED" || status === "CLOSED") && item.subtotal;
+
+                  // Filter spec entries
+                  const specEntries = Object.entries(item.specs || {}).filter(([k, v]) => {
+                    if (k === "pax" || k === "customFields" || k === "services") return false;
+                    if (v === null || v === undefined || v === "") return false;
+                    if (typeof v === "object" && !Array.isArray(v)) {
+                      return Object.values(v).some((val) => Number(val) > 0 || (typeof val === "string" && val.trim() !== ""));
+                    }
+                    return true;
+                  });
+
+                  const customFieldEntries = item.specs?.customFields && typeof item.specs.customFields === "object"
+                    ? Object.entries(item.specs.customFields).filter(([_, v]) => v !== null && v !== undefined && v !== "")
+                    : [];
+
+                  return (
+                    <div
+                      key={item.id || idx}
+                      className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm"
+                    >
+                      {/* Card Header: Lengkap dengan icon, nomor, dan subtotal jika ada */}
+                      <div className="flex items-center justify-between px-5 md:px-6 py-4 bg-slate-50 dark:bg-slate-950/60 border-b border-slate-100 dark:border-slate-800 gap-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-xl bg-amber-100 dark:bg-amber-950/60 text-[#C9A84C] flex items-center justify-center font-bold text-xs shadow-sm">
+                            <CategoryIcon className="w-4 h-4" />
+                          </div>
+                          <div>
+                            <h3 className="font-bold text-slate-900 dark:text-slate-100 text-sm md:text-base">
+                              {item.title}
+                            </h3>
+                            <p className="text-[11px] text-slate-400">
+                              Layanan #{idx + 1}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Subtotal Item jika QUOTED/CLOSED, atau Badge Status jika PENDING */}
+                        <div>
+                          {hasPrice ? (
+                            <div className="text-right">
+                              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Subtotal</span>
+                              <span className="text-sm md:text-base font-black text-[#C9A84C]">
+                                Rp {Number(item.subtotal).toLocaleString("id-ID")}
+                              </span>
+                            </div>
+                          ) : status === "PENDING" ? (
+                            <span className="px-2.5 py-1 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/50 text-amber-700 dark:text-amber-300 text-[11px] font-bold">
+                              Menunggu Hitungan
+                            </span>
+                          ) : null}
+                        </div>
+                      </div>
+
+                      {/* Card Body: Detail Grid Lengkap Semua Data yang Di-input */}
+                      <div className="p-5 md:p-6 space-y-4">
+                        <div className="bg-slate-50 dark:bg-slate-950/80 rounded-xl p-4 md:p-5 grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs">
+                          {/* Pax */}
+                          {pax && (
+                            <div className="space-y-0.5">
+                              <p className="text-slate-400 font-medium">Jumlah Pax</p>
+                              <p className="font-bold text-slate-800 dark:text-slate-200 text-sm">
+                                {pax} Orang
+                              </p>
+                            </div>
+                          )}
+
+                          {/* Standard Spec Entries */}
+                          {specEntries.map(([k, v]) => (
+                            <div key={k} className="space-y-0.5">
+                              <p className="text-slate-400 font-medium">{formatSpecLabel(k)}</p>
+                              <p className="font-semibold text-slate-800 dark:text-slate-200 break-words">
+                                {formatSpecValue(k, v)}
+                              </p>
+                            </div>
+                          ))}
+
+                          {/* Custom Fields */}
+                          {customFieldEntries.map(([k, v]) => (
+                            <div key={k} className="space-y-0.5">
+                              <p className="text-slate-400 font-medium">{formatSpecLabel(k)}</p>
+                              <p className="font-semibold text-slate-800 dark:text-slate-200 break-words">
+                                {formatSpecValue(k, v)}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     </div>
-                    {item.subtotal && (
-                      <p className="text-[#C9A84C] font-extrabold text-sm">
-                        Rp {Number(item.subtotal).toLocaleString("id-ID")}
-                      </p>
-                    )}
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}
 
+          {/* Catatan Tambahan Pemesan (Jika ada) */}
+          {(userNotes || userManifest) && (
+            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-3">
+              <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 flex items-center gap-2">
+                <FileText className="w-4 h-4 text-slate-400" /> Informasi Tambahan Pesanan
+              </h3>
+              {userNotes && (
+                <div className="space-y-1">
+                  <p className="text-xs text-slate-400 font-medium">Catatan / Kebutuhan Khusus:</p>
+                  <p className="text-xs md:text-sm font-medium text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-950 p-3.5 rounded-xl border border-slate-100 dark:border-slate-800">
+                    {userNotes}
+                  </p>
+                </div>
+              )}
+              {userManifest && (
+                <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/50 p-3 rounded-xl">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                  <span>Dokumen Manifest terlampir: <strong>{userManifest}</strong></span>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Footer Card */}
-          <div className="text-center space-y-2 pt-4">
+          <div className="text-center space-y-3 pt-2">
             <p className="text-xs font-medium text-slate-400">
-              Simpan halaman ini untuk memantau status pesanan Anda.
+              Simpan halaman ini untuk memantau pembaruan status pesanan Anda sewaktu-waktu.
             </p>
-            <p className="text-xs font-mono text-slate-300 dark:text-slate-600">ID: {tx.id}</p>
+            <div className="flex items-center justify-center gap-3 pt-1">
+              <Link
+                href="/products"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors py-2.5 px-5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" /> Buat Penawaran Lain
+              </Link>
+            </div>
           </div>
         </div>
       )}
